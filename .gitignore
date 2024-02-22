@@ -1,0 +1,6 @@
+.pio
+**/*.env
+build
+secrets.ini
+.idea
+.vscode
