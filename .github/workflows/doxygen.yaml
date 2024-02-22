@@ -11,9 +11,12 @@ on:
       - develop
 
 jobs:
-  deploy:
+  Documentation:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout project
+        uses: actions/checkout@v3
+
       - uses: DenverCoder1/doxygen-github-pages-action@v1.3.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
