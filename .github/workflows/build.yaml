@@ -33,7 +33,7 @@ jobs:
         run: pip install platformio
 
       - name: Test the project
-        run: platformio test -e $PIO_TEST_ENV
+        run: platformio test -e ${{ env.PIO_TEST_ENV }}
   build:
     needs:
       - test
@@ -63,5 +63,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.packages.name }}-build
-          path: $PIO_BUILD_DIR/${{ matrix.packages.api_name }}
+          path: ${{ env.PIO_BUILD_DIR }}/${{ matrix.packages.api_name }}
 
