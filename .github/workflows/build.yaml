@@ -12,7 +12,7 @@ on:
       - develop
 
 env:
-  PYTHON_VERSION: 3.10
+  PYTHON_VERSION: "3.11.7"
   PIO_BUILD_DIR: .pio/build
   PIO_TEST_ENV: native
 
@@ -27,7 +27,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "$PYTHON_VERSION"
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install PlatformIO
         run: pip install platformio
@@ -51,7 +51,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "$PYTHON_VERSION"
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install PlatformIO
         run: pip install platformio
