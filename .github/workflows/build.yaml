@@ -11,8 +11,32 @@ on:
       - main
       - develop
 
+env:
+  PYTHON_VERSION: 3.10
+  PIO_BUILD_DIR: .pio/build
+  PIO_TEST_ENV: native
+
 jobs:
+  test:
+    name: Test the project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "$PYTHON_VERSION"
+
+      - name: Install PlatformIO
+        run: pip install platformio
+
+      - name: Test the project
+        run: platformio test -e $PIO_TEST_ENV
   build:
+    needs:
+      - test
     strategy:
       matrix:
         packages: [
@@ -26,6 +50,8 @@ jobs:
 
       - name: Set up Python
         uses: actions/setup-python@v5
+        with:
+          python-version: "$PYTHON_VERSION"
 
       - name: Install PlatformIO
         run: pip install platformio
@@ -33,11 +59,9 @@ jobs:
       - name: Build the ${{ matrix.packages.name }} project
         run: platformio run -e ${{ matrix.packages.api_name }}
 
-      - name: Test the project
-        run: platformio check --fail-on-defect high
-
       - name: Upload the build artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.packages.name }}-build
-          path: .pio/build/${{ matrix.packages.api_name }}
+          path: $PIO_BUILD_DIR/${{ matrix.packages.api_name }}
+
