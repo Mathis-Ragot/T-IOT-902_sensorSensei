@@ -1,4 +1,4 @@
-name: Build
+name: Build and upload artifacts
 
 on:
   push:
@@ -64,4 +64,3 @@ jobs:
         with:
           name: ${{ matrix.packages.name }}-build
           path: ${{ env.PIO_BUILD_DIR }}/${{ matrix.packages.api_name }}
-
