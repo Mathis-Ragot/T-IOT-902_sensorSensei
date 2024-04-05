@@ -4,3 +4,5 @@ build
 secrets.ini
 .idea
 .vscode
+/docs/doxygen/html
+/docs/doxygen/latex
