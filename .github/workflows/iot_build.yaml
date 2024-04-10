@@ -1,4 +1,4 @@
-name: [iot] Build, Test and generate documentation
+name: "[IoT] Build, test and generate documentation"
 
 on:
   push:
@@ -18,24 +18,24 @@ env:
 
 jobs:
   test:
-    name: Test the project
+    name: "Test the project"
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout project
+      - name: "Checkout project"
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: "Set up Python"
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Install PlatformIO
+      - name: "Install PlatformIO"
         run: pip install platformio
 
-      - name: Test the project
+      - name: "Test the project"
         run: platformio test -e ${{ env.PIO_TEST_ENV }}
   build:
-    name: Build all packages and upload the artifacts
+    name: "Build all packages and upload the artifacts"
     needs:
       - test
     strategy:
@@ -46,21 +46,21 @@ jobs:
         ]
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout project
+      - name: "Checkout project"
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: "Set up Python"
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Install PlatformIO
+      - name: "Install PlatformIO"
         run: pip install platformio
 
-      - name: Build the ${{ matrix.packages.name }} project
+      - name: "Build the ${{ matrix.packages.name }} project"
         run: platformio run -e ${{ matrix.packages.api_name }}
 
-      - name: Upload the build artifacts
+      - name: "Upload the build artifacts"
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.packages.name }}-build
@@ -69,17 +69,17 @@ jobs:
     needs:
       - build
       - test
-    name: Generate the documentation
+    name: "Generate the documentation"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install Doxygen
+      - name: "Install Doxygen"
         run: |
           sudo apt update --yes && sudo apt upgrade --yes
           sudo apt install doxygen
-      - name: Generate Doc
+      - name: "Generate Doc"
         run: doxygen Doxyfile
-      - name: Upload the documentation artifacts
+      - name: "Upload the documentation artifacts"
         uses: actions/upload-artifact@v4
         with:
           name: documentation

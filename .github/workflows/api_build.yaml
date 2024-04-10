@@ -1,4 +1,4 @@
-name: [api] Build, Test and generate the project
+name: "[API] Build and test application"
 
 on:
   push:
@@ -17,26 +17,26 @@ env:
 
 jobs:
   test:
-    name: Test the project
+    name: "Test the project"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: rustup update and use default
+      - name: "rustup update and use default"
         run: |
           rustup update
           rustup default ${{ env.RUST_TOOLCHAIN }}
-      - name: Cargo test
+      - name: "Cargo test"
         run: cargo test --manifest-path=${{ env.CARGO_PATH }}
   build:
-    name: Build the project
+    name: "Build the project"
     runs-on: ubuntu-latest
     needs:
       - test
     steps:
       - uses: actions/checkout@v4
-      - name: rustup update and use default
+      - name: "rustup update and use default"
         run: |
           rustup update
           rustup default ${{ env.RUST_TOOLCHAIN }}
-      - name: Cargo build
+      - name: "Cargo build"
         run: cargo build --manifest-path=${{ env.CARGO_PATH }}
