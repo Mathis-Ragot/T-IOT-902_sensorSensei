@@ -13,6 +13,7 @@ on:
 
 env:
   PYTHON_VERSION: "3.11.7"
+  IOT_DIRECTORY: iot
   PIO_BUILD_DIR: .pio/build
   PIO_TEST_ENV: native
 
@@ -33,7 +34,7 @@ jobs:
         run: pip install platformio
 
       - name: "Test the project"
-        run: platformio test -e ${{ env.PIO_TEST_ENV }}
+        run: platformio test -e ${{ env.PIO_TEST_ENV }} -d ${{ env.IOT_DIRECTORY }}
   build:
     name: "Build all packages and upload the artifacts"
     needs:
@@ -58,13 +59,13 @@ jobs:
         run: pip install platformio
 
       - name: "Build the ${{ matrix.packages.name }} project"
-        run: platformio run -e ${{ matrix.packages.api_name }}
+        run: platformio run -e ${{ matrix.packages.api_name }} -d ${{ env.IOT_DIRECTORY }}
 
       - name: "Upload the build artifacts"
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.packages.name }}-build
-          path: ${{ env.PIO_BUILD_DIR }}/${{ matrix.packages.api_name }}
+          path: ${{ env.IOT_DIRECTORY }}/${{ env.PIO_BUILD_DIR }}/${{ matrix.packages.api_name }}
   documentation:
     needs:
       - build
@@ -78,9 +79,9 @@ jobs:
           sudo apt update --yes && sudo apt upgrade --yes
           sudo apt install doxygen
       - name: "Generate Doc"
-        run: doxygen Doxyfile
+        run: doxygen ${{ env.IOT_DIRECTORY }}/Doxyfile
       - name: "Upload the documentation artifacts"
         uses: actions/upload-artifact@v4
         with:
           name: documentation
-          path: docs/doxygen/html
+          path: ${{ env.IOT_DIRECTORY }}/docs/doxygen/html
