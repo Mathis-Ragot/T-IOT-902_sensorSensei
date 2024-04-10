@@ -1,11 +1,11 @@
-name: Build and upload artifacts
+name: [iot] Build, Test and generate documentation
 
 on:
   push:
     branches:
-    - main
-    - develop
-    - feat/ci
+      - main
+      - develop
+      - feat/ci
   pull_request:
     branches:
       - main
@@ -35,6 +35,7 @@ jobs:
       - name: Test the project
         run: platformio test -e ${{ env.PIO_TEST_ENV }}
   build:
+    name: Build all packages and upload the artifacts
     needs:
       - test
     strategy:
@@ -64,3 +65,22 @@ jobs:
         with:
           name: ${{ matrix.packages.name }}-build
           path: ${{ env.PIO_BUILD_DIR }}/${{ matrix.packages.api_name }}
+  documentation:
+    needs:
+      - build
+      - test
+    name: Generate the documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Doxygen
+        run: |
+          sudo apt update --yes && sudo apt upgrade --yes
+          sudo apt install doxygen
+      - name: Generate Doc
+        run: doxygen Doxyfile
+      - name: Upload the documentation artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentation
+          path: docs/doxygen/html

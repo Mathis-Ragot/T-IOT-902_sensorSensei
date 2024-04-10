@@ -1,0 +1,42 @@
+name: [api] Build, Test and generate the project
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - feat/ci
+  pull_request:
+    branches:
+      - main
+      - develop
+
+env:
+  RUST_TOOLCHAIN: stable
+  CARGO_PATH: api/Cargo.toml
+
+jobs:
+  test:
+    name: Test the project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: rustup update and use default
+        run: |
+          rustup update
+          rustup default ${{ env.RUST_TOOLCHAIN }}
+      - name: Cargo test
+        run: cargo test --manifest-path=${{ env.CARGO_PATH }}
+  build:
+    name: Build the project
+    runs-on: ubuntu-latest
+    needs:
+      - test
+    steps:
+      - uses: actions/checkout@v4
+      - name: rustup update and use default
+        run: |
+          rustup update
+          rustup default ${{ env.RUST_TOOLCHAIN }}
+      - name: Cargo build
+        run: cargo build --manifest-path=${{ env.CARGO_PATH }}
