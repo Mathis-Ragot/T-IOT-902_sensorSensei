@@ -13,20 +13,29 @@ on:
 
 env:
   RUST_TOOLCHAIN: stable
+  API_DIRECTORY: api
   CARGO_PATH: api/Cargo.toml
 
 jobs:
   test:
     name: "Test the project"
-    runs-on: ubuntu-latest
+    runs-on: xd009642/tarpaulin:0.27.3
     steps:
       - uses: actions/checkout@v4
-      - name: "rustup update and use default"
-        run: |
-          rustup update
-          rustup default ${{ env.RUST_TOOLCHAIN }}
-      - name: "Cargo test"
+      - name: "Generate code coverage"
+        run: cargo tarpaulin --manifest-path=${{ env.CARGO_PATH }} --all-features --workspace --timeout 120 --out html json lcov
+      - name: "Print coverage summary"
+        run: cat ${{ env.API_DIRECTORY }}/tarpaulin-report.html
+      - name: "Launch tests"
         run: cargo test --manifest-path=${{ env.CARGO_PATH }}
+      - name: "Upload coverage artifacts"
+        uses: actions/upload-artifact@v4
+        with:
+          name: "api-coverage"
+          path: |
+            ${{ env.API_DIRECTORY }}/tarpaulin-report.html
+            ${{ env.API_DIRECTORY }}/tarpaulin-report.json
+            ${{ env.API_DIRECTORY }}/lcov.info
   build:
     name: "Build the project"
     runs-on: ubuntu-latest
@@ -40,3 +49,8 @@ jobs:
           rustup default ${{ env.RUST_TOOLCHAIN }}
       - name: "Cargo build"
         run: cargo build --manifest-path=${{ env.CARGO_PATH }}
+      - name: "Upload build artifacts"
+        uses: actions/upload-artifact@v4
+        with:
+          name: "api-build"
+          path: "${{ env.API_DIRECTORY }}/target/release"
