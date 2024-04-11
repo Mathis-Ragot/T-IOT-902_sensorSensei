@@ -1,6 +1,17 @@
-.pio
+# global
 **/*.env
-build
-secrets.ini
 .idea
 .vscode
+
+# IoT
+.pio
+iot/docs/doxygen/html
+iot/docs/doxygen/latex
+iot/secrets.ini
+
+# api
+api/target
+api/cobertura.xml
+api/tarpaulin-report.html
+api/lcov.info
+api/tarpaulin-report.json

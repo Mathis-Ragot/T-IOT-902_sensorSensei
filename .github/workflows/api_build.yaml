@@ -1,0 +1,83 @@
+name: "[API] Build and test application"
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - feat/ci
+  pull_request:
+    branches:
+      - main
+      - develop
+
+env:
+  RUST_TOOLCHAIN: stable
+  API_DIRECTORY: api
+  API_BINARY: api
+  CARGO_PATH: api/Cargo.toml
+  TARPAULIN_BINARY: cargo-tarpaulin
+  TARPAULIN_TIMEOUT: 120
+  TARPAULIN_OUTPUT_FORMAT: html json lcov
+
+jobs:
+  test:
+    name: "Test the project"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: "rustup update and use default"
+        run: |
+          rustup update
+          rustup default ${{ env.RUST_TOOLCHAIN }}
+          cargo install ${{ env.TARPAULIN_BINARY }}
+      - name: "Cargo test"
+        run: cargo test --manifest-path=${{ env.CARGO_PATH }}
+      - name: "Cargo coverage"
+        run: cargo tarpaulin --all-features --workspace --timeout ${{ env.TARPAULIN_TIMEOUT }} --out ${{ env.TARPAULIN_OUTPUT_FORMAT }} --manifest-path=${{ env.CARGO_PATH }}
+      - name: "Upload coverage artifacts"
+        uses: actions/upload-artifact@v4
+        with:
+          name: "api-coverage"
+          path: |
+            ${{ env.API_DIRECTORY }}/tarpaulin-report.html
+            ${{ env.API_DIRECTORY }}/tarpaulin-report.json
+            ${{ env.API_DIRECTORY }}/lcov.info
+            ${{ env.API_DIRECTORY }}/cobertura.xml
+  build:
+    name: "Build the project"
+    runs-on: ubuntu-latest
+    needs:
+      - test
+    steps:
+      - uses: actions/checkout@v4
+      - name: "rustup update and use default"
+        run: |
+          rustup update
+          rustup default ${{ env.RUST_TOOLCHAIN }}
+      - name: "Cargo build"
+        run: cargo build --manifest-path=${{ env.CARGO_PATH }} --release
+      - name: "Upload build artifacts"
+        uses: actions/upload-artifact@v4
+        with:
+          name: "api-build"
+          path: "${{ env.API_DIRECTORY }}/target/release/${{ env.API_BINARY }}"
+  documentation:
+    name: "Generate the project documentation"
+    runs-on: ubuntu-latest
+    needs:
+      - build
+      - test
+    steps:
+      - uses: actions/checkout@v4
+      - name: "rustup update and use default"
+        run: |
+          rustup update
+          rustup default ${{ env.RUST_TOOLCHAIN }}
+      - name: "Cargo doc"
+        run: cargo doc --manifest-path=${{ env.CARGO_PATH }}
+      - name: "Upload documentation artifacts"
+        uses: actions/upload-artifact@v4
+        with:
+          name: "api-doc"
+          path: "${{ env.API_DIRECTORY }}/target/doc/${{ env.API_BINARY }}/"

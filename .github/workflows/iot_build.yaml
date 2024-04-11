@@ -1,0 +1,87 @@
+name: "[IoT] Build, test and generate documentation"
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - feat/ci
+  pull_request:
+    branches:
+      - main
+      - develop
+
+env:
+  PYTHON_VERSION: "3.11.7"
+  IOT_DIRECTORY: iot
+  PIO_BUILD_DIR: .pio/build
+  PIO_TEST_ENV: native
+
+jobs:
+  test:
+    name: "Test the project"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout project"
+        uses: actions/checkout@v4
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: "Install PlatformIO"
+        run: pip install platformio
+
+      - name: "Test the project"
+        run: platformio test -e ${{ env.PIO_TEST_ENV }} -d ${{ env.IOT_DIRECTORY }}
+  build:
+    name: "Build all packages and upload the artifacts"
+    needs:
+      - test
+    strategy:
+      matrix:
+        packages: [
+          { name: "Emitter", api_name: "emitter" },
+          { name: "Receptor", api_name: "receptor" }
+        ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout project"
+        uses: actions/checkout@v4
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: "Install PlatformIO"
+        run: pip install platformio
+
+      - name: "Build the ${{ matrix.packages.name }} project"
+        run: platformio run -e ${{ matrix.packages.api_name }} -d ${{ env.IOT_DIRECTORY }}
+
+      - name: "Upload the build artifacts"
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.packages.name }}-build
+          path: ${{ env.IOT_DIRECTORY }}/${{ env.PIO_BUILD_DIR }}/${{ matrix.packages.api_name }}
+  documentation:
+    needs:
+      - build
+      - test
+    name: "Generate the documentation"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Install Doxygen"
+        run: |
+          sudo apt update --yes && sudo apt upgrade --yes
+          sudo apt install doxygen
+      - name: "Generate Doc"
+        run: doxygen ${{ env.IOT_DIRECTORY }}/Doxyfile
+      - name: "Upload the documentation artifacts"
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentation
+          path: ${{ env.IOT_DIRECTORY }}/docs/doxygen/html
