@@ -19,23 +19,16 @@ env:
 jobs:
   test:
     name: "Test the project"
-    runs-on: xd009642/tarpaulin:0.27.3
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: "Generate code coverage"
-        run: cargo tarpaulin --manifest-path=${{ env.CARGO_PATH }} --all-features --workspace --timeout 120 --out html json lcov
-      - name: "Print coverage summary"
-        run: cat ${{ env.API_DIRECTORY }}/tarpaulin-report.html
-      - name: "Launch tests"
+      - name: "rustup update and use default"
+        run: |
+          rustup update
+          rustup default ${{ env.RUST_TOOLCHAIN }}
+          cargo install cargo-tarpaulin
+      - name: "Cargo test"
         run: cargo test --manifest-path=${{ env.CARGO_PATH }}
-      - name: "Upload coverage artifacts"
-        uses: actions/upload-artifact@v4
-        with:
-          name: "api-coverage"
-          path: |
-            ${{ env.API_DIRECTORY }}/tarpaulin-report.html
-            ${{ env.API_DIRECTORY }}/tarpaulin-report.json
-            ${{ env.API_DIRECTORY }}/lcov.info
   build:
     name: "Build the project"
     runs-on: ubuntu-latest
