@@ -1,0 +1,21 @@
+name: "Mirror the project"
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - feat/ci
+
+jobs:
+  mirror:
+    name: "Mirror the project"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: pixta-dev/repository-mirroring-action@v1
+      with:
+        target_repo_url:
+          git@github.com:EpitechMscProPromo2024/T-IOT-902-NAN_2.git
+        ssh_private_key:
+          ${{ secrets.SSH_PRIVATE_KEY }}
