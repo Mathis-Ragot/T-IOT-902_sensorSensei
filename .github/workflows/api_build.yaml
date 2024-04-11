@@ -16,6 +16,9 @@ env:
   API_DIRECTORY: api
   API_BINARY: api
   CARGO_PATH: api/Cargo.toml
+  TARPAULIN_BINARY: cargo-tarpaulin
+  TARPAULIN_TIMEOUT: 120
+  TARPAULIN_OUTPUT_FORMAT: html json lcov
 
 jobs:
   test:
@@ -27,9 +30,20 @@ jobs:
         run: |
           rustup update
           rustup default ${{ env.RUST_TOOLCHAIN }}
-          cargo install cargo-tarpaulin
+          cargo install ${{ env.TARPAULIN_BINARY }}
       - name: "Cargo test"
         run: cargo test --manifest-path=${{ env.CARGO_PATH }}
+      - name: "Cargo coverage"
+        run: cargo tarpaulin --all-features --workspace --timeout ${{ env.TARPAULIN_TIMEOUT }} --out ${{ env.TARPAULIN_OUTPUT_FORMAT }} --manifest-path=${{ env.CARGO_PATH }}
+      - name: "Upload coverage artifacts"
+        uses: actions/upload-artifact@v4
+        with:
+          name: "api-coverage"
+          path: |
+            ${{ env.API_DIRECTORY }}/tarpaulin-report.html
+            ${{ env.API_DIRECTORY }}/tarpaulin-report.json
+            ${{ env.API_DIRECTORY }}/lcov.info
+            ${{ env.API_DIRECTORY }}/cobertura.xml
   build:
     name: "Build the project"
     runs-on: ubuntu-latest
@@ -42,7 +56,7 @@ jobs:
           rustup update
           rustup default ${{ env.RUST_TOOLCHAIN }}
       - name: "Cargo build"
-        run: cargo build --manifest-path=${{ env.CARGO_PATH }}
+        run: cargo build --manifest-path=${{ env.CARGO_PATH }} --release
       - name: "Upload build artifacts"
         uses: actions/upload-artifact@v4
         with:
