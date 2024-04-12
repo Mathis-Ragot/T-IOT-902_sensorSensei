@@ -39,3 +39,7 @@ Prend en charge la programmation via l'environnement de développement Arduino I
 - Étape 4 : Utilisez les bibliothèques disponibles pour développer votre application, en tenant compte des spécificités de la communication LoRa ou Bluetooth.
 - Étape 5 : Téléversez votre code sur le module Heltec LoRa 32 et observez les résultats.
 - Étape 6 : Pour la communication LoRa, assurez-vous de configurer les paramètres de fréquence, de puissance et de débit de données selon les besoins de votre application.
+
+## Pinout :
+
+![image](https://community.hiveeyes.org/uploads/default/eda042713108809e3511e822a1aa4e582ee70ebc)
