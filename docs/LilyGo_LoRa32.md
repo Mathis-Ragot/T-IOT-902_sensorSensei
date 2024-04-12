@@ -34,3 +34,7 @@ Le LilyGo LoRa32 est un module de développement compact intégrant un microcont
 - Étape 3 : Utilisez les bibliothèques disponibles pour développer votre application, en tenant compte des spécificités de la communication LoRa.
 - Étape 4 : Téléversez votre code sur le module LilyGo LoRa32 et observez les résultats.
 - Étape 5 : Pour la communication LoRa, assurez-vous de configurer correctement les paramètres de fréquence, de puissance et de débit de données en fonction de votre application.
+
+## Pinout
+
+![image](https://europe1.discourse-cdn.com/arduino/original/4X/a/b/6/ab6d5a8500e8b442d35424c57b7e3aa99543fcd7.jpeg)
