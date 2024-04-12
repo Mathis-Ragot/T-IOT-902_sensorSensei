@@ -85,14 +85,16 @@ jobs:
         run: pip install platformio
 
       - name: "Run the static code analysis"
-        run: platformio check -d ${{ env.IOT_DIRECTORY }} > analysis.txt
+        run: platformio check > analysis.txt
+        working-directory: ${{ env.IOT_DIRECTORY }}
       - name: "Display the analysis"
         run: cat analysis.txt
+        working-directory: ${{ env.IOT_DIRECTORY }}
       - name: "Upload the analysis artifacts"
         uses: actions/upload-artifact@v4
         with:
           name: analysis
-          path: analysis.txt
+          path: ${{ env.IOT_DIRECTORY }}/analysis.txt
   documentation:
     needs:
       - build
