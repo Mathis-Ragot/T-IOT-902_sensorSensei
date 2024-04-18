@@ -3,17 +3,21 @@
 
 using namespace std;
 
-DeviceManager *deviceManager;
+EmitterDeviceManager *deviceManager;
 
 App::App() {
 
     Serial.begin(9600);
     delay(1000);
+    deviceManager = new EmitterDeviceManager();
+}
 
-    deviceManager = new DeviceManager();
-
+App::~App() {
+    delete deviceManager;
 }
 
 void App::loop() {
 
+    deviceManager->init();
+    Serial.print("DeviceManager init");
 }

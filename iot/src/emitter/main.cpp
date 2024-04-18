@@ -1,13 +1,14 @@
 #include <vector>
+#include "App.h"
+
 App* app;
 
-
-int setup() {
+void setup() {
     app = new App();
 }
 
-int loop() {
-    return 0;
+void loop() {
+    app->loop();
 }
 
 

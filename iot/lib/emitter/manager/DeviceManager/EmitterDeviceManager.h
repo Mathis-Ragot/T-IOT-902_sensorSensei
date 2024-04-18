@@ -9,10 +9,10 @@
 #include "manager/PowerManger//PowerManager.h"
 #include "manager/CommunicationManager/LoraCommunicationManager.h"
 #include "domain/deviceInfos/DeviceInfos.h"
-#include "domain/ISensor.h"
+#include "domain/Sensor/ISensor.h"
 
 
-class DeviceManager {
+class EmitterDeviceManager {
 
 public:
     DeviceInfos deviceInfo;
@@ -20,7 +20,7 @@ public:
     LoraCommunicationManager communicationManager;
     std::vector<ISensor> sensors;
 
-    DeviceManager();
+    EmitterDeviceManager();
 
     void init();
 

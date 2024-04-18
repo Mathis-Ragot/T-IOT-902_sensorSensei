@@ -3,10 +3,19 @@
 //
 
 #include "DeviceInfos.h"
-#include "../DeviceType.h"
-#include "vector"
 
-DeviceInfos::DeviceInfos(int deviceID, std::vector<DeviceType> deviceBoardType) {
+DeviceInfos::DeviceInfos(
+
+        int deviceID,
+        std::string deviceName,
+        std::string deviceLocation,
+        double latitude,
+        double longitude) {
+
     this->deviceID = deviceID;
-    this->deviceBoardType = deviceBoardType;
+    this->deviceType = std::move(deviceName);
+    this->deviceLocation = std::move(deviceLocation);
+    this->latitude = latitude;
+    this->longitude = longitude;
+
 }

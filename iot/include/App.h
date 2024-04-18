@@ -3,13 +3,14 @@
 
 
 #include <iostream>
-#include "manager/DeviceManager/DeviceManager.h"
+#include "manager/DeviceManager/EmitterDeviceManager.h"
 #include "Arduino.h"
 
 
 class App {
 public:
     App();
+    ~App();
     void loop();
 };
 

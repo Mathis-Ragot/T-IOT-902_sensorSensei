@@ -5,9 +5,10 @@
 #ifndef T_IOT_902_SENSORSENSEI_ISENSOR_H
 #define T_IOT_902_SENSORSENSEI_ISENSOR_H
 
-#include "SensorType.h"
+#include "domain/SensorType.h"
 
 class ISensor {
+
 public:
     virtual void setup() = 0;
 
@@ -19,6 +20,8 @@ public:
 
     virtual void setCallback(void (*callback)(int)) = 0;
 
+    virtual float getValue() = 0;
+
     virtual void start() = 0;
 
     virtual void stop() = 0;
@@ -26,13 +29,11 @@ public:
     virtual SensorType getType() = 0;
 
 private:
-    int frequency;
-    int pins;
-    int threshold;
-    void (*callback)(int);
+    int frequency{};
+    int pins{};
+    int threshold{};
+    void (*callback)(int){};
     SensorType type;
-
-
 };
 
 #endif //T_IOT_902_SENSORSENSEI_ISENSOR_H

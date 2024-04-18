@@ -6,16 +6,26 @@
 #define T_IOT_902_SENSORSENSEI_DEVICEINFOS_H
 
 #include <string>
-#include "../DeviceType.h"
+#include <utility>
+#include "vector"
 
 class DeviceInfos {
+public:
 
-    int deviceID;
-    std::string deviceName;
-    DeviceType deviceBoardType;
+    DeviceInfos(int deviceID, std::string deviceName, std::string deviceLocation,
+                double latitude, double longitude);
+
+    int deviceID{};
+    std::string deviceType;
     std::string deviceLocation;
-    double latitude;
-    double longitude;
+    double latitude{};
+    double longitude{};
+
+    DeviceInfos()= default;
+
+
+
+
 };
 
 
