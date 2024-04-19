@@ -28,11 +28,11 @@ public:
     void init();
     void loop();
     void addSensor(std::shared_ptr<AbstractSensor> sensor);
-    void sendMeasures();
-    void sendInfos();
+    void communicateMeasures();
+    void communicateInfos();
 
 
-
+    void beginSensor();
 };
 
 

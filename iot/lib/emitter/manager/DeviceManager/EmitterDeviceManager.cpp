@@ -11,19 +11,8 @@ void EmitterDeviceManager::init() {
 
     deviceInfo = DeviceInfos(EMITTER_ID, EMITTER_TYPE, EMITTER_LOCATION, EMITTER_LATITUDE, EMITTER_LONGITUDE);
 
-//DUST SENSOR
-    std::shared_ptr<AbstractSensor> mySensor = std::make_shared<DustSensor>(
-            SensorInfos(
-                    DUST_SENSOR_ID,
-                    DUST_SENSOR_REF,
-                    std::vector<SensorType>{SensorInfos::stringToSensorType(DUST_SENSOR_TYPE)}
-            )
-    );
-    addSensor(mySensor);
-
-    for (auto &sensor: sensors) {
-        sensor->begin();
-    }
+    addSensor(std::make_shared<DustSensor>());
+    beginSensor();
 }
 
 void EmitterDeviceManager::loop() {
@@ -32,20 +21,25 @@ void EmitterDeviceManager::loop() {
         sensor->getMeasure();
         delay(400);
     }
+}
 
+void EmitterDeviceManager::communicateMeasures() {
 
 }
 
-void EmitterDeviceManager::sendMeasures() {
-
-}
-
-void EmitterDeviceManager::sendInfos() {
+void EmitterDeviceManager::communicateInfos() {
 
 }
 
 void EmitterDeviceManager::addSensor(std::shared_ptr<AbstractSensor> sensor) {
     sensors.push_back(std::move(sensor));
 }
+
+void EmitterDeviceManager::beginSensor() {
+    for (auto &sensor: sensors) {
+        sensor->begin();
+    }
+}
+
 
 

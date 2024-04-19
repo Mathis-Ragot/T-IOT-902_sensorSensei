@@ -22,10 +22,7 @@ namespace sensor {
 
     protected:
         SensorInfos infos;
-        explicit AbstractSensor(SensorInfos infos) : infos(std::move(infos)) {}
-
-
-
+        explicit AbstractSensor() : infos(std::move(infos)) {}
 
     };
 

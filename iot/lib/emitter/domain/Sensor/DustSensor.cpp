@@ -32,12 +32,19 @@ float sensor::DustSensor::getMeasure() {
     return this->dustDensity;
 }
 
-sensor::DustSensor::DustSensor(SensorInfos infos) : AbstractSensor(infos) {
-    auto sensorTypes = std::vector<SensorType>{SensorInfos::stringToSensorType("AIR_QUALITY")};
-    auto sensorRef = std::string(DUST_SENSOR_REF);
+sensor::DustSensor::DustSensor() : AbstractSensor() {
 
-
-    this->infos = sensor::SensorInfos(DUST_SENSOR_ID,sensorRef , sensorTypes );
+    this->infos = SensorInfos(
+    DUST_SENSOR_ID,
+            DUST_SENSOR_REF,
+            std::vector<SensorType>{SensorInfos::stringToSensorType(DUST_SENSOR_TYPE)}
+    );
+//
+//    auto sensorTypes = std::vector<SensorType>{SensorInfos::stringToSensorType("AIR_QUALITY")};
+//    auto sensorRef = std::string(DUST_SENSOR_REF);
+//
+//
+//    this->infos = sensor::SensorInfos(DUST_SENSOR_ID,sensorRef , sensorTypes );
 
     pinMode(ledPower,OUTPUT);
     pinMode(measurePin,INPUT);

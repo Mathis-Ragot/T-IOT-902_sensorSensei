@@ -20,7 +20,7 @@ namespace sensor {
 
     public:
 
-        explicit DustSensor(SensorInfos infos);
+        explicit DustSensor();
 
         void begin() override;
 
