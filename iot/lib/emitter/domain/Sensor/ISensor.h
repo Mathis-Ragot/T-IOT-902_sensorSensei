@@ -18,8 +18,6 @@ namespace sensor {
 
         virtual float getMeasure() = 0;
 
-//        virtual sensor::SensorInfos getInfos() = 0;
-
         virtual ~ISensor() = default;
 
 
