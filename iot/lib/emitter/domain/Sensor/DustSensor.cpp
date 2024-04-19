@@ -39,12 +39,6 @@ sensor::DustSensor::DustSensor() : AbstractSensor() {
             DUST_SENSOR_REF,
             std::vector<SensorType>{SensorInfos::stringToSensorType(DUST_SENSOR_TYPE)}
     );
-//
-//    auto sensorTypes = std::vector<SensorType>{SensorInfos::stringToSensorType("AIR_QUALITY")};
-//    auto sensorRef = std::string(DUST_SENSOR_REF);
-//
-//
-//    this->infos = sensor::SensorInfos(DUST_SENSOR_ID,sensorRef , sensorTypes );
 
     pinMode(ledPower,OUTPUT);
     pinMode(measurePin,INPUT);

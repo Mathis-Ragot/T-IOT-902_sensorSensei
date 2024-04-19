@@ -12,6 +12,7 @@
 #include "domain/deviceInfos/DeviceInfos.h"
 #include "domain/Sensor/ISensor.h"
 #include "domain/Sensor/AbstractSensor.h"
+#include "domain/Sensor/Sensors.h"
 
 using namespace sensor;
 
@@ -19,15 +20,16 @@ class EmitterDeviceManager {
 
 public:
     DeviceInfos deviceInfo;
+
+    Sensors* sensors;
+
     PowerManager powerManager;
     LoraCommunicationManager communicationManager;
-    std::vector<std::shared_ptr<AbstractSensor>> sensors; // shared_ptr to avoid memory leak
 
-    EmitterDeviceManager();
+    EmitterDeviceManager()  = default;
 
     void init();
-    void loop();
-    void addSensor(std::shared_ptr<AbstractSensor> sensor);
+    void loop() const;
     void communicateMeasures();
     void communicateInfos();
 

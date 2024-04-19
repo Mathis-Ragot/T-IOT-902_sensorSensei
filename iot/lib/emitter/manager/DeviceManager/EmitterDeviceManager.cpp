@@ -4,23 +4,23 @@
 
 #include "EmitterDeviceManager.h"
 #include "domain/Sensor/DustSensor.h"
+#include "domain/Sensor/Sensors.h"
 
-EmitterDeviceManager::EmitterDeviceManager() = default;
+
 
 void EmitterDeviceManager::init() {
 
     deviceInfo = DeviceInfos(EMITTER_ID, EMITTER_TYPE, EMITTER_LOCATION, EMITTER_LATITUDE, EMITTER_LONGITUDE);
 
-    addSensor(std::make_shared<DustSensor>());
-    beginSensor();
+    sensors = new Sensors();
+    sensors->addSensor(std::make_shared<DustSensor>());
+
+    sensors->begin();
 }
 
-void EmitterDeviceManager::loop() {
-
-    for (auto &sensor: sensors) {
-        sensor->getMeasure();
+void EmitterDeviceManager::loop() const {
+        sensors->getMeasures();
         delay(400);
-    }
 }
 
 void EmitterDeviceManager::communicateMeasures() {
@@ -31,15 +31,9 @@ void EmitterDeviceManager::communicateInfos() {
 
 }
 
-void EmitterDeviceManager::addSensor(std::shared_ptr<AbstractSensor> sensor) {
-    sensors.push_back(std::move(sensor));
-}
 
-void EmitterDeviceManager::beginSensor() {
-    for (auto &sensor: sensors) {
-        sensor->begin();
-    }
-}
+
+
 
 
 
