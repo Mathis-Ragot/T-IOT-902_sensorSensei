@@ -6,6 +6,7 @@
 #define T_IOT_902_SENSORSENSEI_SENSORTYPE_H
 
 enum SensorType {
+    UNKNOWN,
     TEMPERATURE,
     HUMIDITY,
     AIR_QUALITY,

@@ -7,9 +7,11 @@ EmitterDeviceManager *deviceManager;
 
 App::App() {
 
-    Serial.begin(9600);
+    Serial.begin(115200);
     delay(1000);
     deviceManager = new EmitterDeviceManager();
+    deviceManager->init();
+
 }
 
 App::~App() {
@@ -18,6 +20,5 @@ App::~App() {
 
 void App::loop() {
 
-    deviceManager->init();
-    Serial.print("DeviceManager init");
+deviceManager->loop();
 }

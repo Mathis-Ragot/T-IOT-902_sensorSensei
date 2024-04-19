@@ -5,7 +5,7 @@
 
 #include <utility>
 
-SensorInfos::SensorInfos(int sensorID, std::vector<SensorType> sensorType) {
-    this->sensorID = sensorID;
-    this->sensorType = std::move(sensorType);
+
+sensor::SensorInfos::SensorInfos(int sensorID, std::string sensorRef, std::vector<SensorType> sensorType) : sensorID(sensorID), sensorRef(std::move(sensorRef)), sensorType(std::move(sensorType)){
+
 }

@@ -15,13 +15,15 @@ public:
     DeviceInfos(int deviceID, std::string deviceName, std::string deviceLocation,
                 double latitude, double longitude);
 
+    DeviceInfos()= default;
+
     int deviceID{};
     std::string deviceType;
     std::string deviceLocation;
     double latitude{};
     double longitude{};
 
-    DeviceInfos()= default;
+
 
 
 

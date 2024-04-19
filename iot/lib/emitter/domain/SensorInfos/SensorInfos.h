@@ -8,14 +8,32 @@
 #include "domain/Sensor/ISensor.h"
 #include "../SensorType.h"
 #include <vector>
+#include <string>
 
-class SensorInfos {
+namespace sensor {
 
-public:
-    int sensorID;
-    std::vector<SensorType> sensorType;
-    SensorInfos(int sensorID, std::vector<SensorType> sensorType);
+    class SensorInfos {
 
-};
+    public:
 
+        SensorInfos(int sensorID, std::string sensorRef, std::vector<SensorType> sensorType);
+
+//        SensorInfos() = default;
+
+        int sensorID{};
+        std::string sensorRef{};
+        std::vector<SensorType> sensorType;
+
+        static SensorType stringToSensorType(const std::string &typeStr) {
+            if (typeStr == "TEMPERATURE") return SensorType::TEMPERATURE;
+            if (typeStr == "HUMIDITY") return SensorType::HUMIDITY;
+            if (typeStr == "AIR_QUALITY") return SensorType::AIR_QUALITY;
+            if (typeStr == "SOUND") return SensorType::SOUND;
+            if (typeStr == "PRESSURE") return SensorType::PRESSURE;
+            if (typeStr == "ALTITUDE") return SensorType::ALTITUDE;
+            return SensorType::UNKNOWN;
+        };
+    };
+
+}
 #endif //T_IOT_902_SENSORSENSEI_SENSORINFOS_H
