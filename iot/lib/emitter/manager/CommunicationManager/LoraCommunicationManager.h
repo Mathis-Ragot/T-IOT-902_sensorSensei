@@ -17,8 +17,6 @@ public:
     void receive() override;
     void connect() override;
     void reconnect() override;
-
-
 };
 
 

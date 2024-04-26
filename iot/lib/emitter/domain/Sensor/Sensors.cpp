@@ -14,10 +14,21 @@ void Sensors::begin() {
     }
 }
 
-uint8_t Sensors::getSerializedMeasures() {
+std::vector<bool> Sensors::getSerializedMeasures() {
+
+    std::vector<bool> serializedMeasures;
     for (auto &sensor: sensors) {
-        sensor->getSerializeMeasure();
-    }}
+//        serializedMeasures.push_back(sensor->getSerializedMeasure());
+    }
+
+//    uint8_t result = 0;
+//    for (auto &measure: serializedMeasures) {
+//        // Assuming the measures are 8 bits and don't overlap
+//        result = (result << 8) | measure;
+//    }
+//    return result;
+    return serializedMeasures;
+}
 
 void Sensors::getMeasures() {
     for (auto &sensor: sensors) {

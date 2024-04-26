@@ -3,7 +3,7 @@
 //
 
 #include "EmitterDeviceManager.h"
-#include "domain/Sensor/DustSensor.h"
+#include "domain/Sensor/Dust/DustSensor.h"
 #include "domain/Sensor/Sensors.h"
 
 
@@ -20,6 +20,7 @@ void EmitterDeviceManager::init() {
 
 void EmitterDeviceManager::loop() const {
         sensors->getMeasures();
+        sensors->getSerializedMeasures();
         delay(400);
 }
 

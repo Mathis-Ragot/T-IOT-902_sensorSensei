@@ -23,8 +23,8 @@ public:
 
     Sensors* sensors;
 
-    PowerManager powerManager;
-    LoraCommunicationManager communicationManager;
+    PowerManager* powerManager;
+    LoraCommunicationManager* communicationManager;
 
     EmitterDeviceManager()  = default;
 

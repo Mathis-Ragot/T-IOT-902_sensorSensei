@@ -5,10 +5,10 @@
 #ifndef IOT_DUSTSENSOR_H
 #define IOT_DUSTSENSOR_H
 
-#include "ISensor.h"
-#include "../SensorInfos/SensorInfos.h"
+#include "domain/Sensor/ISensor.h"
+#include "domain/SensorInfos/SensorInfos.h"
 #include "Arduino.h"
-#include "AbstractSensor.h"
+#include "domain/Sensor/AbstractSensor.h"
 #include <string>
 #include <utility>
 
@@ -26,7 +26,10 @@ namespace sensor {
 
         float getMeasure() override;
 
-//        SensorInfos getInfos() override;
+        std::vector<bool> getSerializedMeasure() override;
+
+
+
 
     private:
         int measurePin = DUST_MEASURE_PIN;

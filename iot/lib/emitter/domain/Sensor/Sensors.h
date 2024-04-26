@@ -20,7 +20,7 @@ public:
 
     void addSensor(std::shared_ptr<AbstractSensor> sensor);
 
-    uint8_t getSerializedMeasures();
+    std::vector<bool> getSerializedMeasures();
 
     void getMeasures();
 

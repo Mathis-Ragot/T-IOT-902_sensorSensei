@@ -14,9 +14,11 @@ namespace sensor {
 
     public:
 
-        virtual void begin() override = 0;
+        void begin() override = 0;
 
-        virtual float getMeasure() override = 0;
+        float getMeasure() override = 0;
+
+        std::vector<bool> getSerializedMeasure() override = 0;
 
         sensor::SensorInfos getInfos();
 

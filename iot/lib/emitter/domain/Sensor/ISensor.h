@@ -6,6 +6,8 @@
 #define T_IOT_902_SENSORSENSEI_ISENSOR_H
 
 #include "domain/SensorInfos/SensorInfos.h"
+#include <cstdint>
+#include <vector>
 
 namespace sensor {
 
@@ -17,6 +19,8 @@ namespace sensor {
         virtual void begin() = 0;
 
         virtual float getMeasure() = 0;
+
+        virtual std::vector<bool> getSerializedMeasure() = 0;
 
         virtual ~ISensor() = default;
 
