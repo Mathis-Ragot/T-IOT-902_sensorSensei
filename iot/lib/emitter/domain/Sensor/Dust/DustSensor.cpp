@@ -50,7 +50,7 @@ sensor::DustSensor::DustSensor() : AbstractSensor(){
 
 
 uint16_t sensor::DustSensor::getSerializedMeasure() {
-    float measure = 4095;
+    float measure = getMeasure();
     int measureInt = static_cast<int>(std::round(measure));
     if (measureInt > 4095) {
         measureInt = 4095;  // Cap the value to fit within 12 bits

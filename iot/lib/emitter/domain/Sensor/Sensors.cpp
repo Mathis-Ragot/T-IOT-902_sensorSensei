@@ -20,7 +20,11 @@ std::vector<uint8_t> Sensors::getSerializedMeasuresAsBytes() {
         return {};
     }
     std::vector<bool> serializedMeasures = {};
+    std::vector<uint8_t> bytesToSent = {};
+    uint8_t totalLength = 0;
+
     for (auto &sensor: sensors) {
+        totalLength += sensor->dataBitLength;
         uint16_t measure = sensor->getSerializedMeasure();
         uint16_t mask = (1 << sensor->dataBitLength) - 1; //Masque pour conserver les n bits désirés
         uint16_t sensorMeasure = measure & mask;
@@ -29,20 +33,22 @@ std::vector<uint8_t> Sensors::getSerializedMeasuresAsBytes() {
         for (int i = 0; i < sensor->dataBitLength; ++i) {
             serializedMeasures.push_back((sensorMeasure >> i) & 1);
         }
-
-        //Empaquetage des bits dans des bytes
-        std::vector<uint8_t> bytes;
-        // Pack bits into bytes.
-        for (size_t i = 0; i < serializedMeasures.size(); i += 8) {
-            uint8_t byte = 0;
-            for (size_t j = 0; j < 8 && i + j < serializedMeasures.size(); ++j) {
-                byte |= serializedMeasures[i + j] << j;
-            }
-            bytes.push_back(byte);
-        }
-
-        return bytes;
     }
+    //Empaquetage des bits dans des bytesToSent
+    bytesToSent.push_back(totalLength);
+    // Pack bits into bytesToSent.
+    for (size_t i = 0; i < serializedMeasures.size(); i += 8) {
+        uint8_t byte = 0;
+        for (size_t j = 0; j < 8 && i + j < serializedMeasures.size(); ++j) {
+            byte |= serializedMeasures[i + j] << j;
+
+        }
+        bytesToSent.push_back(byte);
+    }
+    Utils::printBytesAsIntegers(bytesToSent);
+    Utils::printBytesAsHex(bytesToSent);
+    Utils::printBytesAsCharacters(bytesToSent);
+    return bytesToSent;
 }
     void Sensors::getMeasures() {
         for (auto &sensor: sensors) {
