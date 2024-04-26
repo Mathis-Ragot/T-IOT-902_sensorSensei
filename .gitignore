@@ -20,3 +20,4 @@ api/tarpaulin-report.json
 # docker compose volumes
 influxdb
 postgres
+atac.log
