@@ -23,7 +23,6 @@ namespace sensor {
 
         sensor::SensorInfos getInfos();
 
-
     protected:
         SensorInfos infos;
         explicit AbstractSensor() : infos(std::move(infos)), dataBitLength(0) {

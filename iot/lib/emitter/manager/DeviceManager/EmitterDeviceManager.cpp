@@ -7,10 +7,13 @@
 #include "domain/Sensor/Sensors.h"
 
 
-
 void EmitterDeviceManager::init() {
 
     deviceInfo = DeviceInfos(EMITTER_ID, EMITTER_TYPE, EMITTER_LOCATION, EMITTER_LATITUDE, EMITTER_LONGITUDE);
+
+
+    communicationManager = new LoRaCommunicationManager();
+    communicationManager->init();
 
     sensors = new Sensors();
     sensors->addSensor(std::make_shared<DustSensor>());
@@ -19,9 +22,10 @@ void EmitterDeviceManager::init() {
 }
 
 void EmitterDeviceManager::loop() const {
-//        sensors->getMeasures();
-        sensors->getSerializedMeasuresAsBytes();
-        delay(400);
+
+    std::vector<uint8_t> dataToSend = sensors->getSerializedMeasuresAsBytes();
+    communicationManager->send( dataToSend.data());
+    delay(1000);
 }
 
 void EmitterDeviceManager::communicateMeasures() {

@@ -8,7 +8,7 @@
 #include <vector>
 #include <memory>
 #include "manager/PowerManger//PowerManager.h"
-#include "manager/CommunicationManager/LoraCommunicationManager.h"
+#include "manager/CommunicationManager/LoRaCommunicationManager.h"
 #include "domain/deviceInfos/DeviceInfos.h"
 #include "domain/Sensor/ISensor.h"
 #include "domain/Sensor/AbstractSensor.h"
@@ -21,10 +21,10 @@ class EmitterDeviceManager {
 public:
     DeviceInfos deviceInfo;
 
-    Sensors* sensors;
+    Sensors* sensors{};
 
-    PowerManager* powerManager;
-    LoraCommunicationManager* communicationManager;
+    PowerManager* powerManager{};
+    ICommunication* communicationManager;
 
     EmitterDeviceManager()  = default;
 

@@ -29,9 +29,6 @@ namespace sensor {
 
         uint16_t getSerializedMeasure() override;
 
-
-
-
     private:
         int measurePin = DUST_MEASURE_PIN;
         int ledPower = DUST_LED_PIN;

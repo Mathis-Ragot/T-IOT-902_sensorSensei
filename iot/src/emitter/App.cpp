@@ -1,5 +1,6 @@
 
 #include "App.h"
+#include "board/Boards.h"
 
 using namespace std;
 
@@ -7,8 +8,13 @@ EmitterDeviceManager *deviceManager;
 
 App::App() {
 
-    Serial.begin(115200);
-    delay(1000);
+
+    initBoard();
+    delay(1500);
+
+//    Serial.begin(MONITOR_SPEED);
+//    delay(1000);
+
     deviceManager = new EmitterDeviceManager();
     deviceManager->init();
 

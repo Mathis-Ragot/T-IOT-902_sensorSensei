@@ -46,8 +46,7 @@ std::vector<uint8_t> Sensors::getSerializedMeasuresAsBytes() {
         bytesToSent.push_back(byte);
     }
     Utils::printBytesAsIntegers(bytesToSent);
-    Utils::printBytesAsHex(bytesToSent);
-    Utils::printBytesAsCharacters(bytesToSent);
+
     return bytesToSent;
 }
     void Sensors::getMeasures() {
