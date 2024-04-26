@@ -37,7 +37,7 @@ impl FromRequest for AppConfig {
         let request = req.clone();
         Box::pin(async move {
             let config = request.app_data::<Data<AppState>>()
-                .ok_or(ApiException::BaqRequest(String::from("APE-100300")))?
+                .ok_or(ApiException::Internal(String::from("APE-100300")))?
                 .config.clone();
             Ok(config)
         })

@@ -15,25 +15,20 @@ impl MeasureHandler {
     pub async fn create_measure(measure: Dto<CreateMeasures>, config: AppConfig, client: Data<AppState>) -> Result<String, ApiException> {
         for x in measure.0.values {
             MeasureService::create_measure(&x, &client.influxdb).await?;
-            match x.kind {
-                MeasureKind::Dust => {
-                    SensorCommunity::push_data(config.device_node.as_str(), PushSensorData::from_measure(config.sensor_id, x)).await?;
-                },
-                _ => {}
+            if let MeasureKind::Dust = x.kind {
+                SensorCommunity::push_data(config.device_node.as_str(), PushSensorData::from_measure(config.sensor_id, x)).await?;
             }
         }
         Ok("".to_string())
     }
 
     pub async fn list_measure(client: Data<AppState>) -> impl Responder {
-        MeasureService::list_measure(&client.influxdb).await;
+        let _ = MeasureService::list_measure(&client.influxdb).await;
         ""
     }
 
-    pub async fn get_measure(kind: Path<MeasureKind>) -> Result<impl Responder, ApiException> {
-        match kind.into_inner() {
-            MeasureKind::Dust => Ok("Dust abc"),
-            _ => Err(ApiException::Internal(String::from("Invalid measure kind")))
-        }
+    pub async fn get_measure(kind: Path<MeasureKind>) -> impl Responder {
+        let _ = MeasureService::get_measure(kind.into_inner()).await;
+        ""
     }
 }
