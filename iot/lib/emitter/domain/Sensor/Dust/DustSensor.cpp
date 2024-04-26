@@ -2,8 +2,8 @@
 // Created by clement.mathe on 18/04/2024.
 //
 
-#include <iostream>
 #include "DustSensor.h"
+
 
 void sensor::DustSensor::begin() {
     analogReadResolution(12);  // Configure la résolution ADC à 12 bits
@@ -33,8 +33,9 @@ float sensor::DustSensor::getMeasure() {
     return this->dustDensity;
 }
 
-sensor::DustSensor::DustSensor() : AbstractSensor() {
+sensor::DustSensor::DustSensor() : AbstractSensor(){
 
+    this->dataBitLength = DUST_SENSOR_DATA_BIT_LENGTH;
     this->infos = SensorInfos(
             DUST_SENSOR_ID,
             DUST_SENSOR_REF,
@@ -46,52 +47,16 @@ sensor::DustSensor::DustSensor() : AbstractSensor() {
 
 }
 
-// Fonction pour imprimer les bits d'un nombre
-void static printBits(int value, int numBits) {
-    Serial.print("Bits: ");
-    for (int i = numBits - 1; i >= 0; --i) {
-        Serial.print((value >> i) & 1);
-    }
-    Serial.println();
-}
 
-// Fonction pour compter le nombre de bits significatifs
-int countSignificantBits(int value) {
-    int bits = 0;
-    while (value > 0) {
-        bits++;
-        value >>= 1;
-    }
-    Serial.print("Bits: ");
-    Serial.print(bits);
-    return bits;
-}
 
-std::vector<bool> sensor::DustSensor::getSerializedMeasure() {
+uint16_t sensor::DustSensor::getSerializedMeasure() {
     float measure = 4095;
     int measureInt = static_cast<int>(std::round(measure));
     if (measureInt > 4095) {
         measureInt = 4095;  // Cap the value to fit within 12 bits
     }
 
-//    printBits(static_cast<uint8_t>(measureInt & 0xFFF), 12);
-//    countSignificantBits(static_cast<uint8_t>(measureInt & 0xFFF));
-
-    std::vector<bool> result(12);
-
-    for (int i = 0; i < 12; ++i) {
-        result[i] = (measureInt >> i) & 1;
-    }
-
-    Serial.print("Serialized: ");
-    for (bool bit : result) {
-        Serial.print(bit);
-    }
-
-    Serial.println();
-    Serial.println(result.size());
-
-    return result;
+    return static_cast<uint16_t>(measureInt);
 }
 
 

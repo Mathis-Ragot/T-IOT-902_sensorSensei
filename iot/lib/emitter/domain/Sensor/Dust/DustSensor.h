@@ -11,7 +11,8 @@
 #include "domain/Sensor/AbstractSensor.h"
 #include <string>
 #include <utility>
-
+#include "Utils.h"
+#include <iostream>
 
 
 namespace sensor {
@@ -26,7 +27,7 @@ namespace sensor {
 
         float getMeasure() override;
 
-        std::vector<bool> getSerializedMeasure() override;
+        uint16_t getSerializedMeasure() override;
 
 
 

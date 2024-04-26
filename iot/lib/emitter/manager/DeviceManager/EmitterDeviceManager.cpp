@@ -19,8 +19,8 @@ void EmitterDeviceManager::init() {
 }
 
 void EmitterDeviceManager::loop() const {
-        sensors->getMeasures();
-        sensors->getSerializedMeasures();
+//        sensors->getMeasures();
+        sensors->getSerializedMeasuresAsBytes();
         delay(400);
 }
 

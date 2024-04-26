@@ -13,21 +13,24 @@ namespace sensor {
     private:
 
     public:
+        int dataBitLength;
 
         void begin() override = 0;
 
         float getMeasure() override = 0;
 
-        std::vector<bool> getSerializedMeasure() override = 0;
+        uint16_t getSerializedMeasure() override = 0;
 
         sensor::SensorInfos getInfos();
 
+
     protected:
         SensorInfos infos;
-        explicit AbstractSensor() : infos(std::move(infos)) {}
+        explicit AbstractSensor() : infos(std::move(infos)), dataBitLength(0) {
+
+        }
+
 
     };
-
-
 }
 #endif //IOT_ABSTRACTSENSOR_H

@@ -10,6 +10,7 @@
 #include "shared_mutex"
 #include <vector>
 #include <memory>
+#include <Arduino.h>
 
 using namespace sensor;
 
@@ -20,7 +21,7 @@ public:
 
     void addSensor(std::shared_ptr<AbstractSensor> sensor);
 
-    std::vector<bool> getSerializedMeasures();
+    std::vector<uint8_t> getSerializedMeasuresAsBytes();
 
     void getMeasures();
 

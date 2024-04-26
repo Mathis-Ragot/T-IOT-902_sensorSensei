@@ -3,6 +3,7 @@
 //
 
 #include "Sensors.h"
+#include "Utils.h"
 
 void Sensors::addSensor(std::shared_ptr<AbstractSensor> sensor) {
     sensors.push_back(std::move(sensor));
@@ -14,28 +15,41 @@ void Sensors::begin() {
     }
 }
 
-std::vector<bool> Sensors::getSerializedMeasures() {
-
-    std::vector<bool> serializedMeasures;
+std::vector<uint8_t> Sensors::getSerializedMeasuresAsBytes() {
+    if (sensors.empty()) {
+        return {};
+    }
+    std::vector<bool> serializedMeasures = {};
     for (auto &sensor: sensors) {
-//        serializedMeasures.push_back(sensor->getSerializedMeasure());
+        uint16_t measure = sensor->getSerializedMeasure();
+        uint16_t mask = (1 << sensor->dataBitLength) - 1; //Masque pour conserver les n bits désirés
+        uint16_t sensorMeasure = measure & mask;
+
+        // Store bits from least significant to most significant.
+        for (int i = 0; i < sensor->dataBitLength; ++i) {
+            serializedMeasures.push_back((sensorMeasure >> i) & 1);
+        }
+
+        //Empaquetage des bits dans des bytes
+        std::vector<uint8_t> bytes;
+        // Pack bits into bytes.
+        for (size_t i = 0; i < serializedMeasures.size(); i += 8) {
+            uint8_t byte = 0;
+            for (size_t j = 0; j < 8 && i + j < serializedMeasures.size(); ++j) {
+                byte |= serializedMeasures[i + j] << j;
+            }
+            bytes.push_back(byte);
+        }
+
+        return bytes;
+    }
+}
+    void Sensors::getMeasures() {
+        for (auto &sensor: sensors) {
+            sensor->getMeasure();
+        }
     }
 
-//    uint8_t result = 0;
-//    for (auto &measure: serializedMeasures) {
-//        // Assuming the measures are 8 bits and don't overlap
-//        result = (result << 8) | measure;
-//    }
-//    return result;
-    return serializedMeasures;
-}
-
-void Sensors::getMeasures() {
-    for (auto &sensor: sensors) {
-        sensor->getMeasure();
+    uint8_t Sensors::serialize() {
+        return 0;
     }
-}
-
-uint8_t Sensors::serialize() {
-    return 0;
-}

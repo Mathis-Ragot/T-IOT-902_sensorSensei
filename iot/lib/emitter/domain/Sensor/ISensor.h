@@ -20,7 +20,7 @@ namespace sensor {
 
         virtual float getMeasure() = 0;
 
-        virtual std::vector<bool> getSerializedMeasure() = 0;
+        virtual uint16_t getSerializedMeasure() = 0;
 
         virtual ~ISensor() = default;
 
