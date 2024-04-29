@@ -1,6 +1,6 @@
 
 #include "App.h"
-#include "board/Boards.h"
+#include "board/boards.h"
 
 using namespace std;
 
