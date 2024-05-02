@@ -1,7 +1,7 @@
-int setup() {
-    return 0;
+#include <Arduino.h>
+
+void setup() {
 }
 
-int loop() {
-    return 0;
+void loop() {
 }
