@@ -42,7 +42,7 @@ jobs:
     strategy:
       matrix:
         packages: [
-          { name: "Emitter", api_name: "emitter" },
+          { name: "emitter", api_name: "emitter" },
           { name: "Receptor", api_name: "receptor" }
         ]
     runs-on: ubuntu-latest
