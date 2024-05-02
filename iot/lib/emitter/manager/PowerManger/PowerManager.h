@@ -11,6 +11,7 @@ class PowerManager {
 
 public:
     PowerManager() = default;
+    void init();
 };
 
 

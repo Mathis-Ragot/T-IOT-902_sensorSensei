@@ -6,27 +6,31 @@
 #include "domain/Sensor/Dust/DustSensor.h"
 #include "domain/Sensor/Sensors.h"
 
+EmitterDeviceManager::EmitterDeviceManager() :
+        deviceInfo(DeviceInfos(EMITTER_ID, EMITTER_TYPE, EMITTER_LOCATION, EMITTER_LATITUDE, EMITTER_LONGITUDE)),
+        powerManager(new PowerManager()),
+        communicationManager(new LoRaCommunicationManager),
+        sensors(new Sensors) {}
 
-void EmitterDeviceManager::init() {
 
-    deviceInfo = DeviceInfos(EMITTER_ID, EMITTER_TYPE, EMITTER_LOCATION, EMITTER_LATITUDE, EMITTER_LONGITUDE);
+void EmitterDeviceManager::init() const {
 
-
-    communicationManager = new LoRaCommunicationManager();
+    powerManager->init();
     communicationManager->init();
 
-    sensors = new Sensors();
     sensors->addSensor(std::make_shared<DustSensor>());
-
     sensors->begin();
+
+    esp_sleep_enable_timer_wakeup(300000000);  // Réveil tous les 5 minutes
+    pinMode(GPIO_PIN4_WAKEUP_ENABLE_S, INPUT);
 }
 
 void EmitterDeviceManager::loop() const {
 
-    std::vector<uint8_t> dataToSend = sensors->getSerializedMeasuresAsBytes();
-    communicationManager->send( dataToSend.data());
-    delay(1000);
-}
+    communicationManager->send(sensors->getSerializedMeasuresAsBytes().data());
+    esp_deep_sleep_start()
+
+    ;}
 
 void EmitterDeviceManager::communicateMeasures() {
 

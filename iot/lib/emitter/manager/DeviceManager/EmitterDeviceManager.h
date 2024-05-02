@@ -17,18 +17,16 @@
 using namespace sensor;
 
 class EmitterDeviceManager {
-
+private:
+private:
+    std::unique_ptr<PowerManager> powerManager{};
+    std::unique_ptr<LoRaCommunicationManager> communicationManager;
+    std::unique_ptr<Sensors> sensors;
 public:
     DeviceInfos deviceInfo;
+    EmitterDeviceManager();
 
-    Sensors* sensors{};
-
-    PowerManager* powerManager{};
-    ICommunication* communicationManager;
-
-    EmitterDeviceManager()  = default;
-
-    void init();
+    void init() const;
     void loop() const;
     void communicateMeasures();
     void communicateInfos();

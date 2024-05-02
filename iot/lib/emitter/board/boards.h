@@ -305,7 +305,7 @@ SPIClass SDSPI(HSPI);
 
 void initBoard()
 {
-    Serial.begin(115200);
+    Serial.begin(MONITOR_SPEED);
     Serial.println("initBoard");
     SPI.begin(RADIO_SCLK_PIN, RADIO_MISO_PIN, RADIO_MOSI_PIN);
 

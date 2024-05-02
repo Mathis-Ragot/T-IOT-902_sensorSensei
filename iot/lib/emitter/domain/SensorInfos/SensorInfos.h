@@ -18,8 +18,6 @@ namespace sensor {
 
         SensorInfos(int sensorID, std::string sensorRef, std::vector<SensorType> sensorType);
 
-//        SensorInfos() = default;
-
         int sensorID{};
         std::string sensorRef{};
         std::vector<SensorType> sensorType;

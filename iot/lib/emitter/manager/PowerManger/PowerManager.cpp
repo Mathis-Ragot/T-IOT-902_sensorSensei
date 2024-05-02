@@ -3,3 +3,7 @@
 //
 
 #include "PowerManager.h"
+
+void PowerManager::init() {
+
+}
