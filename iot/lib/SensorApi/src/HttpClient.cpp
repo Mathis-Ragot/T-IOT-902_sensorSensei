@@ -1,4 +1,3 @@
-
 #include <HTTPClient.h>
 #include "HttpClient.h"
 #include "ArduinoJson.h"
@@ -15,15 +14,13 @@ void HttpClient::setURL(const char *serverEndpoint) {
     this->_client->setURL(serverEndpoint);
 }
 
-const char *HttpClient::send(const char *url) {
-    printf("Sending request\n");
+std::tuple<String, int> HttpClient::send(const char* type, const char *body, String url) {
+    printf("Sending request to url: %s\n", url.c_str());
     this->_client->begin(url);
     this->_client->addHeader("Content-Type", "application/json");
-    int a = this->_client->POST(R"({"values": [{"value": ["13.2", "15.20"], "kind": "Dust"}]})");
-    printf("Response: %d\n", a);
+    int a = this->_client->sendRequest(type, body);
     String payload = this->_client->getString();
     JsonDocument doc;
     deserializeJson(doc, payload);
-    printf("Body: %s\n", payload.c_str());
-    return "Success";
+    return std::make_tuple(payload, a);
 }

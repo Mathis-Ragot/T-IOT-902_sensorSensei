@@ -16,10 +16,13 @@ enum MeasureKind {
 struct Measure {
     std::vector<String> value;
     MeasureKind kind;
+    String toJson();
+    static Measure fromJson(String);
 };
 
 struct CreateMeasures {
     std::vector<Measure> values;
+    String toJson();
 };
 
 struct MeasureKindMap {
@@ -28,7 +31,7 @@ struct MeasureKindMap {
     MeasureKind kind;
 };
 
-const MeasureKindMap measureKindMaps[] = {{"dust", Dust}, {"temperature", Temperature}, {"humidity", Humidity}, {"pressure", Pressure}, {"soundlevel", SoundLevel}};
+const MeasureKindMap measureKindMaps[] = {{"Dust", Dust}, {"Temperature", Temperature}, {"Humidity", Humidity}, {"Pressure", Pressure}, {"Soundlevel", SoundLevel}};
 
 std::optional<Measure> createMeasure(const std::vector<String>& value, const String& kind);
 std::optional<Measure> createMeasure(String value, const String& kind);

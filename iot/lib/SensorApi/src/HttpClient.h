@@ -8,7 +8,7 @@ class HttpClient: public IClient {
 public:
     HttpClient();
     ~HttpClient();
-    const char *send(const char *) override;
+    std::tuple<String, int> send(const char* type, const char *body, String url) override;
     void setURL(const char *serverEndpoint) override;
 private:
     HTTPClient *_client;

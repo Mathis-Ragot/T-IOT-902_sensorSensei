@@ -1,20 +1,29 @@
 #ifndef IOT_SENSORAPI_H
 #define IOT_SENSORAPI_H
 
-#include <vector>
 #include <memory>
 
 #include "Measure.h"
 #include "IClient.h"
 
+#define MEASURE_ENDPOINT "/measure/"
+#define CREATE_MEASURE_METHOD_TYPE "POST"
+#define LIST_MEASURE_METHOD_TYPE "GET"
+
 /**
  * Enum for the response of the sensor api
  */
-enum SensorResponse {
+enum SensorResponseKind {
     Success,
     Failed,
     InvalidMeasure
 };
+
+typedef std::tuple<String, int> SensorApiError;
+typedef std::tuple<SensorResponseKind, SensorApiError> SensorApiResponse;
+typedef std::tuple<SensorResponseKind, SensorApiError, std::vector<Measure>> SensorApiMeasureResponse;
+typedef std::tuple<SensorResponseKind, String> SensorResponse;
+typedef std::shared_ptr<IClient> SensorClient;
 
 class SensorApi {
 public:
@@ -22,7 +31,7 @@ public:
      * Constructor
      * @param serverEndpoint
      */
-    SensorApi(std::shared_ptr<IClient> client, String serverEndpoint);
+    SensorApi(SensorClient client, String serverEndpoint);
     /**
      * Copy constructor
      * @param sensorApi
@@ -32,7 +41,7 @@ public:
      * Get the client
      * @return
      */
-    IClient* getClient() const;
+    [[nodiscard]] IClient* getClient() const;
     /**
      * Set the client
      * @param client
@@ -40,49 +49,54 @@ public:
     void setClient(std::shared_ptr<IClient> client);
     /**
      * Send all measures in queues to the api
-     * @return SensorResponse
+     * @return SensorResponseKind
      */
-    SensorResponse send();
+    SensorApiResponse send() noexcept;
 
+    /**
+     * Get all measures from the api
+     * @return tuple of SensorResponseKind and vector of Measure
+     */
+    [[nodiscard]] SensorApiMeasureResponse getMeasures() const noexcept;
     /**
      * Send a list of measures to the api (without queues)
      * @param measures
-     * @return SensorResponse
+     * @return SensorResponseKind
      */
-    SensorResponse send(std::vector<Measure> measures) const;
+    [[nodiscard]] SensorApiResponse send(std::vector<Measure> &measures) const noexcept;
     /**
      * Send a single measure to the api (without queues)
      * @param measure
-     * @return SensorResponse
+     * @return SensorResponseKind
      */
-    SensorResponse send(Measure measure) const;
+    [[nodiscard]] SensorApiResponse send(Measure &measure) const noexcept;
     /**
      * Add a measure to the queues
      * @param measure
-     * @return SensorResponse
+     * @return SensorResponseKind
      */
-    SensorResponse addMeasure(Measure measure);
+    SensorResponse addMeasure(Measure &measure) noexcept;
     /**
      * Add a list of measures to the queues
      * @param measures
-     * @return SensorResponse
+     * @return SensorResponseKind
      */
-    SensorResponse addMeasure(std::vector<Measure> measures);
+    SensorResponse addMeasure(std::vector<Measure> &measures) noexcept;
     /**
      * Add a measure to the queues
      * @param measure
      * @return
      */
-    SensorResponse addMeasure(std::optional<Measure> measure);
+    SensorResponse addMeasure(std::optional<Measure> &measure) noexcept;
     /**
      * Clear all measures in the queues
      */
-    void clearMeasures();
+    void clearMeasures() noexcept;
     /**
      * Get the server endpoint
      * @return
      */
-    String getServerEndpoint() const;
+    [[nodiscard]] String getServerEndpoint() const noexcept;
     /**
      * Destructor
      */
@@ -91,7 +105,7 @@ private:
     /**
      * The http client
      */
-    std::shared_ptr<IClient> _client;
+    SensorClient _client;
     /**
      * The server endpoint
      */
