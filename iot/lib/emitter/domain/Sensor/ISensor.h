@@ -11,7 +11,6 @@
 
 namespace sensor {
 
-}
     class ISensor {
 
     public:
@@ -25,5 +24,7 @@ namespace sensor {
         virtual ~ISensor() = default;
 
 
-};
+    };
+
+}
 #endif //T_IOT_902_SENSORSENSEI_ISENSOR_H
