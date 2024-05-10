@@ -6,9 +6,9 @@
 sensor::PressureSensor::PressureSensor() : BMP280Sensor() {
     this->dataBitLength = TEMP_SENSOR_DATA_BIT_LENGTH;
     this->infos = SensorInfos(
-            HUM_SENSOR_ID,
-            HUM_SENSOR_REF,
-            std::vector<SensorType>{SensorInfos::stringToSensorType(HUM_SENSOR_TYPE)}
+            PRESSURE_SENSOR_ID,
+            PRESSURE_SENSOR_REF,
+            std::vector<SensorType>{SensorInfos::stringToSensorType(PRESSURE_SENSOR_TYPE)}
     );
 }
 
