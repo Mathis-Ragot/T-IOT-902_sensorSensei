@@ -5,25 +5,25 @@ MeasureKindMap::MeasureKindMap(String name, MeasureKind kind) {
     this->name = std::move(name);
 }
 
-std::optional<Measure> createMeasure(const std::vector<String>& value, const String& kind) {
+tl::optional<Measure> createMeasure(const std::vector<String>& value, const String& kind) {
     for (const auto &item: measureKindMaps) {
         if (kind.equalsIgnoreCase(item.name)) {
-            return std::optional(Measure {
+            return tl::optional<Measure>(Measure {
                     value,
                     item.kind
             });
         }
     }
-    return std::nullopt;
+    return tl::nullopt;
 }
 
-std::optional<MeasureKind> parseMeasureKind(const String& name) {
+tl::optional<MeasureKind> parseMeasureKind(const String& name) {
     for (const auto &item: measureKindMaps) {
         if (item.name.equalsIgnoreCase(name)) {
             return item.kind;
         }
     }
-    return std::nullopt;
+    return tl::nullopt;
 }
 
 String getMeasureKindName(MeasureKind kind){
@@ -35,14 +35,14 @@ String getMeasureKindName(MeasureKind kind){
     throw std::invalid_argument("Invalid MeasureKind");
 }
 
-std::optional<Measure> createMeasure(String value, const String& kind) {
+tl::optional<Measure> createMeasure(String value, const String& kind) {
     if (parseMeasureKind(kind).has_value()) {
-        return std::optional(Measure {
+        return tl::optional<Measure>(Measure {
                 std::vector<String>{std::move(value)},
                 parseMeasureKind(kind).value()
         });
     }
-    return std::nullopt;
+    return tl::nullopt;
 }
 
 Measure createMeasure(std::vector<String> value, MeasureKind kind) {
