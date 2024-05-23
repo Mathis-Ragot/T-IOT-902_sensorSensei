@@ -25,7 +25,7 @@ impl MeasureService {
     }
 
     pub async fn get_measure(kind: MeasureKind, client: &influxdb::Client) -> Result<QueryResponse, ApiException> {
-        let measures = client.query(ReadQuery::new(format!("SELECT * FROM measures WHERE kind = '{}'", kind.to_string()))).await
+        let measures = client.query(ReadQuery::new(format!("SELECT * FROM measures WHERE kind = '{}'", kind))).await
             .or(Err(ApiException::BaqRequest("API-1000500".to_string())))?;
         println!("{}", measures);
         serde_json::from_str(measures.as_str()).map_err(|x| {
