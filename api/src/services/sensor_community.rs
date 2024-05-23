@@ -48,7 +48,7 @@ pub struct PushSensorDataResponse {
 }
 
 impl SensorCommunity {
-    pub async fn push_data(sensor_id: &str, data: PushSensorData) -> Result<PushSensorDataResponse, ApiException> {
+    pub async fn push_data(sensor_id: &String, data: PushSensorData) -> Result<PushSensorDataResponse, ApiException> {
         println!("Pushing data to sensor: {}", sensor_id);
         println!("Data: {:?}", data);
         let client = reqwest::Client::new();

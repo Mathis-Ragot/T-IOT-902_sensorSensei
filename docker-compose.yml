@@ -19,15 +19,3 @@ services:
     restart: unless-stopped
     ports:
       - '3000:3000'
-  postgres:
-    image: postgres:16
-    container_name: postgres
-    restart: unless-stopped
-    ports:
-      - '5432:5432'
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-helloworld}
-      POSTGRES_DB: ${POSTGRES_DB:-iotdb}
-    volumes:
-      - ./postgres:/var/lib/postgresql/data

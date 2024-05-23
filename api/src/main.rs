@@ -20,8 +20,8 @@ const DEFAULT_WORKERS: usize = 8;
 async fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
     let state = AppState::new();
+    println!("Starting server");
     HttpServer::new(move || {
-        println!("Starting server");
         App::new()
             .app_data(Data::new(state.clone()))
             .route("/measure/", web::post().to(MeasureHandler::create_measure))
