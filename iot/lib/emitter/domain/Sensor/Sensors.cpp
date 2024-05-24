@@ -49,12 +49,13 @@ std::vector<uint8_t> Sensors::getSerializedMeasuresAsBytes() {
 
     return bytesToSent;
 }
-    void Sensors::getMeasures() {
-        for (auto &sensor: sensors) {
-            sensor->getMeasure();
-        }
-    }
 
-    uint8_t Sensors::serialize() {
-        return 0;
+void Sensors::getMeasures() {
+    for (auto &sensor: sensors) {
+        sensor->getMeasure();
     }
+}
+
+uint8_t Sensors::serialize() {
+    return 0;
+}
