@@ -2,7 +2,19 @@
 name = "api"
 version = "0.1.0"
 edition = "2021"
+license = "Apache-2.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+actix-web = { version = "4.5.1"}
+serde = { version = "1.0.197", features = ["derive"] }
+serde_json = {version = "1.0.115"}
+influxdb = { version = "0.7.2", features = ["derive"] }
+url = "2.5.0"
+config = "0.14.0"
+dotenv = { version = "0.15.0" }
+chrono = { version = "0.4.37", features = ["serde"] }
+rand = "0.8.5"
+validator = { version = "0.16", features = ["derive"] }
+reqwest = {version = "0.12.3", features = ["json"]}

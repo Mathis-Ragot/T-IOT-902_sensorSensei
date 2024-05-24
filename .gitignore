@@ -16,3 +16,8 @@ api/cobertura.xml
 api/tarpaulin-report.html
 api/lcov.info
 api/tarpaulin-report.json
+
+# docker compose volumes
+influxdb
+postgres
+atac.log

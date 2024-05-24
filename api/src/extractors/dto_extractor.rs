@@ -1,0 +1,28 @@
+use std::future::Future;
+use std::pin::Pin;
+use actix_web::{FromRequest, HttpRequest};
+use actix_web::dev::Payload;
+use actix_web::web::Json;
+use serde::de::DeserializeOwned;
+use validator::{Validate};
+use crate::exceptions::api_exception::ApiException;
+
+pub struct Dto<T: DeserializeOwned + Validate>(pub T);
+
+impl<T: DeserializeOwned + Validate + 'static> FromRequest for Dto<T> {
+    type Error = ApiException;
+    type Future = Pin<Box<dyn Future<Output = Result<Self, Self::Error>>>>;
+
+    fn from_request(req: &HttpRequest, payload: &mut Payload) -> Self::Future {
+        let json_extract = Json::<T>::from_request(req, payload);
+        Box::pin(async move {
+            let value = json_extract.await
+                .map_err(|x| {
+                    println!("Error: {:?}", x);
+                    ApiException::BaqRequest(String::from("API-1000500"))
+                })?.into_inner();
+            value.validate()?;
+            Ok(Dto(value))
+        })
+    }
+}
