@@ -4,7 +4,7 @@
 
 #include "BMP280Sensor.h"
 
-sensor::BMP280Sensor::BMP280Sensor() : AbstractSensor(){
+sensor::BMP280Sensor::BMP280Sensor() : AbstractSensor() {
     // It gives the same address for all Adafruit_BMP280 instances
     Adafruit_BMP280 bmp = Adafruit_BMP280();
     this->bmp = bmp;
@@ -12,7 +12,7 @@ sensor::BMP280Sensor::BMP280Sensor() : AbstractSensor(){
 
 void sensor::BMP280Sensor::begin() {
     unsigned status;
-    status = bmp.begin(address);
+    status = bmp.begin(TEMP_PRESSURE_SENSOR_I2C_ADDRESS);
 
     if (!status) {
         Serial.println(F("Could not find a valid BMP280 sensor, check wiring or try a different address!"));

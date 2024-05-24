@@ -4,10 +4,11 @@
 
 #include "Adafruit_BMP280.h"
 #include "EmitterDeviceManager.h"
+#include "domain/Sensor/Sensors.h"
 #include "domain/Sensor/Dust/DustSensor.h"
 #include "domain/Sensor/Temperature/TemperatureSensor.h"
-#include "domain/Sensor/Sensors.h"
 #include "domain/Sensor/Pressure/PressureSensor.h"
+#include "domain/Sensor/Sound/SoundSensor.h"
 
 EmitterDeviceManager::EmitterDeviceManager() :
         deviceInfo(DeviceInfos(EMITTER_ID, EMITTER_TYPE, EMITTER_LOCATION, EMITTER_LATITUDE, EMITTER_LONGITUDE)),
@@ -24,6 +25,7 @@ void EmitterDeviceManager::init() const {
     sensors->addSensor(std::make_shared<DustSensor>());
     sensors->addSensor(std::make_shared<TemperatureSensor>());
     sensors->addSensor(std::make_shared<PressureSensor>());
+    sensors->addSensor(std::make_shared<SoundSensor>());
     sensors->begin();
 
     esp_sleep_enable_timer_wakeup(300000000);  // Réveil tous les 5 minutes
@@ -31,11 +33,10 @@ void EmitterDeviceManager::init() const {
 }
 
 void EmitterDeviceManager::loop() const {
-
-    communicationManager->send(sensors->getSerializedMeasuresAsBytes().data());
-    esp_deep_sleep_start()
-
-    ;}
+    uint8_t* data = sensors->getSerializedMeasuresAsBytes().data();
+    communicationManager->send(data);
+    esp_deep_sleep_start();
+}
 
 void EmitterDeviceManager::communicateMeasures() {
 

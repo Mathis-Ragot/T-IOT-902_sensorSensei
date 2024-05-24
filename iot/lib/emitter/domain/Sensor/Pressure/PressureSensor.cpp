@@ -13,21 +13,18 @@ sensor::PressureSensor::PressureSensor() : BMP280Sensor() {
 }
 
 float sensor::PressureSensor::getMeasure() {
-    float pressure = this->bmp.readPressure();
-
-    Serial.println("Pressure: ");
-    Serial.println(pressure / 100.0f);
-
-    return pressure;
+    return this->bmp.readPressure();
 }
 
 uint16_t sensor::PressureSensor::getSerializedMeasure() {
     float measure = getMeasure();
-    int measureInt = static_cast<int>(std::round(measure));
 
-    if (measureInt > 4095) {
-        measureInt = 4095;  // Cap the value to fit within 12 bits
+    if (measure > 4095) {
+        measure = 4095;  // Cap the value to fit within 12 bits
     }
 
-    return static_cast<uint16_t>(measureInt);
+    Serial.print("Pressure: ");
+    Serial.println(measure / 100.0f);
+
+    return static_cast<uint16_t>(measure);
 }

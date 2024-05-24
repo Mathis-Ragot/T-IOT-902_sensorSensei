@@ -13,21 +13,18 @@ sensor::TemperatureSensor::TemperatureSensor() : BMP280Sensor() {
 }
 
 float sensor::TemperatureSensor::getMeasure() {
-    float temperature = this->bmp.readTemperature();
-
-    Serial.println("Temperature: ");
-    Serial.println(temperature);
-
-    return temperature;
+    return this->bmp.readTemperature();
 }
 
 uint16_t sensor::TemperatureSensor::getSerializedMeasure() {
     float measure = getMeasure();
-    int measureInt = static_cast<int>(std::round(measure));
 
-    if (measureInt > 4095) {
-        measureInt = 4095;  // Cap the value to fit within 12 bits
+    if (measure > 4095) {
+        measure = 4095;  // Cap the value to fit within 12 bits
     }
 
-    return static_cast<uint16_t>(measureInt);
+    Serial.print("Temperature: ");
+    Serial.println(measure);
+
+    return static_cast<uint16_t>(measure);
 }
