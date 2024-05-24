@@ -87,7 +87,7 @@ public:
      * @param measure
      * @return
      */
-    SensorResponse addMeasure(std::optional<Measure> &measure) noexcept;
+    SensorResponse addMeasure(tl::optional<Measure> &measure) noexcept;
     /**
      * Clear all measures in the queues
      */

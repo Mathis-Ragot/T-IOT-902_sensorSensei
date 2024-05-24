@@ -1,9 +1,9 @@
 #ifndef IOT_MEASURE_H
 #define IOT_MEASURE_H
 
-#include <optional>
 #include <vector>
 #include <ArduinoJson.h>
+#include "optional.hpp"
 
 enum MeasureKind {
     Dust,
@@ -33,9 +33,9 @@ struct MeasureKindMap {
 
 const MeasureKindMap measureKindMaps[] = {{"Dust", Dust}, {"Temperature", Temperature}, {"Humidity", Humidity}, {"Pressure", Pressure}, {"Soundlevel", SoundLevel}};
 
-std::optional<Measure> createMeasure(const std::vector<String>& value, const String& kind);
-std::optional<Measure> createMeasure(String value, const String& kind);
-std::optional<MeasureKind> parseMeasureKind();
+tl::optional<Measure> createMeasure(const std::vector<String>& value, const String& kind);
+tl::optional<Measure> createMeasure(String value, const String& kind);
+tl::optional<MeasureKind> parseMeasureKind();
 Measure createMeasure(std::vector<String> value, MeasureKind kind);
 Measure createMeasure(String value, MeasureKind kind);
 CreateMeasures createMeasures(std::vector<Measure> measures);

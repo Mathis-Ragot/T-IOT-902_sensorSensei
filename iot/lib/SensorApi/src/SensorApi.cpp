@@ -34,7 +34,7 @@ std::tuple<SensorResponseKind, String> SensorApi::addMeasure(std::vector<Measure
     return std::make_tuple(Success, "Measure added");
 }
 
-std::tuple<SensorResponseKind, String> SensorApi::addMeasure(std::optional<Measure> &measure) noexcept {
+std::tuple<SensorResponseKind, String> SensorApi::addMeasure(tl::optional<Measure> &measure) noexcept {
     if (measure.has_value()) {
         this->_queues.push_back(measure.value());
         return std::make_tuple(Success, "Measure added");
