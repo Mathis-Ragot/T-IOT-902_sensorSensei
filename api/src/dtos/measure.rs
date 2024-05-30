@@ -265,12 +265,24 @@ mod tests {
 
     #[test]
     async fn basic_vec_time_measure_from_create_measure() {
-        let create_measure = CreateMeasure {
+        let mut create_measure = CreateMeasure {
             value: vec!["1".to_string(), "2".to_string()],
             kind: MeasureKind::Dust,
         };
-        let time_measures: Vec<TimeMeasure> = create_measure.into();
+        let time_measures: Vec<TimeMeasure> = create_measure.clone().into();
         assert_eq!(time_measures.len(), 2);
+        create_measure.kind = MeasureKind::Humidity;
+        let time_measures: Vec<TimeMeasure> = create_measure.clone().into();
+        assert_eq!(time_measures.len(), 1);
+        create_measure.kind = MeasureKind::Pressure;
+        let time_measures: Vec<TimeMeasure> = create_measure.clone().into();
+        assert_eq!(time_measures.len(), 1);
+        create_measure.kind = MeasureKind::SoundLevel;
+        let time_measures: Vec<TimeMeasure> = create_measure.clone().into();
+        assert_eq!(time_measures.len(), 1);
+        create_measure.kind = MeasureKind::Temperature;
+        let time_measures: Vec<TimeMeasure> = create_measure.clone().into();
+        assert_eq!(time_measures.len(), 1);
     }
 
     #[test]

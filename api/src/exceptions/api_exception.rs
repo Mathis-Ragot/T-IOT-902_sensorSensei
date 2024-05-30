@@ -12,8 +12,11 @@ pub enum ApiException {
 }
 
 impl Display for ApiException {
-    fn fmt(&self, _f: &mut Formatter<'_>) -> std::fmt::Result {
-        todo!()
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ApiException::BaqRequest(x) => write!(f, "Bad request: {}", x),
+            ApiException::Internal(x) => write!(f, "Internal error: {}", x)
+        }
     }
 }
 
@@ -32,5 +35,37 @@ impl ResponseError for ApiException {
 impl From<ValidationErrors> for ApiException {
     fn from(errors: ValidationErrors) -> Self {
         errors.into()
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use actix_web::test;
+    use super::*;
+
+    #[test]
+    async fn test_api_exception() {
+        let err = ApiException::BaqRequest("Invalid request".to_string());
+        let resp = err.error_response();
+        assert_eq!(resp.status(), 400);
+    }
+
+    #[test]
+    async fn test_api_exception_internal() {
+        let err = ApiException::Internal("Internal error".to_string());
+        let resp = err.error_response();
+        assert_eq!(resp.status(), 500);
+    }
+    
+    #[test]
+    async fn test_api_exception_display() {
+        let err = ApiException::BaqRequest("Invalid request".to_string());
+        assert_eq!(err.to_string(), "Bad request: Invalid request");
+    }
+
+    #[test]
+    async fn test_api_exception_display_internal() {
+        let err = ApiException::Internal("Internal error".to_string());
+        assert_eq!(err.to_string(), "Internal error: Internal error");
     }
 }
