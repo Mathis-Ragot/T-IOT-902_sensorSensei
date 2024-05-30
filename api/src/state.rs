@@ -1,13 +1,18 @@
 use influxdb::Client;
 use crate::config::AppConfig;
 
+/// AppState structure is used to represent the state of the application
 #[derive(Clone, Debug)]
 pub struct AppState {
+    /// Influxdb client
     pub influxdb: Client,
+    /// Application configuration
     pub config: AppConfig,
 }
 
+/// Implementation of the AppState structure
 impl AppState {
+    /// Create a new instance of the AppState structure
     pub fn new() -> Self {
         let config = AppConfig::new().unwrap();
         Self {

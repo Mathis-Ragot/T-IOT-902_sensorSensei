@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use validator::{Validate};
 
+/// Measure DTO is used to represent a measure
 #[derive(Serialize, Deserialize, Validate, Clone, Default)]
 pub struct Measure {
     #[validate(length(min = 2, max = 2))]
@@ -13,14 +14,16 @@ pub struct Measure {
     pub kind: MeasureKind,
 }
 
+/// Implementation of the Responder trait for the Measure structure
 impl Responder for Measure {
     type Body = BoxBody;
-
+    /// Respond to the request with the json of Measure
     fn respond_to(self, _req: &actix_web::HttpRequest) -> actix_web::HttpResponse {
         actix_web::HttpResponse::Ok().json(self)
     }
 }
 
+/// TimeMeasure DTO is used to represent a measure with a timestamp (used for influxdb)
 #[derive(Serialize, Clone, InfluxDbWriteable, Default)]
 pub struct TimeMeasure {
     pub time: chrono::DateTime<chrono::Utc>,
@@ -31,6 +34,7 @@ pub struct TimeMeasure {
     pub value_type: String,
 }
 
+/// Implementation of the Responder trait for the TimeMeasure structure
 #[derive(Deserialize, Validate, Clone, Serialize, Default)]
 pub struct CreateMeasure {
     #[validate(length(min = 1, max = 255))]
@@ -38,7 +42,9 @@ pub struct CreateMeasure {
     pub kind: MeasureKind,
 }
 
+/// Implementation of the Responder trait for the CreateMeasure structure
 impl From<CreateMeasure> for Vec<TimeMeasure> {
+    /// Convert a CreateMeasure to a TimeMeasure
     fn from(value: CreateMeasure) -> Self {
         match &value.kind {
             MeasureKind::Dust => vec![
@@ -61,6 +67,7 @@ impl From<CreateMeasure> for Vec<TimeMeasure> {
     }
 }
 
+/// Implementation of the Responder trait for the CreateMeasure structure
 impl From<CreateMeasure> for TimeMeasure {
     fn from(measure: CreateMeasure) -> Self {
         TimeMeasure {
@@ -72,7 +79,9 @@ impl From<CreateMeasure> for TimeMeasure {
     }
 }
 
+/// Implementation of the Responder trait for the CreateMeasure structure
 impl TimeMeasure {
+    /// Create a new TimeMeasure
     pub fn new(value: f64, kind: String, value_type: String) -> Self {
         TimeMeasure {
             time: chrono::Utc::now(),
@@ -90,22 +99,30 @@ pub struct CreateMeasures {
     pub values: Vec<CreateMeasure>,
 }
 
+/// Available type of measures
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Default)]
 pub enum MeasureKind {
+    /// json value 'dust'
     #[default]
     #[serde(rename = "dust")]
     Dust,
+    /// json value 'temperature'
     #[serde(rename = "temperature")]
     Temperature,
+    /// json value 'humidity'
     #[serde(rename = "humidity")]
     Humidity,
+    /// json value 'pressure'
     #[serde(rename = "pressure")]
     Pressure,
+    /// json value 'sound_level'
     #[serde(rename = "sound_level")]
     SoundLevel,
 }
 
+/// Implementation of the Display trait for the MeasureKind structure
 impl Display for MeasureKind {
+    /// Display the MeasureKind
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             MeasureKind::Dust => write!(f, "dust"),
@@ -117,17 +134,20 @@ impl Display for MeasureKind {
     }
 }
 
+/// Query DTO is used to represent a query returned by 'influxdb write query'
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct QueryResponse {
     pub results: Vec<QueryResult>,
 }
 
+/// sub-structure of QueryResponse
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct QueryResult {
     pub statement_id: u64,
     pub series: Vec<SeriesResult>,
 }
 
+/// sub-structure of QueryResult containing the values of influxdb query
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct SeriesResult {
     pub name: String,
@@ -135,9 +155,11 @@ pub struct SeriesResult {
     pub values: Vec<Vec<Value>>,
 }
 
+/// Implementation of the Responder trait for the QueryResponse structure
 impl Responder for QueryResponse {
     type Body = BoxBody;
 
+    /// Respond to the request with the json of QueryResponse
     fn respond_to(self, _req: &actix_web::HttpRequest) -> actix_web::HttpResponse {
         actix_web::HttpResponse::Ok().json(self)
     }
@@ -306,7 +328,7 @@ mod tests {
         measure_kind = MeasureKind::SoundLevel;
         assert_eq!(measure_kind.to_string(), "sound_level");
     }
-    
+
     #[test]
     async fn basic_query_response_responder() {
         let query_response = QueryResponse::default();

@@ -7,12 +7,16 @@ use serde::de::DeserializeOwned;
 use validator::{Validate};
 use crate::exceptions::api_exception::ApiException;
 
+/// Extractor structure for a validated DTO
 pub struct Dto<T: DeserializeOwned + Validate>(pub T);
 
+/// Implementation of the FromRequest trait for the Dto structure used for an actix handler
 impl<T: DeserializeOwned + Validate + 'static> FromRequest for Dto<T> {
+    /// The error type for the future
     type Error = ApiException;
+    /// The future response value
     type Future = Pin<Box<dyn Future<Output = Result<Self, Self::Error>>>>;
-
+    /// Extracts the request payload and validates it
     fn from_request(req: &HttpRequest, payload: &mut Payload) -> Self::Future {
         let json_extract = Json::<T>::from_request(req, payload);
         Box::pin(async move {
