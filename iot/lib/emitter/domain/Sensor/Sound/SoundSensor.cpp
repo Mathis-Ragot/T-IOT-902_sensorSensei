@@ -15,8 +15,8 @@ sensor::SoundSensor::SoundSensor() : AbstractSensor() {
 }
 
 void sensor::SoundSensor::installDriver() const {
-    i2s_driver_install(this->i2sPort, &this->i2sConfig, 0, NULL);
-    REG_SET_BIT(I2S_TIMING_REG(this->i2sPort),BIT(9));
+    i2s_driver_install(this->i2sPort, &this->i2sConfig, I2SQueueSize, nullptr);
+    REG_SET_BIT(I2S_TIMING_REG(this->i2sPort), MicTimingShiftBit);
     REG_SET_BIT(I2S_CONF_REG(this->i2sPort), I2S_RX_MSB_SHIFT);
 }
 
@@ -30,7 +30,7 @@ void sensor::SoundSensor::begin() {
 }
 
 float sensor::SoundSensor::convertToDecibels(float value) {
-    return 20 * log10(value);
+    return DecibelFactor * log10(value);
 }
 
 float sensor::SoundSensor::getMeasure() {
@@ -45,7 +45,7 @@ float sensor::SoundSensor::getMeasure() {
         // Exclude values from other channel
         if (i != 0)
         {
-            cleanBuffer[cleanBufIdx] = i >> 14;
+            cleanBuffer[cleanBufIdx] = i >> ChannelBufferExclude;
             cleanBufIdx++;
         }
     }
@@ -69,8 +69,8 @@ float sensor::SoundSensor::getMeasure() {
     }
 
     // Find the 'peak to peak' max
-    float maxSample = -100000;
-    float minSample = 100000;
+    float maxSample = MaxSamplePeak;
+    float minSample = MinSamplePeak;
     for (int i = 0; i < volumeCount; i++) {
         minSample = _min(minSample, static_cast<float>(cleanBuffer[i]));
         maxSample = _max(maxSample, static_cast<float>(cleanBuffer[i]));
@@ -83,13 +83,15 @@ uint16_t sensor::SoundSensor::getSerializedMeasure() {
     float measure = getMeasure();
 
     // Cap the value to fit within 12 bits
-    if (measure > 4095) {
-        measure = 4095;
+    if (measure > MaxMeasureSize) {
+        measure = MaxMeasureSize;
     }
 
-    Serial.print("Volume: ");
-    Serial.print(measure);
-    Serial.println(" dB");
+    #ifdef SOUND_SENSOR_DEBUG
+        Serial.print("Volume: ");
+        Serial.print(measure);
+        Serial.println(" dB");
+    #endif
 
     return static_cast<uint16_t>(measure);
 }
