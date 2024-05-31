@@ -19,7 +19,6 @@ namespace sensor {
 
     protected:
         Adafruit_BMP280 bmp;
-        int address = TEMP_PRESSURE_SENSOR_I2C_ADDRESS;
 
     private:
         Adafruit_BMP280::sensor_mode mode = Adafruit_BMP280::MODE_NORMAL;

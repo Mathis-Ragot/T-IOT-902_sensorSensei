@@ -2,6 +2,7 @@
 // Created by clavi on 03/05/2024.
 //
 #include "TemperatureSensor.h"
+#include "domain/Sensor/Sensors.h"
 
 sensor::TemperatureSensor::TemperatureSensor() : BMP280Sensor() {
     this->dataBitLength = TEMP_SENSOR_DATA_BIT_LENGTH;
@@ -13,21 +14,19 @@ sensor::TemperatureSensor::TemperatureSensor() : BMP280Sensor() {
 }
 
 float sensor::TemperatureSensor::getMeasure() {
-    float temperature = this->bmp.readTemperature();
-
-    Serial.println("Temperature: ");
-    Serial.println(temperature);
-
-    return temperature;
+    return this->bmp.readTemperature();
 }
 
 uint16_t sensor::TemperatureSensor::getSerializedMeasure() {
     float measure = getMeasure();
-    int measureInt = static_cast<int>(std::round(measure));
 
-    if (measureInt > 4095) {
-        measureInt = 4095;  // Cap the value to fit within 12 bits
+    if (measure > MaxMeasureSize) {
+        measure = MaxMeasureSize;  // Cap the value to fit within 12 bits
     }
 
-    return static_cast<uint16_t>(measureInt);
+    #ifdef TEMP_SENSOR_DEBUG
+        Serial.print("Temperature: ");
+        Serial.println(measure);
+    #endif
+    return static_cast<uint16_t>(measure);
 }

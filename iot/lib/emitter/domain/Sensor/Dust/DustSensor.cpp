@@ -3,6 +3,7 @@
 //
 
 #include "DustSensor.h"
+#include "domain/Sensor/Sensors.h"
 
 
 void sensor::DustSensor::begin() {
@@ -52,8 +53,8 @@ sensor::DustSensor::DustSensor() : AbstractSensor(){
 uint16_t sensor::DustSensor::getSerializedMeasure() {
     float measure = getMeasure();
     int measureInt = static_cast<int>(std::round(measure));
-    if (measureInt > 4095) {
-        measureInt = 4095;  // Cap the value to fit within 12 bits
+    if (measureInt > MaxMeasureSize) {
+        measureInt = MaxMeasureSize;  // Cap the value to fit within 12 bits
     }
 
     return static_cast<uint16_t>(measureInt);

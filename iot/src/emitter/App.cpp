@@ -20,6 +20,5 @@ App::~App() {
 }
 
 void App::loop() {
-
-deviceManager->loop();
+    deviceManager->loop();
 }
