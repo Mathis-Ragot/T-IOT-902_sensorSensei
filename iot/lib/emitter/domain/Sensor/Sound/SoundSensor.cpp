@@ -3,6 +3,7 @@
 //
 
 #include "SoundSensor.h"
+#include "domain/Sensor/Sensors.h"
 
 
 sensor::SoundSensor::SoundSensor() : AbstractSensor() {

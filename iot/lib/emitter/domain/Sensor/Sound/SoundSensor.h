@@ -13,7 +13,6 @@
 
 constexpr int32_t MaxSamplePeak = -100000;
 constexpr uint32_t MinSamplePeak = 100000;
-constexpr uint16_t MaxMeasureSize = 4095;
 constexpr uint16_t MicTimingShiftBit = BIT(9);
 constexpr uint16_t DecibelFactor = 20;
 constexpr uint8_t ChannelBufferExclude = 14;

@@ -2,6 +2,7 @@
 // Created by clavi on 03/05/2024.
 //
 #include "PressureSensor.h"
+#include "domain/Sensor/Sensors.h"
 
 sensor::PressureSensor::PressureSensor() : BMP280Sensor() {
     this->dataBitLength = TEMP_SENSOR_DATA_BIT_LENGTH;
@@ -19,12 +20,14 @@ float sensor::PressureSensor::getMeasure() {
 uint16_t sensor::PressureSensor::getSerializedMeasure() {
     float measure = getMeasure();
 
-    if (measure > 4095) {
-        measure = 4095;  // Cap the value to fit within 12 bits
+    if (measure > MaxMeasureSize) {
+        measure = MaxMeasureSize;  // Cap the value to fit within 12 bits
     }
 
-    Serial.print("Pressure: ");
-    Serial.println(measure / 100.0f);
+    #ifdef PRESSURE_SENSOR_DEBUG
+        Serial.print("Pressure: ");
+        Serial.println(measure / 100.0f);
+    #endif
 
     return static_cast<uint16_t>(measure);
 }

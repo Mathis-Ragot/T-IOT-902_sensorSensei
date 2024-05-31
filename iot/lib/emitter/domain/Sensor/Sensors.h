@@ -12,6 +12,8 @@
 #include <memory>
 #include <Arduino.h>
 
+constexpr uint16_t MaxMeasureSize = 4095;
+
 using namespace sensor;
 
 class Sensors {
