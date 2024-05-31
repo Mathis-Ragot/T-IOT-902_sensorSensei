@@ -44,6 +44,12 @@ jobs:
             ${{ env.API_DIRECTORY }}/tarpaulin-report.json
             ${{ env.API_DIRECTORY }}/lcov.info
             ${{ env.API_DIRECTORY }}/cobertura.xml
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          flags: API
+          name: API
+          token: ${{ secrets.CODECOV_TOKEN }}
   build:
     name: "Build the project"
     runs-on: ubuntu-latest
