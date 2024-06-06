@@ -5,10 +5,9 @@
 #ifndef T_IOT_902_SENSORSENSEI_SENSORINFOS_H
 #define T_IOT_902_SENSORSENSEI_SENSORINFOS_H
 
-#include "../Sensor/ISensor.h"
-#include "../SensorType.h"
 #include <vector>
 #include <string>
+#include "domain/SensorType.h"
 
 namespace sensor {
 

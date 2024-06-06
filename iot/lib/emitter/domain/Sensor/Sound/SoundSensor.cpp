@@ -3,8 +3,7 @@
 //
 
 #include "SoundSensor.h"
-#include "../Sensors.h"
-
+#include "domain/Sensor/Sensors.h"
 
 sensor::SoundSensor::SoundSensor() : AbstractSensor() {
     this->dataBitLength = SOUND_SENSOR_DATA_BIT_LENGTH;

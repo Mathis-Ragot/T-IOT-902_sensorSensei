@@ -18,11 +18,13 @@
 extern LoRaClass LoRa;
 #endif
 
-
 class ReceptorApp {
 public:
     ReceptorApp();
     ~ReceptorApp();
     void loop();
+private:
+    ReceptorDeviceManager *deviceManager;
+    LoRaClass loraInstance;
 };
 #endif //IOT_RECEPTORAPP_H

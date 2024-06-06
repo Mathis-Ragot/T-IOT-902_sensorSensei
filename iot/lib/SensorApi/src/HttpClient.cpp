@@ -15,9 +15,10 @@ void HttpClient::setURL(const char *serverEndpoint) {
 }
 
 std::tuple<String, int> HttpClient::send(const char* type, const char *body, String url) {
-    #ifdef DEBUG
+    #ifdef SENSOR_API_DEBUG
         Serial.printf("Sending request to url: %s\n", url.c_str());
     #endif
+
     this->_client->begin(url);
     this->_client->addHeader("Content-Type", "application/json");
     int a = this->_client->sendRequest(type, body);

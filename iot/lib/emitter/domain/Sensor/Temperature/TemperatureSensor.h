@@ -5,7 +5,8 @@
 #ifndef IOT_TEMPERATURESENSOR_H
 #define IOT_TEMPERATURESENSOR_H
 
-#include "../BMP280/BMP280Sensor.h"
+
+#include "domain/Sensor/BMP280/BMP280Sensor.h"
 
 namespace sensor {
 
