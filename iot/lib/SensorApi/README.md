@@ -4,7 +4,7 @@
 
 ```c++
 #include "SensorApi.h"
-#include "HttpClient.h"
+#include "MyHttpClient.h"
 
 constexpr int WAITING_WIFI = 100;
 
@@ -27,7 +27,7 @@ void setup() {
     Serial.begin(MONITOR_SPEED);
     init_wifi();
 
-    SensorApi sensorApi(std::make_shared<HttpClient>(), "https://3c7e-163-5-23-29.ngrok-free.app");
+    SensorApi sensorApi(std::make_shared<MyHttpClient>(), "https://3c7e-163-5-23-29.ngrok-free.app");
     std::optional<Measure> dust = createMeasure(std::vector<String>{"10.2", "12.25"}, "dust");
     if (dust.has_value()) {
         sensorApi.addMeasure(dust.value());

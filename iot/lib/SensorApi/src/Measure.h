@@ -31,7 +31,7 @@ struct MeasureKindMap {
     MeasureKind kind;
 };
 
-const MeasureKindMap measureKindMaps[] = {{"Dust", Dust}, {"Temperature", Temperature}, {"Humidity", Humidity}, {"Pressure", Pressure}, {"Soundlevel", SoundLevel}};
+const MeasureKindMap measureKindMaps[] = {{"dust", Dust}, {"temperature", Temperature}, {"humidity", Humidity}, {"pressure", Pressure}, {"sound_level", SoundLevel}};
 
 tl::optional<Measure> createMeasure(const std::vector<String>& value, const String& kind);
 tl::optional<Measure> createMeasure(String value, const String& kind);
