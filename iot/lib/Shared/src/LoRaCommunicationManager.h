@@ -5,9 +5,10 @@
 #ifndef T_IOT_902_SENSORSENSEI_COMMUNICATIONMANAGER_H
 #define T_IOT_902_SENSORSENSEI_COMMUNICATIONMANAGER_H
 
+#include <vector>
 #include "ICommunication.h"
 #include "Arduino.h"
-
+#include "IPacketObserver.h"
 
 #ifdef LORA_RECEPTOR
 #include "heltec.h"
@@ -32,6 +33,9 @@ public:
     void reconnect() override;
     void close() override;
 
+    void addObserver(IPacketObserver *observer);
+    void removeObserver(IPacketObserver *observer);
+
 protected:
 
     LoRaClass &LoRa;
@@ -41,7 +45,12 @@ protected:
     int irqPin;    // Interrupt Request pin
     long frequency;  // Frequency channel
     int ssPin;
+
+private:
+    std::vector<IPacketObserver*> observers;
+    void notifyObservers(const uint8_t *data, size_t length);
 };
+
 
 
 #endif //T_IOT_902_SENSORSENSEI_COMMUNICATIONMANAGER_H

@@ -7,10 +7,12 @@
 
 void LoraReceptorManager::setupLoRa() const {
 
+#ifdef LORA_RECEPTOR
     if (!LoRa.begin(LORA_FREQUENCY, true)) {
         Serial.println("Erreur lors de l'initialisation de LoRa sur Heltec.");
         while (1);
     }
+#endif
 
     LoRa.setTxPower(LORA_TX_POWER, PA_OUTPUT_PA_BOOST_PIN);
     LoRa.setSpreadingFactor(LORA_SPREADING_FACTOR);

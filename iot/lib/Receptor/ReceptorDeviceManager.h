@@ -12,17 +12,17 @@
 #include "DeviceInfos.h"
 #include "infrastructure/lora/LoraReceptorManager.h"
 
-class ReceptorDeviceManager {
+    class ReceptorDeviceManager {
 
-private:
-    std::unique_ptr<LoRaCommunicationManager> communicationManager;
+    private:
+        std::unique_ptr<LoRaCommunicationManager> communicationManager;
 
-public:
-    DeviceInfos deviceInfo;
+    public:
+        DeviceInfos deviceInfo;
 
-    explicit ReceptorDeviceManager(LoRaClass &loraInstance);
+        explicit ReceptorDeviceManager(LoRaClass &loraInstance);
 
-    void init() const;
+        void init() const;
 
     void loop() const;
 

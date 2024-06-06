@@ -7,6 +7,7 @@
 void LoraEmitterManager::setupLoRa() const {
     LoRa.setPins(ssPin, resetPin, irqPin);
 
+
     if (!LoRa.begin(frequency)) {
         Serial.println("Starting LoRa failed!");
         while (true);

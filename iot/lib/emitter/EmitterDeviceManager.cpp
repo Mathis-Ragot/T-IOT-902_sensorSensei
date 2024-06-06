@@ -4,7 +4,7 @@
 
 #include "Adafruit_BMP280.h"
 #include "EmitterDeviceManager.h"
-
+#include "ExampleObserverReceptor.h"
 
 
 EmitterDeviceManager::EmitterDeviceManager(LoRaClass &loraInstance)
@@ -24,6 +24,9 @@ void EmitterDeviceManager::init() const {
     sensors->addSensor(std::make_shared<PressureSensor>());
     sensors->addSensor(std::make_shared<SoundSensor>());
     sensors->begin();
+
+    auto *observer = new ExampleObserverReceptor();
+    communicationManager->addObserver(observer);
 
     esp_sleep_enable_timer_wakeup(WAKE_UP_BOARD_DELAY);  // Réveil tous les 5 secondes
     pinMode(GPIO_PIN4_WAKEUP_ENABLE_S, INPUT);
