@@ -10,7 +10,7 @@
 
 
 #ifdef LORA_RECEPTOR
-#include <heltec.h>
+#include "heltec.h"
 #endif
 
 #ifdef LORA_EMITTER

@@ -9,8 +9,8 @@
 #include <memory>
 #include "powerManger/PowerManager.h"
 //#include "infrastructure/CommunicationManager/LoRaCommunicationManager.h"
-#include "../../Shared/infrastructure/CommunicationManager/LoRaCommunicationManager.h"
-#include "domain/deviceInfos/DeviceInfos.h"
+#include "../Shared/src/infrastructure/CommunicationManager/LoRaCommunicationManager.h"
+#include "../Shared/src/domain/deviceInfos/DeviceInfos.h"
 #include "domain/Sensor/ISensor.h"
 #include "domain/Sensor/AbstractSensor.h"
 #include "domain/Sensor/Sensors.h"
