@@ -6,7 +6,7 @@
 #define IOT_LORARECEPTORMANAGER_H
 
 //#include "infrastructure/CommunicationManager/LoRaCommunicationManager.h"
-#include "../../Shared/src/infrastructure/CommunicationManager/LoRaCommunicationManager.h"
+#include "LoRaCommunicationManager.h"
 
 
 class LoraReceptorManager : public LoRaCommunicationManager {
