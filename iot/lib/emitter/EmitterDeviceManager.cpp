@@ -6,11 +6,12 @@
 #include "EmitterDeviceManager.h"
 
 
-EmitterDeviceManager::EmitterDeviceManager() :
-        deviceInfo(DeviceInfos(EMITTER_ID, EMITTER_TYPE, EMITTER_LOCATION, EMITTER_LATITUDE, EMITTER_LONGITUDE)),
-        powerManager(new PowerManager()),
-        communicationManager(new LoraEmitterManager()),
-        sensors(new Sensors) {}
+
+EmitterDeviceManager::EmitterDeviceManager(LoRaClass &loraInstance)
+        : deviceInfo(EMITTER_ID, EMITTER_TYPE, EMITTER_LOCATION, EMITTER_LATITUDE, EMITTER_LONGITUDE),
+          powerManager(new PowerManager()),
+          communicationManager(new LoraEmitterManager(loraInstance)),
+          sensors(new Sensors) {}
 
 
 void EmitterDeviceManager::init() const {

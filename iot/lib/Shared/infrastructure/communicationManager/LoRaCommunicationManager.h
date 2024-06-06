@@ -7,13 +7,21 @@
 
 #include "ICommunication.h"
 #include "Arduino.h"
-#include "LoRa.h"
+
+#ifdef LORA_RECEPTOR
+#include <heltec.h>
+#endif
+
+#ifdef LORA_EMITTER
+#include <LoRa.h>
+#endif
 
 
 class LoRaCommunicationManager : public communication::ICommunication {
 
 public:
-    LoRaCommunicationManager();
+    LoRaCommunicationManager(LoRaClass &loraInstance, int ssPin, int resetPin, int irqPin, long frequency);
+
     virtual ~LoRaCommunicationManager() = default;
 
     void init() override;
@@ -23,11 +31,9 @@ public:
     void reconnect() override;
     void close() override;
 
-private:
-
-
-
 protected:
+
+    LoRaClass &LoRa;
     virtual void setupLoRa() const = 0;
     // Slave Select pin
     int resetPin;  // Reset pin

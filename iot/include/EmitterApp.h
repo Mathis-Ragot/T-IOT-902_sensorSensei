@@ -6,6 +6,16 @@
 #include "EmitterDeviceManager.h"
 #include "Arduino.h"
 
+#ifdef LORA_RECEPTOR
+#include <heltec.h>
+//extern LoRaClass &LoRa;
+#endif
+
+#ifdef LORA_EMITTER
+#include <LoRa.h>
+extern LoRaClass LoRa;
+#endif
+
 
 class EmitterApp {
 public:

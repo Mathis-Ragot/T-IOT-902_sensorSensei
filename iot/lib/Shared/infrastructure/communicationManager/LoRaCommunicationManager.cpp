@@ -1,35 +1,24 @@
-//
-// Created by clement.mathe on 12/04/2024.
-//
-
 #include "LoRaCommunicationManager.h"
 
-LoRaCommunicationManager::LoRaCommunicationManager() : ssPin(LORA_SS_PIN), resetPin(LORA_RESET_PIN),irqPin(LORA_IRQ_PIN),
-                                                       frequency(LORA_FREQUENCY) {
-}
+LoRaCommunicationManager::LoRaCommunicationManager(LoRaClass &loraInstance, int ssPin, int resetPin, int irqPin, long frequency)
+        : LoRa(loraInstance), ssPin(ssPin), resetPin(resetPin), irqPin(irqPin), frequency(frequency) {}
 
 void LoRaCommunicationManager::init() {
     setupLoRa();
 }
 
 void LoRaCommunicationManager::connect() {
-    // Typically, there's no "connect" method for LoRa, it's a direct send and receive setup.
-    // This method might be used to reset or check status.
     Serial.println("LoRa is setup and ready.");
 }
 
-void LoRaCommunicationManager::send(const uint8_t *data, size_t length) {
+void LoRaCommunicationManager::send(const uint8_t* data, size_t length) {
     LoRa.beginPacket();
-    for (size_t i = 0; i < length; i++) {
-        LoRa.print(data[i]);
-        Serial.print(data[i]);
-    }
+    LoRa.write(data, length);
     LoRa.endPacket();
     Serial.println("Packet sent");
 }
 
 void LoRaCommunicationManager::receive() {
-    // This implementation must be called periodically to check for incoming packets
     int packetSize = LoRa.parsePacket();
     if (packetSize) {
         Serial.print("Received packet: ");
@@ -48,7 +37,3 @@ void LoRaCommunicationManager::reconnect() {
 void LoRaCommunicationManager::close() {
     LoRa.end();
 }
-
-
-
-

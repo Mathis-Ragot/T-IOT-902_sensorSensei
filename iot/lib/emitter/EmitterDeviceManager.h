@@ -30,7 +30,7 @@ private:
     std::unique_ptr<Sensors> sensors;
 public:
     DeviceInfos deviceInfo;
-    EmitterDeviceManager();
+    explicit EmitterDeviceManager(LoRaClass &loraInstance);
 
     void init() const;
     void loop() const;

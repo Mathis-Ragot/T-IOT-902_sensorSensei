@@ -4,7 +4,6 @@
 
 #include "LoraEmitterManager.h"
 
-
 void LoraEmitterManager::setupLoRa() const {
     LoRa.setPins(ssPin, resetPin, irqPin);
 
