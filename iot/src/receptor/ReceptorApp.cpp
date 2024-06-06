@@ -8,7 +8,7 @@ ReceptorDeviceManager *deviceManager;
 LoRaClass loraInstance;
 
 ReceptorApp::ReceptorApp() {
-    Heltec.begin(true /*DisplayEnable Enable*/, false /*LoRa Enable*/, true /*Serial Enable*/, true, LORA_FREQUENCY);
+    Heltec.begin(true /*DisplayEnable Enable*/, false /*LoRa Enable*/, true /*Serial Enable*/, false, LORA_FREQUENCY);
 
     deviceManager = new ReceptorDeviceManager(loraInstance);
     deviceManager->init();

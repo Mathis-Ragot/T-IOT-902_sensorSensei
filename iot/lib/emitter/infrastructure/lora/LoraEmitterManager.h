@@ -5,9 +5,7 @@
 #ifndef IOT_LORAEMITTERMANAGER_H
 #define IOT_LORAEMITTERMANAGER_H
 
-//#include "infrastructure/CommunicationManager/LoRaCommunicationManager.h"
 #include "LoRaCommunicationManager.h"
-
 
 class LoraEmitterManager : public LoRaCommunicationManager {
 public:
