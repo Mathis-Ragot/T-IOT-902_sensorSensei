@@ -18,10 +18,11 @@ void LoRaCommunicationManager::connect() {
     Serial.println("LoRa is setup and ready.");
 }
 
-void LoRaCommunicationManager::send(const uint8_t *data) {
+void LoRaCommunicationManager::send(const uint8_t *data, size_t length) {
     LoRa.beginPacket();
-    while (*data) {
-        LoRa.write(*data++);
+    for (size_t i = 0; i < length; i++) {
+        LoRa.print(data[i]);
+        Serial.print(data[i]);
     }
     LoRa.endPacket();
     Serial.println("Packet sent");
@@ -48,13 +49,6 @@ void LoRaCommunicationManager::close() {
     LoRa.end();
 }
 
-void LoRaCommunicationManager::setupLoRa() const {
-    LoRa.setPins(ssPin, resetPin, irqPin);
 
-    if (!LoRa.begin(frequency)) {
-        Serial.println("Starting LoRa failed!");
-        while (true);
-    }
-}
 
 

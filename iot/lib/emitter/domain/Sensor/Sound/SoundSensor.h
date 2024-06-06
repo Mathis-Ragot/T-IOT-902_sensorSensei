@@ -3,7 +3,7 @@
 //
 
 #include "Arduino.h"
-#include "domain/Sensor/AbstractSensor.h"
+#include "../AbstractSensor.h"
 #include "soc/i2s_reg.h"
 #include <driver/i2s.h>
 #include <iomanip>

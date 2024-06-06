@@ -3,7 +3,7 @@
 //
 
 #include "DustSensor.h"
-#include "domain/Sensor/Sensors.h"
+#include "../Sensors.h"
 
 
 void sensor::DustSensor::begin() {

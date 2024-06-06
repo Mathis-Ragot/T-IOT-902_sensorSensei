@@ -2,7 +2,7 @@
 // Created by clavi on 03/05/2024.
 //
 #include "TemperatureSensor.h"
-#include "domain/Sensor/Sensors.h"
+#include "../Sensors.h"
 
 sensor::TemperatureSensor::TemperatureSensor() : BMP280Sensor() {
     this->dataBitLength = TEMP_SENSOR_DATA_BIT_LENGTH;

@@ -7,10 +7,10 @@
 
 #include "ICommunication.h"
 #include "Arduino.h"
-#include <LoRa.h>
+#include "LoRa.h"
 
 
-class LoRaCommunicationManager : public ICommunication {
+class LoRaCommunicationManager : public communication::ICommunication {
 
 public:
     LoRaCommunicationManager();
@@ -18,20 +18,22 @@ public:
 
     void init() override;
     void connect() override;
-    void send(const uint8_t* data) override;
+    void send(const uint8_t* data, size_t  size) override;
     void receive() override;
     void reconnect() override;
     void close() override;
 
 private:
 
-    int ssPin;     // Slave Select pin
+
+
+protected:
+    virtual void setupLoRa() const = 0;
+    // Slave Select pin
     int resetPin;  // Reset pin
     int irqPin;    // Interrupt Request pin
     long frequency;  // Frequency channel
-
-
-    void setupLoRa() const;
+    int ssPin;
 };
 
 
