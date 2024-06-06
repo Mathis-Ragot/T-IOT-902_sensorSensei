@@ -7,11 +7,12 @@
 #include "HttpClient.h"
 
 ReceptorApp::ReceptorApp() {
-    Heltec.begin(true /*DisplayEnable Enable*/, false /*LoRa Enable*/, true /*Serial Enable*/, true, LORA_FREQUENCY);
+    Heltec.begin(true /*DisplayEnable Enable*/, false /*LoRa Enable*/, true /*Serial Enable*/, false, LORA_FREQUENCY);
     wifiManager = new WifiManager(new ArduinoWifiClient());
     if (auto wifi_error = wifiManager->initialize()) {
         throw std::runtime_error(wifi_error.value().c_str());
     }
+
     deviceManager = new ReceptorDeviceManager(loraInstance);
     deviceManager->init();
 

@@ -7,7 +7,6 @@
 
 #include "LoRaCommunicationManager.h"
 
-
 class LoraEmitterManager : public LoRaCommunicationManager {
 public:
 public:
