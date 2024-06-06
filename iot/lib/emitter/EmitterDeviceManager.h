@@ -8,7 +8,8 @@
 #include <vector>
 #include <memory>
 #include "powerManger/PowerManager.h"
-#include "infrastructure/CommunicationManager/LoRaCommunicationManager.h"
+//#include "infrastructure/CommunicationManager/LoRaCommunicationManager.h"
+#include "../../Shared/infrastructure/CommunicationManager/LoRaCommunicationManager.h"
 #include "domain/deviceInfos/DeviceInfos.h"
 #include "domain/Sensor/ISensor.h"
 #include "domain/Sensor/AbstractSensor.h"

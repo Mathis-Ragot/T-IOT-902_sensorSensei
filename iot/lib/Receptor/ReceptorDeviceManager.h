@@ -8,7 +8,8 @@
 
 #include <vector>
 #include <memory>
-#include "infrastructure/CommunicationManager/LoRaCommunicationManager.h"
+//#include "infrastructure/CommunicationManager/LoRaCommunicationManager.h"
+#include "../../Shared/infrastructure/CommunicationManager/LoRaCommunicationManager.h"
 #include "domain/deviceInfos/DeviceInfos.h"
 #include "infrastructure/lora/LoraReceptorManager.h"
 
