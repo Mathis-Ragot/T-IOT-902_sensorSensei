@@ -2,8 +2,8 @@
 // Created by clavi on 03/05/2024.
 //
 
-#include "../AbstractSensor.h"
 #include "Adafruit_BMP280.h"
+#include "domain/Sensor/AbstractSensor.h"
 
 #ifndef IOT_BPM280SENSOR_H
 #define IOT_BPM280SENSOR_H

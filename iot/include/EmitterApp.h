@@ -1,6 +1,7 @@
 #ifndef ARGAMES_IOT_APP
 #define ARGAMES_IOT_APP
 
+constexpr int EMITTER_STARTUP_DELAY = 1500;
 
 #include <iostream>
 #include "EmitterDeviceManager.h"

@@ -7,6 +7,8 @@
 
 #include <Arduino.h>
 #include "ReceptorDeviceManager.h"
+#include "infrastructure/wifi/WifiManager.h"
+#include "SensorApi.h"
 
 #ifdef LORA_RECEPTOR
 #include <heltec.h>
@@ -18,11 +20,15 @@
 extern LoRaClass LoRa;
 #endif
 
-
 class ReceptorApp {
 public:
     ReceptorApp();
     ~ReceptorApp();
     void loop();
+private:
+    ReceptorDeviceManager *deviceManager;
+    LoRaClass loraInstance;
+    WifiManager *wifiManager;
+    SensorApi *api;
 };
 #endif //IOT_RECEPTORAPP_H

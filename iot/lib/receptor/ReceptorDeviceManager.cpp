@@ -13,12 +13,8 @@ void ReceptorDeviceManager::init() const {
 }
 
 void ReceptorDeviceManager::loop() const {
-
     communicationManager->receive();
-
-
-
-    ;}
+}
 
 void ReceptorDeviceManager::communicateMeasures() {
 
