@@ -1,24 +1,26 @@
 
-#include "App.h"
+#include "EmitterApp.h"
 #include "board/boards.h"
+
+
 
 using namespace std;
 
 EmitterDeviceManager *deviceManager;
 
-App::App() {
+EmitterApp::EmitterApp() {
 
     initBoard();
     delay(1500);
+    deviceManager = new EmitterDeviceManager(LoRa);
 
-    deviceManager = new EmitterDeviceManager();
     deviceManager->init();
 }
 
-App::~App() {
+EmitterApp::~EmitterApp() {
     delete deviceManager;
 }
 
-void App::loop() {
+void EmitterApp::loop() {
     deviceManager->loop();
 }

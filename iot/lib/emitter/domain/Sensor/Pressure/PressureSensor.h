@@ -5,7 +5,7 @@
 #ifndef IOT_PRESSURESENSOR_H
 #define IOT_PRESSURESENSOR_H
 
-#include "domain/Sensor/BMP280/BMP280Sensor.h"
+#include "../BMP280/BMP280Sensor.h"
 
 namespace sensor {
 

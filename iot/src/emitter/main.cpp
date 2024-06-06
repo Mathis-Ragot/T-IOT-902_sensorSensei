@@ -1,10 +1,10 @@
 #include <vector>
-#include "App.h"
+#include "EmitterApp.h"
 
-App *app;
+EmitterApp *app;
 
 void setup() {
-    app = new App();
+    app = new EmitterApp();
 }
 
 void loop() {

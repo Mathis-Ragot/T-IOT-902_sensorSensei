@@ -5,10 +5,10 @@
 #ifndef IOT_DUSTSENSOR_H
 #define IOT_DUSTSENSOR_H
 
-#include "domain/Sensor/ISensor.h"
-#include "domain/SensorInfos/SensorInfos.h"
+#include "../ISensor.h"
+#include "../../SensorInfos/SensorInfos.h"
 #include "Arduino.h"
-#include "domain/Sensor/AbstractSensor.h"
+#include "../AbstractSensor.h"
 #include <string>
 #include <utility>
 #include "Utils.h"

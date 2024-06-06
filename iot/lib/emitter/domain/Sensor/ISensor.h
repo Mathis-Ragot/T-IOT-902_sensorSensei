@@ -5,7 +5,7 @@
 #ifndef T_IOT_902_SENSORSENSEI_ISENSOR_H
 #define T_IOT_902_SENSORSENSEI_ISENSOR_H
 
-#include "domain/SensorInfos/SensorInfos.h"
+#include "../SensorInfos/SensorInfos.h"
 #include <cstdint>
 #include <vector>
 

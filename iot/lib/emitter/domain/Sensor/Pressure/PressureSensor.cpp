@@ -2,7 +2,7 @@
 // Created by clavi on 03/05/2024.
 //
 #include "PressureSensor.h"
-#include "domain/Sensor/Sensors.h"
+#include "../Sensors.h"
 
 sensor::PressureSensor::PressureSensor() : BMP280Sensor() {
     this->dataBitLength = TEMP_SENSOR_DATA_BIT_LENGTH;

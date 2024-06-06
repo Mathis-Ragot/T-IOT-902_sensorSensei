@@ -7,12 +7,19 @@
 
 #include <vector>
 #include <memory>
-#include "manager/PowerManger//PowerManager.h"
-#include "manager/CommunicationManager/LoRaCommunicationManager.h"
-#include "domain/deviceInfos/DeviceInfos.h"
+#include "powerManger/PowerManager.h"
+//#include "infrastructure/CommunicationManager/LoRaCommunicationManager.h"
+#include "LoRaCommunicationManager.h"
+#include "DeviceInfos.h"
 #include "domain/Sensor/ISensor.h"
 #include "domain/Sensor/AbstractSensor.h"
 #include "domain/Sensor/Sensors.h"
+#include "domain/Sensor/Dust/DustSensor.h"
+#include "domain/Sensor/Temperature/TemperatureSensor.h"
+#include "domain/Sensor/Pressure/PressureSensor.h"
+#include "domain/Sensor/Sound/SoundSensor.h"
+#include "infrastructure/lora/LoraEmitterManager.h"
+
 
 using namespace sensor;
 
@@ -24,7 +31,7 @@ private:
     std::unique_ptr<Sensors> sensors;
 public:
     DeviceInfos deviceInfo;
-    EmitterDeviceManager();
+    explicit EmitterDeviceManager(LoRaClass &loraInstance);
 
     void init() const;
     void loop() const;
