@@ -40,7 +40,7 @@ uint16_t sensor::HumiditySensor::getSerializedMeasure()
     int measureInt = static_cast<int>(std::round(measure));
     if (measureInt > MaxMeasureSize)
     {
-        measureInt = MaxMeasureSize; // Cap the value to fit within 11 bits
+        measureInt = MaxMeasureSize; // Cap the value to fit within 12 bits
     }
 
     return static_cast<uint16_t>(measureInt);
