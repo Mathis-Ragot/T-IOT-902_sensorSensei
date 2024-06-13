@@ -43,7 +43,7 @@ impl PushSensorData {
 /// SensorDataResponse structure is used to represent the response of the sensor data
 #[derive(Debug, Clone, Deserialize)]
 pub struct SensorDataResponse {
-    pub sensordata: u64,
+    pub _sensordata: u64,
 }
 
 /// PushSensorDataResponse structure is used to represent the response of the sensor data
@@ -72,6 +72,9 @@ impl SensorCommunity {
             .unwrap();
         let a = a.json::<PushSensorDataResponse>().await.unwrap();
         println!("{:?}", a);
+        println!("{:?}", a.sensor);
+        println!("{:?}", a.timestamp);
+        println!("{:?}", a.sensordatavalues);
         Ok(a)
     }
 }

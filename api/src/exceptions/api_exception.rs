@@ -40,8 +40,8 @@ impl ResponseError for ApiException {
 
 /// Implementation of the From trait for the ValidationErrors structure
 impl From<ValidationErrors> for ApiException {
-    fn from(errors: ValidationErrors) -> Self {
-        errors.into()
+    fn from(_errors: ValidationErrors) -> Self {
+        todo!("Handle validation errors")
     }
 }
 
