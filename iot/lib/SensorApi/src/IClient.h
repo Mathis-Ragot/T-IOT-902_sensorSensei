@@ -1,9 +1,11 @@
 #ifndef IOT_ICLIENT_H
 #define IOT_ICLIENT_H
 
+using namespace std;
+
 class IClient {
 public:
-    virtual std::tuple<String, int> send(const char* type, const char *body, String url) = 0;
+    virtual std::tuple<string, int> send(const char* type, const char *body, string url) = 0;
     virtual void setURL(const char *serverEndpoint) = 0;
 };
 

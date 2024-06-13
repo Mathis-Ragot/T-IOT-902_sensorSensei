@@ -1,6 +1,6 @@
 #include "SensorApi.h"
 
-SensorApi::SensorApi(std::shared_ptr<IClient> client, String serverEndpoint) : _serverEndpoint(std::move(serverEndpoint)) {
+SensorApi::SensorApi(std::shared_ptr<IClient> client, string serverEndpoint) : _serverEndpoint(std::move(serverEndpoint)) {
     this->_client = std::move(client);
     this->_client->setURL(this->_serverEndpoint.c_str());
 }
@@ -18,23 +18,23 @@ void SensorApi::setClient(std::shared_ptr<IClient> client) {
     this->_client = std::move(client);
 }
 
-String SensorApi::getServerEndpoint() const noexcept{
+string SensorApi::getServerEndpoint() const noexcept{
     return this->_serverEndpoint;
 }
 
-std::tuple<SensorResponseKind, String> SensorApi::addMeasure(Measure &measure) noexcept {
+std::tuple<SensorResponseKind, string> SensorApi::addMeasure(Measure &measure) noexcept {
     this->_queues.push_back(measure);
     return std::make_tuple(Success, "Measure added");
 }
 
-std::tuple<SensorResponseKind, String> SensorApi::addMeasure(std::vector<Measure> &measures) noexcept {
+std::tuple<SensorResponseKind, string> SensorApi::addMeasure(std::vector<Measure> &measures) noexcept {
     for (auto &measure: measures) {
         this->_queues.push_back(measure);
     }
     return std::make_tuple(Success, "Measure added");
 }
 
-std::tuple<SensorResponseKind, String> SensorApi::addMeasure(tl::optional<Measure> &measure) noexcept {
+std::tuple<SensorResponseKind, string> SensorApi::addMeasure(tl::optional<Measure> &measure) noexcept {
     if (measure.has_value()) {
         this->_queues.push_back(measure.value());
         return std::make_tuple(Success, "Measure added");
@@ -51,7 +51,7 @@ void SensorApi::clearMeasures() noexcept {
 std::tuple<SensorResponseKind, SensorApiError> SensorApi::send() noexcept {
     auto measuresToSend = createMeasures(this->_queues);
 
-    String url = (String(this->_serverEndpoint) + MEASURE_ENDPOINT);
+    string url = (string(this->_serverEndpoint) + MEASURE_ENDPOINT);
     const auto [body, code] = this->_client->send(CREATE_MEASURE_METHOD_TYPE, measuresToSend.toJson().c_str(), url);
 #ifdef SENSOR_API_DEBUG
     printf("Code: %i\n", code);
@@ -61,7 +61,7 @@ std::tuple<SensorResponseKind, SensorApiError> SensorApi::send() noexcept {
 }
 
 std::tuple<SensorResponseKind, SensorApiError, std::vector<Measure>> SensorApi::getMeasures() const noexcept {
-    String url = (String(this->_serverEndpoint) + MEASURE_ENDPOINT);
+    string url = (string(this->_serverEndpoint) + MEASURE_ENDPOINT);
     const auto [body, code] = this->_client->send(LIST_MEASURE_METHOD_TYPE, "", url);
 #ifdef SENSOR_API_DEBUG
     printf("Code: %i\n", code);
@@ -72,7 +72,7 @@ std::tuple<SensorResponseKind, SensorApiError, std::vector<Measure>> SensorApi::
 
 std::tuple<SensorResponseKind, SensorApiError> SensorApi::send(std::vector<Measure> &measures) const noexcept {
     auto measuresToSend = createMeasures(measures);
-    String url = (String(this->_serverEndpoint) + MEASURE_ENDPOINT);
+    string url = (string(this->_serverEndpoint) + MEASURE_ENDPOINT);
     const auto [body, code] = this->_client->send(CREATE_MEASURE_METHOD_TYPE, R"({"values": [{"value": ["13.2", "15.20"], "kind": "Dust"}]})", url);
 #ifdef SENSOR_API_DEBUG
     printf("Code: %i\n", code);
@@ -83,7 +83,7 @@ std::tuple<SensorResponseKind, SensorApiError> SensorApi::send(std::vector<Measu
 
 std::tuple<SensorResponseKind, SensorApiError> SensorApi::send(Measure &measure) const noexcept {
     auto measuresToSend = createMeasures(std::vector<Measure>{measure});
-    String url = (String(this->_serverEndpoint) + MEASURE_ENDPOINT);
+    string url = (string(this->_serverEndpoint) + MEASURE_ENDPOINT);
     const auto [body, code] = this->_client->send(CREATE_MEASURE_METHOD_TYPE, R"({"values": [{"value": ["13.2", "15.20"], "kind": "Dust"}]})", url);
 #ifdef SENSOR_API_DEBUG
     printf("Code: %i\n", code);
