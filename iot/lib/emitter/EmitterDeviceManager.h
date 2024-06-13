@@ -7,7 +7,7 @@
 
 #include <vector>
 #include <memory>
-#include "powerManger/PowerManager.h"
+#include "PowerManager/PowerManager.h"
 #include "LoRaCommunicationManager.h"
 #include "DeviceInfos.h"
 #include "domain/Sensor/ISensor.h"
@@ -20,25 +20,20 @@
 #include "infrastructure/lora/LoraEmitterManager.h"
 
 
-using namespace sensor;
-
 class EmitterDeviceManager {
-private:
-private:
-    std::unique_ptr<PowerManager> powerManager{};
-    std::unique_ptr<LoRaCommunicationManager> communicationManager;
-    std::unique_ptr<Sensors> sensors;
-public:
-    DeviceInfos deviceInfo;
-    explicit EmitterDeviceManager(LoRaClass &loraInstance);
+    public:
+        DeviceInfos deviceInfo;
+        explicit EmitterDeviceManager(LoRaClass &loraInstance);
 
-    void init() const;
-    void loop() const;
-    void communicateMeasures();
-    void communicateInfos();
+        void init() const;
+        void loop() const;
+        void communicateMeasures();
+        void communicateInfos();
 
-
-    void beginSensor();
+    private:
+        std::unique_ptr<PowerManager> powerManager{};
+        std::unique_ptr<LoRaCommunicationManager> communicationManager;
+        std::unique_ptr<Sensors> sensors;
 };
 
 
