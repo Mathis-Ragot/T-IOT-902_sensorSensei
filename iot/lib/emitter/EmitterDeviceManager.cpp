@@ -15,8 +15,7 @@ EmitterDeviceManager::EmitterDeviceManager(LoRaClass &loraInstance)
 
 
 void EmitterDeviceManager::init() const {
-
-    powerManager->init();
+    PowerManager::init();
     communicationManager->init();
 
     sensors->addSensor(std::make_shared<DustSensor>());
@@ -24,16 +23,11 @@ void EmitterDeviceManager::init() const {
     sensors->addSensor(std::make_shared<PressureSensor>());
     sensors->addSensor(std::make_shared<SoundSensor>());
     sensors->begin();
-
-    esp_sleep_enable_timer_wakeup(WAKE_UP_BOARD_DELAY);  // Réveil tous les 5 secondes
-    pinMode(GPIO_PIN4_WAKEUP_ENABLE_S, INPUT);
 }
 
 void EmitterDeviceManager::loop() const {
-
     communicationManager->send(sensors->getSerializedMeasuresAsBytes().data(),sensors->getSerializedMeasuresAsBytes().size() );
-
-    esp_deep_sleep_start();
+    PowerManager::start();
 }
 
 void EmitterDeviceManager::communicateMeasures() {

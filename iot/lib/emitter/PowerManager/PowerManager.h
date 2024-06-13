@@ -5,13 +5,17 @@
 #ifndef T_IOT_902_SENSORSENSEI_POWERMANAGER_H
 #define T_IOT_902_SENSORSENSEI_POWERMANAGER_H
 
+#include "esp_sleep.h"
+#include "Arduino.h"
 
 class PowerManager {
 
 
 public:
     PowerManager() = default;
-    void init();
+
+    static void init();
+    static void start();
 };
 
 
