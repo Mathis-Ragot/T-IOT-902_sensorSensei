@@ -26,5 +26,6 @@ public:
 private:
     ReceptorDeviceManager *deviceManager;
     LoRaClass loraInstance;
+
 };
 #endif //IOT_RECEPTORAPP_H

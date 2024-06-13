@@ -2,17 +2,17 @@
 // Created by clement.mathe on 12/04/2024.
 //
 
-#include "Adafruit_BMP280.h"
 #include "EmitterDeviceManager.h"
-#include "ExampleObserverReceptor.h"
+#include "infrastructure/lora/LoraReceptorManager.h"
 
 
 EmitterDeviceManager::EmitterDeviceManager(LoRaClass &loraInstance)
         : deviceInfo(EMITTER_ID, EMITTER_TYPE, EMITTER_LOCATION, EMITTER_LATITUDE, EMITTER_LONGITUDE),
           powerManager(new PowerManager()),
-          communicationManager(new LoraEmitterManager(loraInstance)),
-          sensors(new Sensors) {}
-
+          sensors(new Sensors) {
+    packetQueue = xQueueCreate(10, sizeof(std::vector<uint8_t>));
+    communicationManager = new LoraEmitterManager(loraInstance, packetQueue);
+}
 
 void EmitterDeviceManager::init() const {
 

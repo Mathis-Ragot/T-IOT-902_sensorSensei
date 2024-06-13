@@ -2,7 +2,6 @@
 #define IOT_SENSORAPI_H
 
 #include <memory>
-
 #include "Measure.h"
 #include "IClient.h"
 

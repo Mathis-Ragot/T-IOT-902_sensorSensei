@@ -10,8 +10,8 @@
 class LoraEmitterManager : public LoRaCommunicationManager {
 public:
 public:
-    explicit LoraEmitterManager(LoRaClass &loraInstance)
-            : LoRaCommunicationManager(loraInstance, LORA_SS_PIN, LORA_RESET_PIN, LORA_IRQ_PIN, LORA_FREQUENCY) {}
+    explicit LoraEmitterManager(LoRaClass &loraInstance, QueueHandle_t packetQueue)
+            : LoRaCommunicationManager(loraInstance, packetQueue ) {}
 
 
     void setupLoRa() const override;

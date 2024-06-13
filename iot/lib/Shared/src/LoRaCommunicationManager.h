@@ -22,9 +22,10 @@
 class LoRaCommunicationManager : public communication::ICommunication {
 
 public:
-    LoRaCommunicationManager(LoRaClass &loraInstance, int ssPin, int resetPin, int irqPin, long frequency);
+    LoRaCommunicationManager(LoRaClass &loraInstance, QueueHandle_t queue) :
+            LoRa(loraInstance), packetQueue(queue), ssPin(LORA_SS_PIN), resetPin(LORA_RESET_PIN), irqPin(LORA_IRQ_PIN), frequency(LORA_FREQUENCY) {};
 
-    virtual ~LoRaCommunicationManager() = default;
+    virtual ~LoRaCommunicationManager();
 
     void init() override;
     void connect() override;
@@ -49,6 +50,11 @@ protected:
 private:
     std::vector<IPacketObserver*> observers;
     void notifyObservers(const uint8_t *data, size_t length);
+
+    QueueHandle_t packetQueue;
+    TaskHandle_t receiveTaskHandle{};
+    void enqueuePacket(const uint8_t* data, size_t length);
+    static void receiveTask(void *param);
 };
 
 

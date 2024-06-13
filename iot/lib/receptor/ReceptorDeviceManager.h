@@ -5,17 +5,18 @@
 #ifndef IOT_RECEPTORDEVICEMANAGER_H
 #define IOT_RECEPTORDEVICEMANAGER_H
 
-
+#include <freertos/FreeRTOS.h>
+#include <freertos/queue.h>
 #include <vector>
 #include <memory>
 #include "LoRaCommunicationManager.h"
 #include "DeviceInfos.h"
-#include "infrastructure/lora/LoraReceptorManager.h"
 #include "infrastructure/wifi/WifiManager.h"
 #include "SensorApi.h"
-#include "ExampleObserverReceptor.h"
+#include "infrastructure/lora/LoraReceptorManager.h"
 #include "MyHttpClient.h"
 #include "infrastructure/wifi/ArduinoWifiClient.h"
+#include "ExampleObserverReceptor.h"
 
 class ReceptorDeviceManager {
 
@@ -23,14 +24,16 @@ public:
     DeviceInfos deviceInfo;
     explicit ReceptorDeviceManager(LoRaClass &loraInstance);
     ~ReceptorDeviceManager();
-    void init() const;
+    void init();
     void loop() const;
     void communicateMeasures();
     void communicateInfos();
 private:
-    std::unique_ptr<LoRaCommunicationManager> communicationManager;
+    LoRaCommunicationManager* communicationManager;
     WifiManager *wifiManager;
     SensorApi *api;
+    QueueHandle_t packetQueue;
+
 };
 
 

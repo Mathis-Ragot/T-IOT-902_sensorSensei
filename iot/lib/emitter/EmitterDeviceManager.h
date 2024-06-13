@@ -18,7 +18,10 @@
 #include "domain/Sensor/Pressure/PressureSensor.h"
 #include "domain/Sensor/Sound/SoundSensor.h"
 #include "infrastructure/lora/LoraEmitterManager.h"
-
+#include "Adafruit_BMP280.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/queue.h"
+#include "ExampleObserverReceptor.h"
 
 using namespace sensor;
 
@@ -26,8 +29,9 @@ class EmitterDeviceManager {
 private:
 private:
     std::unique_ptr<PowerManager> powerManager{};
-    std::unique_ptr<LoRaCommunicationManager> communicationManager;
+    LoRaCommunicationManager* communicationManager;
     std::unique_ptr<Sensors> sensors;
+    QueueHandle_t packetQueue;
 public:
     DeviceInfos deviceInfo;
     explicit EmitterDeviceManager(LoRaClass &loraInstance);
