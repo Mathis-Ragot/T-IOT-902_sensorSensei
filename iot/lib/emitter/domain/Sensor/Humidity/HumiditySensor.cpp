@@ -1,4 +1,5 @@
 #include "HumiditySensor.h"
+#include "domain/Sensor/Sensors.h"
 
 void sensor::HumiditySensor::begin()
 {
@@ -37,9 +38,9 @@ uint16_t sensor::HumiditySensor::getSerializedMeasure()
 {
     float measure = getMeasure();
     int measureInt = static_cast<int>(std::round(measure));
-    if (measureInt > 2047)
+    if (measureInt > MaxMeasureSize)
     {
-        measureInt = 2047; // Cap the value to fit within 11 bits
+        measureInt = MaxMeasureSize; // Cap the value to fit within 11 bits
     }
 
     return static_cast<uint16_t>(measureInt);
