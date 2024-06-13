@@ -22,6 +22,7 @@ void EmitterDeviceManager::init() const {
     sensors->addSensor(std::make_shared<TemperatureSensor>());
     sensors->addSensor(std::make_shared<PressureSensor>());
     sensors->addSensor(std::make_shared<SoundSensor>());
+    sensors->addSensor(std::make_shared<HumiditySensor>());
     sensors->begin();
 }
 
