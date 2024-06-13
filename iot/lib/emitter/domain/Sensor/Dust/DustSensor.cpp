@@ -52,14 +52,8 @@ uint16_t sensor::DustSensor::getSerializedMeasure()
 {
     float measure = getMeasure();
     int measureInt = static_cast<int>(std::round(measure));
-<<<<<<< HEAD
-    if (measureInt > 4095)
-    {
-        measureInt = 4095; // Cap the value to fit within 12 bits
-=======
     if (measureInt > MaxMeasureSize) {
         measureInt = MaxMeasureSize;  // Cap the value to fit within 12 bits
->>>>>>> c9e3d566fca8fa633c2601572fc564b3b981ec1f
     }
 
     return static_cast<uint16_t>(measureInt);
