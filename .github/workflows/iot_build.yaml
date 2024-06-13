@@ -35,6 +35,13 @@ jobs:
 
       - name: "Test the project"
         run: platformio test -e ${{ env.PIO_TEST_ENV }} -d ${{ env.IOT_DIRECTORY }}
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          flags: IOT
+          name: IOT
+          token: ${{ secrets.CODECOV_TOKEN }}
   build:
     name: "Build all packages and upload the artifacts"
     needs:

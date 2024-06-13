@@ -2,8 +2,8 @@
 // Created by clavi on 03/05/2024.
 //
 
-#include "domain/Sensor/AbstractSensor.h"
 #include "Adafruit_BMP280.h"
+#include "domain/Sensor/AbstractSensor.h"
 
 #ifndef IOT_BPM280SENSOR_H
 #define IOT_BPM280SENSOR_H
@@ -19,7 +19,6 @@ namespace sensor {
 
     protected:
         Adafruit_BMP280 bmp;
-        int address = TEMP_PRESSURE_SENSOR_I2C_ADDRESS;
 
     private:
         Adafruit_BMP280::sensor_mode mode = Adafruit_BMP280::MODE_NORMAL;
