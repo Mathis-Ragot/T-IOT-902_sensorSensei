@@ -36,6 +36,7 @@ mod test {
         env::set_var("INFLUX_DB_TOKEN", "test");
         env::set_var("SENSOR_ID", "1");
         env::set_var("DEVICE_NODE", "test");
+        env::set_var("SENSOR_COMMUNITY_URL", "test");
         let state = AppState::new();
         assert_eq!(state.config.influx_url, "http://localhost:8086");
         assert_eq!(state.config.influx_db_name, "test");
@@ -48,6 +49,7 @@ mod test {
         env::set_var("INFLUX_DB_TOKEN", "test");
         env::set_var("SENSOR_ID", "1");
         env::set_var("DEVICE_NODE", "test");
+        env::set_var("SENSOR_COMMUNITY_URL", "test");
         let state = AppState::new();
         let req = actix_web::test::TestRequest::default().app_data(Data::new(state)).to_http_request();
         let resp = AppConfig::from_request(&req, &mut actix_web::dev::Payload::None).await;

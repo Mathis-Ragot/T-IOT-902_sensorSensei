@@ -6,7 +6,7 @@
 
 using namespace sensor;
 
-SensorInfos AbstractSensor::getInfos() {
+SensorInfos AbstractSensor::getInfos()
+{
     return infos;
 }
-

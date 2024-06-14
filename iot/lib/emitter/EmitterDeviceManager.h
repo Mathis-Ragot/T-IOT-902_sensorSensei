@@ -16,6 +16,7 @@
 #include "domain/Sensor/Dust/DustSensor.h"
 #include "domain/Sensor/Temperature/TemperatureSensor.h"
 #include "domain/Sensor/Pressure/PressureSensor.h"
+#include "domain/Sensor/Humidity/HumiditySensor.h"
 #include "domain/Sensor/Sound/SoundSensor.h"
 #include "infrastructure/lora/LoraEmitterManager.h"
 

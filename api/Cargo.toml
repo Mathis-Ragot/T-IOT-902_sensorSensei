@@ -18,3 +18,4 @@ chrono = { version = "0.4.37", features = ["serde"] }
 rand = "0.8.5"
 validator = { version = "0.16", features = ["derive"] }
 reqwest = {version = "0.12.3", features = ["json"]}
+mockito = "1.4.0"

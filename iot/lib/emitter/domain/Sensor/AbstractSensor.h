@@ -7,11 +7,12 @@
 
 #include "ISensor.h"
 
-namespace sensor {
+namespace sensor
+{
 
-    class AbstractSensor : public ISensor {
+    class AbstractSensor : public ISensor
+    {
     private:
-
     public:
         int dataBitLength;
 
@@ -25,11 +26,9 @@ namespace sensor {
 
     protected:
         SensorInfos infos;
-        explicit AbstractSensor() : infos(std::move(infos)), dataBitLength(0) {
-
+        explicit AbstractSensor() : infos(std::move(infos)), dataBitLength(0)
+        {
         }
-
-
     };
 }
-#endif //IOT_ABSTRACTSENSOR_H
+#endif // IOT_ABSTRACTSENSOR_H
