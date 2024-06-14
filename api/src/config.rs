@@ -18,7 +18,8 @@ pub struct AppConfig {
     pub influx_db_name: String,
     pub influx_db_token: String,
     pub sensor_id: u64,
-    pub device_node: String
+    pub device_node: String,
+    pub sensor_community_url: String,
 }
 
 /// Implementation of the AppConfig structure
@@ -71,6 +72,7 @@ mod test {
             env::set_var("INFLUX_DB_TOKEN", "test");
             env::set_var("SENSOR_ID", "1");
             env::set_var("DEVICE_NODE", "test");
+            env::set_var("SENSOR_COMMUNITY_URL", "http://localhost:8086");
         });
     }
 
