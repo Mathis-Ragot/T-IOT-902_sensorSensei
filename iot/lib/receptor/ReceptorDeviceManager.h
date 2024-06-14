@@ -24,9 +24,11 @@ public:
     void communicateMeasures();
     void communicateInfos();
 private:
-    std::unique_ptr<LoRaCommunicationManager> communicationManager;
+    LoRaCommunicationManager* communicationManager;
     WifiManager *wifiManager;
     SensorApi *api;
+    QueueHandle_t packetQueue;
+
 };
 
 

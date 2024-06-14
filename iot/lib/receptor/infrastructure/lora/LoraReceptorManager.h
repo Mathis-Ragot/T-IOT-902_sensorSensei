@@ -10,8 +10,8 @@
 class LoraReceptorManager : public LoRaCommunicationManager {
 
 public:
-    explicit LoraReceptorManager(LoRaClass &loraInstance)
-            : LoRaCommunicationManager(loraInstance, LORA_SS_PIN, LORA_RESET_PIN, LORA_IRQ_PIN, LORA_FREQUENCY) {}
+    explicit LoraReceptorManager(LoRaClass &loraInstance, QueueHandle_t queue)
+            : LoRaCommunicationManager(loraInstance,queue ) {}
 
     void setupLoRa() const override;
 };
