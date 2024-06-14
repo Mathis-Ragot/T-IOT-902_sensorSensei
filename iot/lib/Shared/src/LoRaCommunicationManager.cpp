@@ -1,6 +1,6 @@
 #include <vector>
 #include "LoRaCommunicationManager.h"
-
+#include "Utils.h"
 
 
 void LoRaCommunicationManager::init() {
@@ -27,12 +27,7 @@ void LoRaCommunicationManager::receive() {
         for (int i = 0; i < packetSize; ++i) {
             packet[i] = LoRa.read();
         }
-        Serial.print("Received packet: ");
-        for (const auto &byte : packet) {
-            Serial.print(byte, HEX);
-            Serial.print(" ");
-        }
-        Serial.println();
+        Utils::printBytesAsHex(packet);
     }
 }
 

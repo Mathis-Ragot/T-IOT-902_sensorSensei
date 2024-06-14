@@ -7,12 +7,8 @@
 
 #include "ICommunication.h"
 #include "Arduino.h"
-#include "optional.hpp"
 #include <vector>
-#include <FreeRTOSConfig.h>
-#include <freertos/queue.h>
-#include <freertos/FreeRTOS.h>
-#include <freertos/task.h>
+
 
 #ifdef LORA_RECEPTOR
 #include "heltec.h"
