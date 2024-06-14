@@ -17,7 +17,7 @@ impl MeasureHandler {
         for x in measure.0.values {
             MeasureService::create_measure(&x, &client.influxdb).await?;
             if let MeasureKind::Dust = x.kind {
-                SensorCommunity::push_data(&config.device_node, PushSensorData::from_measure(config.sensor_id, x)).await?;
+                SensorCommunity::push_data(config.sensor_community_url.as_str(), &config.device_node, PushSensorData::from_measure(config.sensor_id, x)).await?;
             }
         }
         Ok(String::from("OK"))
@@ -36,13 +36,23 @@ impl MeasureHandler {
 
 #[cfg(test)]
 mod test {
-
+    use std::env;
     use actix_web::{test};
     use crate::dtos::measure::CreateMeasure;
     use super::*;
+
+    fn init_app_config() {
+        env::set_var("INFLUX_URL", "http://localhost:8086");
+        env::set_var("INFLUX_DB_NAME", "test");
+        env::set_var("INFLUX_DB_TOKEN", "test");
+        env::set_var("SENSOR_ID", "1");
+        env::set_var("DEVICE_NODE", "test");
+        env::set_var("SENSOR_COMMUNITY_URL", "http://localhost:8087");
+    }
     
     #[test]
     async fn test_measure_handler() {
+        init_app_config();
         let measure = Dto(CreateMeasures {
             values: vec![
                 CreateMeasure {
@@ -59,6 +69,7 @@ mod test {
     
     #[test]
     async fn test_measure_handler_error() {
+        init_app_config();
         let measure = Dto(CreateMeasures {
             values: vec![
                 CreateMeasure {
@@ -75,6 +86,7 @@ mod test {
     
     #[test]
     async fn test_list_measure() {
+        init_app_config();
         let client = Data::new(AppState::new());
         let resp = MeasureHandler::list_measure(client).await;
         assert_eq!(resp.ok().is_none(), true);
@@ -82,6 +94,7 @@ mod test {
     
     #[test]
     async fn test_get_measure() {
+        init_app_config();
         let client = Data::new(AppState::new());
         let kind = Path::from(MeasureKind::Dust);
         let resp = MeasureHandler::get_measure(kind, client).await;

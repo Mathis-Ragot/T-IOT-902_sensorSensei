@@ -41,7 +41,7 @@ impl ResponseError for ApiException {
 /// Implementation of the From trait for the ValidationErrors structure
 impl From<ValidationErrors> for ApiException {
     fn from(_errors: ValidationErrors) -> Self {
-        todo!("Handle validation errors")
+        ApiException::BaqRequest("Invalid request".to_string())
     }
 }
 
@@ -74,5 +74,12 @@ mod test {
     async fn test_api_exception_display_internal() {
         let err = ApiException::Internal("Internal error".to_string());
         assert_eq!(err.to_string(), "Internal error: Internal error");
+    }
+    
+    #[test]
+    async fn test_api_exception_from() {
+        let err = ValidationErrors::new();
+        let api_err = ApiException::from(err);
+        assert_eq!(api_err.to_string(), ApiException::BaqRequest("Invalid request".to_string()).to_string());
     }
 }
