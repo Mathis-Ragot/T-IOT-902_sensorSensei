@@ -5,7 +5,8 @@
 #include <ArduinoJson.h>
 #include "optional.hpp"
 
-enum MeasureKind {
+enum MeasureKind
+{
     Dust,
     Temperature,
     Humidity,
@@ -13,19 +14,22 @@ enum MeasureKind {
     SoundLevel,
 };
 
-struct Measure {
+struct Measure
+{
     std::vector<String> value;
     MeasureKind kind;
     String toJson();
     static Measure fromJson(String);
 };
 
-struct CreateMeasures {
+struct CreateMeasures
+{
     std::vector<Measure> values;
     String toJson();
 };
 
-struct MeasureKindMap {
+struct MeasureKindMap
+{
     MeasureKindMap(String, MeasureKind);
     String name;
     MeasureKind kind;
@@ -33,8 +37,8 @@ struct MeasureKindMap {
 
 const MeasureKindMap measureKindMaps[] = {{"dust", Dust}, {"temperature", Temperature}, {"humidity", Humidity}, {"pressure", Pressure}, {"sound_level", SoundLevel}};
 
-tl::optional<Measure> createMeasure(const std::vector<String>& value, const String& kind);
-tl::optional<Measure> createMeasure(String value, const String& kind);
+tl::optional<Measure> createMeasure(const std::vector<String> &value, const String &kind);
+tl::optional<Measure> createMeasure(String value, const String &kind);
 tl::optional<MeasureKind> parseMeasureKind();
 Measure createMeasure(std::vector<String> value, MeasureKind kind);
 Measure createMeasure(String value, MeasureKind kind);
