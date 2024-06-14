@@ -12,6 +12,7 @@
 #include "infrastructure/lora/LoraReceptorManager.h"
 #include "infrastructure/wifi/WifiManager.h"
 #include "SensorApi.h"
+#include "core/DataManager.h"
 
 class ReceptorDeviceManager {
 
@@ -20,14 +21,18 @@ public:
     explicit ReceptorDeviceManager(LoRaClass &loraInstance);
     ~ReceptorDeviceManager();
     void init() const;
-    void loop() const;
+    void loop();
     void communicateMeasures();
     void communicateInfos();
 private:
     LoRaCommunicationManager* communicationManager;
     WifiManager *wifiManager;
     SensorApi *api;
-    QueueHandle_t packetQueue;
+
+    DataManager queueManager;
+    void processReceivedPacket(std::vector<uint8_t> &packet);
+
+
 
 };
 

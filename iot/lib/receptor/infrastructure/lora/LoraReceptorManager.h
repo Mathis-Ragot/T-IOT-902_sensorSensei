@@ -6,14 +6,22 @@
 #define IOT_LORARECEPTORMANAGER_H
 
 #include "LoRaCommunicationManager.h"
+#include "core/DataManager.h"
 
 class LoraReceptorManager : public LoRaCommunicationManager {
 
 public:
-    explicit LoraReceptorManager(LoRaClass &loraInstance, QueueHandle_t queue)
-            : LoRaCommunicationManager(loraInstance,queue ) {}
+    LoraReceptorManager(LoRaClass &loraInstance, DataManager &dataQueueManager);
+    ~LoraReceptorManager() override;
 
     void setupLoRa() const override;
+    void connect() override;
+    void receive() override;
+
+private:
+    static void receiveTask(void *param);
+    DataManager &dataQueueManager;
+    TaskHandle_t receiveTaskHandle;
 };
 
 

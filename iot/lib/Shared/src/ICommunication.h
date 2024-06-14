@@ -24,7 +24,6 @@ namespace communication {
 
         virtual void close() = 0;
 
-        virtual void enqueuePacket(const uint8_t* data, size_t length) = 0;
 
 
     };

@@ -7,10 +7,11 @@
 #include "infrastructure/wifi/ArduinoWifiClient.h"
 
 ReceptorDeviceManager::ReceptorDeviceManager(LoRaClass &loraInstance) :
+        queueManager(20),
         deviceInfo(DeviceInfos(RECEPTOR_ID, RECEPTOR_TYPE, RECEPTOR_LOCATION, RECEPTOR_LATITUDE, RECEPTOR_LONGITUDE)) {
 
-    packetQueue = xQueueCreate(30, sizeof(std::vector<uint8_t>*));
-    communicationManager = new LoraReceptorManager(loraInstance, packetQueue);
+
+    communicationManager = new LoraReceptorManager(loraInstance, queueManager);
     api = new SensorApi(std::make_shared<MyHttpClient>(), SENSOR_API_ENDPOINT);
     wifiManager = new WifiManager(new ArduinoWifiClient());
 }
@@ -29,26 +30,30 @@ void ReceptorDeviceManager::init() const {
     }
 }
 
-void ReceptorDeviceManager::loop() const {
-//    communicationManager->receive();
-    std::vector<uint8_t>* receivedPacket;
+
+void ReceptorDeviceManager::loop() {
+    std::vector<uint8_t> receivedPacket;
+    if (queueManager.dequeuePacket(receivedPacket)) {
+        Serial.print("Processing received packet at: ");
+        Serial.println(millis());
+        processReceivedPacket(receivedPacket);
+    }
+}
+
+void ReceptorDeviceManager::processReceivedPacket(std::vector<uint8_t> &packet) {
+    Serial.print("Received packet: ");
     Heltec.display->clear();
     String displayData = "Received: ";
 
-    if (xQueueReceive(packetQueue, &receivedPacket, portMAX_DELAY) == pdPASS) {
-        // Traitement du paquet
-        for (const auto &byte: *receivedPacket) {
-            Serial.print(byte, HEX);
-            Serial.print(" ");
-            displayData += String(byte, HEX) + " ";
-        }
-        Serial.println();
-        Heltec.display->drawString(0, 0, displayData);
-        Heltec.display->display();
-        // Libérer la mémoire après traitement
-        delete receivedPacket;
+    for (const auto& byte : packet) {
+        Serial.print(byte, HEX);
+        Serial.print(" ");
+        displayData += String(byte, HEX) + " ";
     }
+    Serial.println();
 
+    Heltec.display->drawString(0, 0, displayData);
+    Heltec.display->display();
 }
 
 void ReceptorDeviceManager::communicateMeasures() {
@@ -62,7 +67,6 @@ void ReceptorDeviceManager::communicateInfos() {
 ReceptorDeviceManager::~ReceptorDeviceManager() {
     delete wifiManager;
     delete api;
-    vQueueDelete(packetQueue);
 
 }
 
