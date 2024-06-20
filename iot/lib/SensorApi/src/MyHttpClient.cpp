@@ -1,20 +1,20 @@
-#include <HTTPClient.h>
-#include "HttpClient.h"
+#include <MyHttpClient.h>
+#include "MyHttpClient.h"
 #include "ArduinoJson.h"
 
-HttpClient::HttpClient() {
+MyHttpClient::MyHttpClient() {
     this->_client = new HTTPClient();
 }
 
-HttpClient::~HttpClient() {
+MyHttpClient::~MyHttpClient() {
     delete this->_client;
 }
 
-void HttpClient::setURL(const char *serverEndpoint) {
+void MyHttpClient::setURL(const char *serverEndpoint) {
     this->_client->setURL(serverEndpoint);
 }
 
-std::tuple<String, int> HttpClient::send(const char* type, const char *body, String url) {
+std::tuple<String, int> MyHttpClient::send(const char* type, const char *body, String url) {
     #ifdef SENSOR_API_DEBUG
         Serial.printf("Sending request to url: %s\n", url.c_str());
     #endif
