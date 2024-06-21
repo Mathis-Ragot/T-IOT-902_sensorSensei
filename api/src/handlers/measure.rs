@@ -42,9 +42,11 @@ mod test {
     use super::*;
 
     fn init_app_config() {
+        env::set_var("INFLUX_DB_HOST", "localhost");
         env::set_var("INFLUX_DB_PORT", "8086");
         env::set_var("INFLUX_DB_NAME", "test");
         env::set_var("INFLUX_DB_TOKEN", "test");
+        env::set_var("API_PORT", "8080");
         env::set_var("SENSOR_ID", "1");
         env::set_var("DEVICE_NODE", "test");
         env::set_var("SENSOR_COMMUNITY_URL", "http://localhost:8087");

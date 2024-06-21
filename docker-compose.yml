@@ -1,4 +1,16 @@
 services:
+
+  api:
+    container_name: api
+    build:
+      context: .
+      dockerfile: ./api/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    networks:
+      influxdb-net:
+
   influxdb:
     container_name: influxdb
     image: influxdb:2.6
@@ -25,11 +37,11 @@ services:
     restart: unless-stopped
     depends_on:
       - influxdb
+    ports:
+      - "${GRAFANA_PORT}:${GRAFANA_PORT}"
     environment:
       GF_SECURITY_ADMIN_USER: ${GRAFANA_USERNAME}
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
-    ports:
-      - "${GRAFANA_PORT}:${GRAFANA_PORT}"
     volumes:
       - ./grafana/data:/var/lib/grafana
       - ./grafana/log:/var/log/grafana

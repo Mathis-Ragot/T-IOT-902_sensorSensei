@@ -20,6 +20,7 @@ const DEFAULT_WORKERS: usize = 8;
 async fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
     let state = AppState::new();
+    let port = state.config.api_port.clone();
     println!("Starting server");
     HttpServer::new(move || {
         App::new()
@@ -29,7 +30,7 @@ async fn main() -> std::io::Result<()> {
             .route("/measure/", web::get().to(MeasureHandler::list_measure))
     })
         .workers(DEFAULT_WORKERS)
-        .bind((DEFAULT_HOST, DEFAULT_PORT))?
+        .bind((DEFAULT_HOST, port))?
         .run()
         .await
 }

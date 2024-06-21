@@ -10,13 +10,15 @@ use crate::state::AppState;
 
 /// AppConfig structure is used to represent the configuration of the application load in the environment variable at the startup of the app
 /// The structure is used to store the configuration of the influxdb connection and the sensor info
-/// Required: INFLUX_DB_PORT, INFLUX_DB_NAME, INFLUX_DB_TOKEN, SENSOR_ID and DEVICE_NODE
+/// Required: INFLUX_DB_HOST, INFLUX_DB_PORT, INFLUX_DB_NAME, INFLUX_DB_TOKEN, API_PORT, SENSOR_ID and DEVICE_NODE
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct AppConfig {
+    pub influx_db_host: String,
     pub influx_db_port: String,
     pub influx_db_name: String,
     pub influx_db_token: String,
+    pub api_port: u16,
     pub sensor_id: u64,
     pub device_node: String,
     pub sensor_community_url: String,
@@ -67,9 +69,11 @@ mod test {
 
     pub fn initialize() {
         INIT.call_once(|| {
+            env::set_var("INFLUX_DB_HOST", "localhost");
             env::set_var("INFLUX_DB_PORT", "8086");
             env::set_var("INFLUX_DB_NAME", "test");
             env::set_var("INFLUX_DB_TOKEN", "test");
+            env::set_var("API_PORT", "8080");
             env::set_var("SENSOR_ID", "1");
             env::set_var("DEVICE_NODE", "test");
             env::set_var("SENSOR_COMMUNITY_URL", "http://localhost:8086");

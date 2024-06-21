@@ -43,18 +43,18 @@ impl PushSensorData {
 /// SensorDataResponse structure is used to represent the response of the sensor data
 #[derive(Debug, Clone, Deserialize)]
 pub struct SensorDataResponse {
-    pub _sensordata: u64,
+    pub sensordata: u64,
 }
 
 /// PushSensorDataResponse structure is used to represent the response of the sensor data
 #[derive(Debug, Clone, Deserialize)]
 pub struct PushSensorDataResponse {
     #[serde(rename = "sensor")]
-    pub _sensor: u64,
+    pub sensor: u64,
     #[serde(rename = "timestamp")]
-    pub _timestamp: String,
+    pub timestamp: String,
     #[serde(rename = "sensordatavalues")]
-    pub _sensordatavalues: Vec<SensorDataResponse>
+    pub sensordatavalues: Vec<SensorDataResponse>
 }
 
 /// Implementation of the SensorCommunity structure
