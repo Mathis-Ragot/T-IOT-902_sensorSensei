@@ -1,10 +1,15 @@
+use actix_web::body::BoxBody;
+use actix_web::{HttpRequest, HttpResponse, Responder};
 use reqwest;
 use serde::{Deserialize, Serialize};
 use crate::dtos::measure::{CreateMeasure};
-use crate::exceptions::api_exception::ApiException;
 
 /// SensorCommunity structure is used to represent the service of the sensor community wrapper
 pub struct SensorCommunity;
+
+use anyhow::{Context, Result};
+use log::{info, trace};
+use reqwest::Client;
 
 /// SensorData structure is used to represent the data of a sensor
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -41,39 +46,56 @@ impl PushSensorData {
 }
 
 /// SensorDataResponse structure is used to represent the response of the sensor data
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct SensorDataResponse {
-    pub _sensordata: u64,
+    pub sensordata: u64,
 }
 
 /// PushSensorDataResponse structure is used to represent the response of the sensor data
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct PushSensorDataResponse {
     #[serde(rename = "sensor")]
-    pub _sensor: u64,
+    pub sensor: u64,
     #[serde(rename = "timestamp")]
-    pub _timestamp: String,
+    pub timestamp: String,
     #[serde(rename = "sensordatavalues")]
-    pub _sensordatavalues: Vec<SensorDataResponse>
+    pub sensordatavalues: Vec<SensorDataResponse>
+}
+
+pub struct PushMeasuresResponse(pub Vec<PushSensorDataResponse>);
+
+impl Responder for PushMeasuresResponse {
+    type Body = BoxBody;
+
+    fn respond_to(self, _req: &HttpRequest) -> HttpResponse<Self::Body> {
+        HttpResponse::Ok().json(self.0)
+    }
+}
+
+impl Responder for PushSensorDataResponse {
+    type Body = BoxBody;
+
+    fn respond_to(self, _req: &HttpRequest) -> HttpResponse<Self::Body> {
+        HttpResponse::Ok().json(self)
+    }
 }
 
 /// Implementation of the SensorCommunity structure
 impl SensorCommunity {
     
     /// Push data to the sensor community
-    pub async fn push_data(base_url: &str, sensor_id: &String, data: PushSensorData) -> Result<PushSensorDataResponse, ApiException> {
-        println!("Pushing data to sensor: {}", sensor_id);
-        println!("Data: {:?}", data);
-        let client = reqwest::Client::new();
-        let a = client.post(format!("{}/v1/push-sensor-data/", base_url).as_str())
+    pub async fn push_data(base_url: &str, sensor_id: &String, data: PushSensorData) -> Result<PushSensorDataResponse> {
+        info!("Pushing data to sensor: {}", sensor_id);
+        trace!("Data: {:?}", data);
+        Client::new().post(format!("{}/v1/push-sensor-data/", base_url).as_str())
             .header("Content-Type", "application/json")
             .header("X-Sensor", sensor_id)
             .header("X-Pin", "1")
             .json(&data)
             .send()
             .await
-            .unwrap();
-        a.json::<PushSensorDataResponse>().await.map_err(|_| ApiException::Internal("Error while pushing data".to_string()))
+            .context("Cannot send sensor community request !")?
+            .json::<PushSensorDataResponse>().await.context("Cannot parse sensor community response !")
     }
 }
 
@@ -95,9 +117,9 @@ mod test {
         println!("{:?}", resp);
         assert_eq!(resp.is_ok(), true);
         let response = resp.expect("PushSensorData should not be null");
-        assert_eq!(response._sensor, 1);
-        assert_eq!(response._timestamp, "2021-01-01T00:00:00Z");
-        assert_eq!(response._sensordatavalues.len(), 1);
+        assert_eq!(response.sensor, 1);
+        assert_eq!(response.timestamp, "2021-01-01T00:00:00Z");
+        assert_eq!(response.sensordatavalues.len(), 1);
     }
 
     #[actix_web::test]

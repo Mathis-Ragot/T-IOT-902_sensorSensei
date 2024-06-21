@@ -1,6 +1,6 @@
 use std::fmt::Display;
 use actix_web::body::BoxBody;
-use actix_web::Responder;
+use actix_web::{HttpResponse, Responder};
 use influxdb::InfluxDbWriteable;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -161,7 +161,7 @@ impl Responder for QueryResponse {
 
     /// Respond to the request with the json of QueryResponse
     fn respond_to(self, _req: &actix_web::HttpRequest) -> actix_web::HttpResponse {
-        actix_web::HttpResponse::Ok().json(self)
+        HttpResponse::Ok().json(self)
     }
 }
 
