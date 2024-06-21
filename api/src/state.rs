@@ -16,7 +16,7 @@ impl AppState {
     pub fn new() -> Self {
         let config = AppConfig::new().unwrap();
         Self {
-            influxdb: Client::new(config.influx_url.clone(), config.influx_db_name.clone()).with_token(config.influx_db_token.clone()),
+            influxdb: Client::new(format!("http://influxdb:{}", config.influx_db_port.clone()), config.influx_db_name.clone()).with_token(config.influx_db_token.clone()),
             config
         }
     }
@@ -31,20 +31,20 @@ mod test {
 
     #[test]
     async fn test_app_state() {
-        env::set_var("INFLUX_URL", "http://localhost:8086");
+        env::set_var("INFLUX_DB_PORT", "8086");
         env::set_var("INFLUX_DB_NAME", "test");
         env::set_var("INFLUX_DB_TOKEN", "test");
         env::set_var("SENSOR_ID", "1");
         env::set_var("DEVICE_NODE", "test");
         env::set_var("SENSOR_COMMUNITY_URL", "test");
         let state = AppState::new();
-        assert_eq!(state.config.influx_url, "http://localhost:8086");
+        assert_eq!(state.config.influx_db_port, "8086");
         assert_eq!(state.config.influx_db_name, "test");
     }
     
     #[test]
     async fn test_app_state_influxdb() {
-        env::set_var("INFLUX_URL", "http://localhost:8086");
+        env::set_var("INFLUX_DB_PORT", "8086");
         env::set_var("INFLUX_DB_NAME", "test");
         env::set_var("INFLUX_DB_TOKEN", "test");
         env::set_var("SENSOR_ID", "1");
