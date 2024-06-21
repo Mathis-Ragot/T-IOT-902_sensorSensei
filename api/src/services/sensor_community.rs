@@ -110,7 +110,7 @@ mod test {
         let _m = server.mock("POST", "/v1/push-sensor-data/")
             .with_status(200)
             .with_header("content-type", "application/json")
-            .with_body(r#"{"sensor": 1, "timestamp": "2021-01-01T00:00:00Z", "sensordatavalues": [{"_sensordata": 1}]}"#)
+            .with_body(r#"{"sensor": 1, "timestamp": "2021-01-01T00:00:00Z", "sensordatavalues": [{"sensordata": 1}]}"#)
             .create();
         let data = PushSensorData::default();
         let resp = SensorCommunity::push_data(server.url().as_str(), &"1".to_string(), data).await;

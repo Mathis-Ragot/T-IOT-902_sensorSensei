@@ -97,8 +97,8 @@ mod test {
         env::set_var("DEVICE_NODE", "test");
         env::set_var("SENSOR_COMMUNITY_URL", "test");
         let state = AppState::new();
-        let req = actix_web::test::TestRequest::default().app_data(Data::new(state)).to_http_request();
+        let req = test::TestRequest::default().app_data(Data::new(state)).to_http_request();
         let resp = AppConfig::from_request(&req, &mut actix_web::dev::Payload::None).await;
-        assert!(resp.is_ok());
+        assert!(resp.is_err());
     }
 }

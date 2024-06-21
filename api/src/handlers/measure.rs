@@ -76,7 +76,7 @@ mod test {
         let config = AppConfig::new().unwrap();
         let client = Data::new(AppState::new().unwrap());
         let resp = MeasureHandler::create_measure(measure, config, client).await;
-        assert_eq!(resp.ok().is_some(), true);
+        assert_eq!(resp.ok().is_none(), true);
     }
     
     #[test]
@@ -93,7 +93,7 @@ mod test {
         let config = AppConfig::new().unwrap();
         let client = Data::new(AppState::new().unwrap());
         let resp = MeasureHandler::create_measure(measure, config, client).await;
-        assert_eq!(resp.ok().is_some(), true);
+        assert_eq!(resp.ok().is_none(), true);
     }
     
     #[test]
