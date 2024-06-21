@@ -4,6 +4,9 @@
 
 #include "Sensors.h"
 #include "Utils.h"
+#include <iostream>
+#include <vector>
+#include <bitset>
 
 void Sensors::addSensor(std::shared_ptr<AbstractSensor> sensor) {
     sensors.push_back(std::move(sensor));
@@ -58,72 +61,65 @@ std::vector<uint8_t> Sensors::getSerializedMeasuresAsBytes() {
 
         bytesToSent.push_back(byte);
     }
-   deserializeMeasureFromBytes(bytesToSent, 56);
+   deserializeMeasureFromBytes(bytesToSent);
 
     Utils::printBytesAsIntegers(bytesToSent);
     return bytesToSent;
 }
-uint32_t extractBits(const std::vector<uint8_t>& bytes, int startBit, int bitLength) {
-    uint32_t result = 0;
-    int byteIndex = startBit / 8; // Calcule l'index de l'octet de départ
-    int bitIndex = startBit % 8; // Calcule le bit de départ dans l'octet
-    int bitsCollected = 0;
-
-    Serial.print("byteIndex = ");
-    Serial.println(byteIndex);
-    Serial.print("bitIndex = ");
-    Serial.println(bitIndex);
 
 
 
 
-    while (bitsCollected < bitLength) {
-        int bitsInThisByte = std::min(bitLength - bitsCollected, 8 - bitIndex);
-        uint32_t mask = (1 << bitsInThisByte) - 1; // Crée un masque pour les bits nécessaires dans cet octet
-        uint32_t bits = (bytes[byteIndex] >> bitIndex) & mask; // Extrait les bits nécessaires et les place à droite
-        result |= (bits << bitsCollected); // Place les bits extraits dans le résultat, décalés correctement
-        bitsCollected += bitsInThisByte; // Met à jour le nombre de bits collectés
-        bitIndex = 0; // Réinitialise le bitIndex pour le prochain octet
-        byteIndex++; // Passe à l'octet suivant
-    }
-
-    Serial.print("bitsCollected = ");
-    Serial.println(bitsCollected);
-
-    Serial.print("result = ");
-    Serial.println(result);
-
-    return result;
-}
-
-uint16_t Sensors::deserializeMeasureFromBytes(const std::vector<uint8_t>& bytes, uint8_t dataBitLength) {
-    if (bytes.empty()) {
+uint16_t Sensors::deserializeMeasureFromBytes(const std::vector<uint8_t>& data) {
+    if (data.empty()) {
         return 0;
     }
 
-    int datasBitLength[] = {12,12,12,12,8};
-    std::vector<bool> serializedMeasures;
-    int a =0;
-    for (int len : datasBitLength) {
+//    int datasBitLength[] = {12,12,12,12,8};
+//    int bitPos = 8; // Commence à 8 pour ignorer le premier byte
+//
+//    for (int length : datasBitLength) {
+//        uint32_t extractedValue = extractBits(data, bitPos, length);
+//        std::cout << "Valeur extraite : " << extractedValue << " (";
+//        std::cout << std::bitset<32>(extractedValue).to_string().substr(32-length, length) << ")" << std::endl;
+//    }
+//    uint16_t measure = 0;
+    std::vector<bool> serializedBits = serializeMeasuresToBits(data);
 
-        extractBits(bytes, a, len);
-        a+=len;
+    // Définition des longueurs de bits pour chaque mesure
+    int datasBitLength[] = {12, 12, 12, 12, 8};
+    int pos = 0;
+
+    for (int length : datasBitLength) {
+        uint32_t value = bitsToInteger(serializedBits, pos, length);
+        std::cout << "Valeur extraite : " << value << " (";
+        for (int i = pos; i < pos + length; ++i) {
+            std::cout << serializedBits[i];
+        }
+        std::cout << ")" << std::endl;
+        pos += length;
     }
-    // Convertir les octets en bits
-    for (size_t i = 1; i < bytes.size(); ++i) { // Commence à 1 pour ignorer le premier octet (totalLength)
-        uint8_t byte = bytes[i];
-        for (int j = 0; j < 8; ++j) {
-            serializedMeasures.push_back((byte >> j) & 1);
+    return 0;
+}
+
+// Simule l'obtention des mesures sérialisées en bits
+std::vector<bool> Sensors::serializeMeasuresToBits(const std::vector<uint8_t>& data) {
+    std::vector<bool> bits;
+    for (size_t i = 1; i < data.size(); ++i) { // Commencer à partir de l'indice 1 pour ignorer le premier byte
+        for (int j = 7; j >= 0; --j) {
+            bits.push_back((data[i] >> j) & 1);
         }
     }
+    return bits;
+}
 
-    // Reconstituer la mesure en uint16_t
-    uint16_t measure = 0;
-    for (int i = 0; i < dataBitLength && i < serializedMeasures.size(); ++i) {
-        measure |= serializedMeasures[i] << i;
+// Convertit un segment de bits en un entier
+uint32_t Sensors::bitsToInteger(const std::vector<bool>& bits, int start, int length) {
+    uint32_t result = 0;
+    for (int i = 0; i < length; ++i) {
+        result = (result << 1) | bits[start + i];
     }
-
-    return measure;
+    return result;
 }
 
 void Sensors::getMeasures() {

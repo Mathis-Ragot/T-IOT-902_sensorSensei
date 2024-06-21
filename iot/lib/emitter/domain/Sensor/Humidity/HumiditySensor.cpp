@@ -44,8 +44,8 @@ uint16_t sensor::HumiditySensor::getSerializedMeasure()
     }
 
     Serial.print("Humidity serialized: ");
-    Serial.println(measureInt*10);
+    Serial.println(measureInt);
 
 
-    return static_cast<uint16_t>(measureInt*10); // *10 to keep one decimal
+    return static_cast<uint16_t>(measureInt);
 }
