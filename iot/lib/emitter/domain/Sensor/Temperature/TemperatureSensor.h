@@ -19,6 +19,8 @@ namespace sensor {
 
         uint16_t getSerializedMeasure() override;
 
+        float celsiusToFahrenheit(float celsius);
+
     };
 
 }

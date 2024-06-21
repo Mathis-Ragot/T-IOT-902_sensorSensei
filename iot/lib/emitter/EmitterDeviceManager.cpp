@@ -27,7 +27,9 @@ void EmitterDeviceManager::init() const {
 }
 
 void EmitterDeviceManager::loop() const {
-    communicationManager->send(sensors->getSerializedMeasuresAsBytes().data(),sensors->getSerializedMeasuresAsBytes().size() );
+
+    std::vector<uint8_t> measures = sensors->getSerializedMeasuresAsBytes();
+    communicationManager->send(measures.data(),measures.size() );
     PowerManager::deepSleep();
 }
 

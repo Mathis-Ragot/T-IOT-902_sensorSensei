@@ -21,9 +21,6 @@ float sensor::DustSensor::getMeasure()
     delayMicroseconds(sleepTime); //
     calcVoltage = voMeasured * (3.2 / 4096.0);
 
-    Serial.print("Voltage: ");
-    Serial.print(voMeasured);
-    Serial.print(" ");
     // linear eqaution taken from http://www.howmuchsnow.com/arduino/airquality/
     dustDensity = 170 * calcVoltage - 0.1;
 
@@ -55,6 +52,9 @@ uint16_t sensor::DustSensor::getSerializedMeasure()
     if (measureInt > MaxMeasureSize) {
         measureInt = MaxMeasureSize;  // Cap the value to fit within 12 bits
     }
+
+    Serial.print("Dust serialized: ");
+    Serial.println(measureInt);
 
     return static_cast<uint16_t>(measureInt);
 }

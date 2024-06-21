@@ -24,6 +24,7 @@ public:
     void addSensor(std::shared_ptr<AbstractSensor> sensor);
 
     std::vector<uint8_t> getSerializedMeasuresAsBytes();
+    uint16_t deserializeMeasureFromBytes(const std::vector<uint8_t>& bytes, uint8_t dataBitLength);
 
     void getMeasures();
 
