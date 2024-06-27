@@ -40,11 +40,9 @@ float sensor::SoundSensor::getMeasure() {
     auto cleanBuffer = std::vector<int32_t>(BufferSize / 2, 0);
 
     int cleanBufIdx = 0;
-    for (int i : buffer)
-    {
+    for (int i: buffer) {
         // Exclude values from other channel
-        if (i != 0)
-        {
+        if (i != 0) {
             cleanBuffer[cleanBufIdx] = i >> ChannelBufferExclude;
             cleanBufIdx++;
         }
@@ -52,10 +50,8 @@ float sensor::SoundSensor::getMeasure() {
 
     float meanValue = 0;
     int volumeCount = 0;
-    for (int i : cleanBuffer)
-    {
-        if (i != 0)
-        {
+    for (int i: cleanBuffer) {
+        if (i != 0) {
             meanValue += i;
             volumeCount++;
         }
@@ -63,8 +59,7 @@ float sensor::SoundSensor::getMeasure() {
     meanValue /= static_cast<float>(volumeCount);
 
     // Subtract it from all sapmles to get a 'normalized' output
-    for (int i = 0; i < volumeCount; i++)
-    {
+    for (int i = 0; i < volumeCount; i++) {
         cleanBuffer[i] -= static_cast<int32_t>(meanValue);
     }
 
@@ -76,7 +71,15 @@ float sensor::SoundSensor::getMeasure() {
         maxSample = _max(maxSample, static_cast<float>(cleanBuffer[i]));
     }
 
-    return sensor::SoundSensor::convertToDecibels(maxSample - minSample);
+    float measure = sensor::SoundSensor::convertToDecibels(maxSample - minSample);
+
+    #ifdef SOUND_SENSOR_DEBUG
+        Serial.print("Volume: ");
+        Serial.print(measure);
+        Serial.println(" dB");
+    #endif
+
+    return measure;
 }
 
 uint16_t sensor::SoundSensor::getSerializedMeasure() {
@@ -87,11 +90,10 @@ uint16_t sensor::SoundSensor::getSerializedMeasure() {
         measure = MaxMeasureSize;
     }
 
-    #ifdef SOUND_SENSOR_DEBUG
-        Serial.print("Volume: ");
-        Serial.print(measure);
-        Serial.println(" dB");
-    #endif
-
-    return static_cast<uint16_t>(measure);
+#ifdef SOUND_SENSOR_DEBUG
+    Serial.print("Volume Serialized: ");
+    Serial.print(static_cast<uint16_t>(measure*10));
+    Serial.println();
+#endif
+    return static_cast<uint16_t>(measure * 10); // *10 to keep one decimal
 }

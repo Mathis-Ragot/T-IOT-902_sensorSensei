@@ -43,5 +43,9 @@ uint16_t sensor::HumiditySensor::getSerializedMeasure()
         measureInt = MaxMeasureSize; // Cap the value to fit within 12 bits
     }
 
+    Serial.print("Humidity serialized: ");
+    Serial.println(measureInt);
+
+
     return static_cast<uint16_t>(measureInt);
 }

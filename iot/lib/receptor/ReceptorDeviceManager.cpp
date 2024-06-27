@@ -3,17 +3,24 @@
 //
 
 #include "ReceptorDeviceManager.h"
-#include "MyHttpClient.h"
-#include "infrastructure/wifi/ArduinoWifiClient.h"
+
+
 
 ReceptorDeviceManager::ReceptorDeviceManager(LoRaClass &loraInstance) :
-        queueManager(20),
+        dataManager(20),
         deviceInfo(DeviceInfos(RECEPTOR_ID, RECEPTOR_TYPE, RECEPTOR_LOCATION, RECEPTOR_LATITUDE, RECEPTOR_LONGITUDE)) {
 
 
-    communicationManager = new LoraReceptorManager(loraInstance, queueManager);
+    communicationManager = new LoraReceptorManager(loraInstance, dataManager);
     api = new SensorApi(std::make_shared<MyHttpClient>(), SENSOR_API_ENDPOINT);
     wifiManager = new WifiManager(new ArduinoWifiClient());
+
+    dataManager.measures.addMeasure(std::make_shared<measure::DustMeasure>());
+    dataManager.measures.addMeasure(std::make_shared<measure::TemperatureMeasure>());
+    dataManager.measures.addMeasure(std::make_shared<measure::PressureMeasure>());
+    dataManager.measures.addMeasure(std::make_shared<measure::SoundMeasure>());
+    dataManager.measures.addMeasure(std::make_shared<measure::HumidityMeasure>());
+
 }
 
 void ReceptorDeviceManager::init() const {
@@ -28,12 +35,13 @@ void ReceptorDeviceManager::init() const {
     if (auto wifi_error = wifiManager->initialize()) {
         Serial.println(wifi_error.value().c_str());
     }
+
 }
 
 
 void ReceptorDeviceManager::loop() {
     std::vector<uint8_t> receivedPacket;
-    if (queueManager.dequeuePacket(receivedPacket)) {
+    if (dataManager.dequeuePacket(receivedPacket)) {
         Serial.print("Processing received packet at: ");
         Serial.println(millis());
         processReceivedPacket(receivedPacket);
@@ -41,19 +49,24 @@ void ReceptorDeviceManager::loop() {
 }
 
 void ReceptorDeviceManager::processReceivedPacket(std::vector<uint8_t> &packet) {
-    Serial.print("Received packet: ");
+    dataManager.measures.deserializeMeasureFromBytes(packet);
+
+    // Affiche sur l'écran heltec lora les valeurs des mesures
     Heltec.display->clear();
-    String displayData = "Received: ";
+    int y = 0;
+    for (const std::shared_ptr<measure::AbstractMeasure> &measure: dataManager.measures.measures) {
+        String value = measure->getDeSerializedMeasure();
+        Heltec.display->drawString(0, y, String(value.c_str()));
+        y += 10; // Ajuster l'espacement en fonction de vos besoins
 
-    for (const auto& byte : packet) {
-        Serial.print(byte, HEX);
-        Serial.print(" ");
-        displayData += String(byte, HEX) + " ";
     }
-    Serial.println();
-
-    Heltec.display->drawString(0, 0, displayData);
     Heltec.display->display();
+
+    // Envoi des mesures sur l'API
+
+
+
+
 }
 
 void ReceptorDeviceManager::communicateMeasures() {
