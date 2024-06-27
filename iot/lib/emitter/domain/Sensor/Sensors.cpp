@@ -61,65 +61,10 @@ std::vector<uint8_t> Sensors::getSerializedMeasuresAsBytes() {
 
         bytesToSent.push_back(byte);
     }
-   deserializeMeasureFromBytes(bytesToSent);
+
 
     Utils::printBytesAsIntegers(bytesToSent);
     return bytesToSent;
-}
-
-
-
-
-uint16_t Sensors::deserializeMeasureFromBytes(const std::vector<uint8_t>& data) {
-    if (data.empty()) {
-        return 0;
-    }
-
-//    int datasBitLength[] = {12,12,12,12,8};
-//    int bitPos = 8; // Commence à 8 pour ignorer le premier byte
-//
-//    for (int length : datasBitLength) {
-//        uint32_t extractedValue = extractBits(data, bitPos, length);
-//        std::cout << "Valeur extraite : " << extractedValue << " (";
-//        std::cout << std::bitset<32>(extractedValue).to_string().substr(32-length, length) << ")" << std::endl;
-//    }
-//    uint16_t measure = 0;
-    std::vector<bool> serializedBits = serializeMeasuresToBits(data);
-
-    // Définition des longueurs de bits pour chaque mesure
-    int datasBitLength[] = {12, 12, 12, 12, 8};
-    int pos = 0;
-
-    for (int length : datasBitLength) {
-        uint32_t value = bitsToInteger(serializedBits, pos, length);
-        std::cout << "Valeur extraite : " << value << " (";
-        for (int i = pos; i < pos + length; ++i) {
-            std::cout << serializedBits[i];
-        }
-        std::cout << ")" << std::endl;
-        pos += length;
-    }
-    return 0;
-}
-
-// Simule l'obtention des mesures sérialisées en bits
-std::vector<bool> Sensors::serializeMeasuresToBits(const std::vector<uint8_t>& data) {
-    std::vector<bool> bits;
-    for (size_t i = 1; i < data.size(); ++i) { // Commencer à partir de l'indice 1 pour ignorer le premier byte
-        for (int j = 7; j >= 0; --j) {
-            bits.push_back((data[i] >> j) & 1);
-        }
-    }
-    return bits;
-}
-
-// Convertit un segment de bits en un entier
-uint32_t Sensors::bitsToInteger(const std::vector<bool>& bits, int start, int length) {
-    uint32_t result = 0;
-    for (int i = 0; i < length; ++i) {
-        result = (result << 1) | bits[start + i];
-    }
-    return result;
 }
 
 void Sensors::getMeasures() {
