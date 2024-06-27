@@ -148,4 +148,24 @@ mod test {
         assert_eq!(data.sensordatavalues[1].value_type, "P2");
         assert_eq!(data.sensordatavalues[1].value, "2");
     }
+    
+    #[actix_web::test]
+    async fn test_push_measures_response() {
+        let response = PushMeasuresResponse(vec![]);
+        let req = actix_web::test::TestRequest::default().to_http_request();
+        let resp = response.respond_to(&req);
+        assert_eq!(resp.status().as_u16(), 200);
+    }
+    
+    #[actix_web::test]
+    async fn test_push_sensor_data_response() {
+        let response = PushSensorDataResponse {
+            sensor: 1,
+            timestamp: "2021-01-01T00:00:00Z".to_string(),
+            sensordatavalues: vec![SensorDataResponse { sensordata: 1 }]
+        };
+        let req = actix_web::test::TestRequest::default().to_http_request();
+        let resp = response.respond_to(&req);
+        assert_eq!(resp.status().as_u16(), 200);
+    }
 }

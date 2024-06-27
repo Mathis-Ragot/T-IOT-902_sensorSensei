@@ -51,10 +51,7 @@ impl FromRequest for AppConfig {
     fn from_request(req: &HttpRequest, _payload: &mut Payload) -> Self::Future {
         let request = req.clone();
         Box::pin(async move {
-            let config = request.app_data::<Data<AppState>>()
-                .ok_or(ApiException::Internal(String::from("APE-100300")))?
-                .config.clone();
-            Ok(config)
+            request.app_data::<Data<AppState>>().ok_or(ApiException::Internal(String::from("APE-100300"))).map(|state| state.config.clone())
         })
     }
 }
@@ -97,7 +94,7 @@ mod test {
     async fn test_app_config_from_request_error() {
         initialize();
         let req = actix_web::test::TestRequest::default().to_http_request();
-        let resp = AppConfig::from_request(&req, &mut actix_web::dev::Payload::None).await;
+        let resp = AppConfig::from_request(&req, &mut Payload::None).await;
         assert!(resp.is_err());
     }
 
@@ -105,7 +102,15 @@ mod test {
     async fn test_app_config_from_request_error_data() {
         initialize();
         let req = actix_web::test::TestRequest::default().to_http_request();
-        let resp = AppConfig::from_request(&req, &mut actix_web::dev::Payload::None).await;
+        let resp = AppConfig::from_request(&req, &mut Payload::None).await;
         assert!(resp.is_err());
+    }
+
+    #[test]
+    async fn test_app_config_from_request_ok() {
+        initialize();
+        let data = Data::new(AppState::new());
+        let req = test::TestRequest::default().app_data(data.clone()).to_http_request();
+        let _ = AppConfig::from_request(&req, &mut Payload::None).await;
     }
 }

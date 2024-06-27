@@ -1,5 +1,4 @@
 use actix_web::{HttpServer, web};
-use actix_web::middleware::Logger;
 use actix_web::web::Data;
 use anyhow::Context;
 use env_logger::{Env, init_from_env};
@@ -8,6 +7,7 @@ use crate::config::AppConfig;
 use crate::handlers::measure::{MeasureHandler, MeasureHandlers};
 use anyhow::Result;
 use tracing::info;
+use tracing_actix_web::TracingLogger;
 
 pub struct App {
     pub state: AppState,
@@ -34,7 +34,7 @@ impl App {
         HttpServer::new(move || {
             actix_web::App::new()
                 .app_data(data.clone())
-                .wrap(Logger::default())
+                .wrap(TracingLogger::default())
                 .route("/measure/", web::post().to(MeasureHandler::create_measure))
                 .route("/measure/{kind}/", web::get().to(MeasureHandler::get_measure))
                 .route("/measure/", web::get().to(MeasureHandler::list_measure))
@@ -71,18 +71,35 @@ impl AppState {
 #[cfg(test)]
 mod test {
     use std::env;
+    use std::sync::Once;
     use super::*;
     use actix_web::{FromRequest, test};
     use actix_web::web::Data;
 
+
+    static INIT: Once = Once::new();
+
+    pub fn initialize() {
+        INIT.call_once(|| {
+            env::set_var("INFLUX_URL", "http://localhost:8086");
+            env::set_var("INFLUX_DB_NAME", "test");
+            env::set_var("INFLUX_DB_TOKEN", "test");
+            env::set_var("SENSOR_ID", "1");
+            env::set_var("DEVICE_NODE", "test");
+            env::set_var("SENSOR_COMMUNITY_URL", "test");
+        });
+    }
+
+    #[test]
+    async fn test_app_new() {
+        initialize();
+        let app = App::new().unwrap();
+        assert_eq!(app.workers, 8);
+    }
+
     #[test]
     async fn test_app_state() {
-        env::set_var("INFLUX_URL", "http://localhost:8086");
-        env::set_var("INFLUX_DB_NAME", "test");
-        env::set_var("INFLUX_DB_TOKEN", "test");
-        env::set_var("SENSOR_ID", "1");
-        env::set_var("DEVICE_NODE", "test");
-        env::set_var("SENSOR_COMMUNITY_URL", "test");
+        initialize();
         let state = AppState::new().unwrap();
         assert_eq!(state.config.influx_url, "http://localhost:8086");
         assert_eq!(state.config.influx_db_name, "test");
@@ -90,12 +107,7 @@ mod test {
     
     #[test]
     async fn test_app_state_influxdb() {
-        env::set_var("INFLUX_URL", "http://localhost:8086");
-        env::set_var("INFLUX_DB_NAME", "test");
-        env::set_var("INFLUX_DB_TOKEN", "test");
-        env::set_var("SENSOR_ID", "1");
-        env::set_var("DEVICE_NODE", "test");
-        env::set_var("SENSOR_COMMUNITY_URL", "test");
+        initialize();
         let state = AppState::new();
         let req = test::TestRequest::default().app_data(Data::new(state)).to_http_request();
         let resp = AppConfig::from_request(&req, &mut actix_web::dev::Payload::None).await;
