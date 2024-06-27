@@ -31,6 +31,10 @@ jobs:
           rustup update
           rustup default ${{ env.RUST_TOOLCHAIN }}
           cargo install ${{ env.TARPAULIN_BINARY }}
+      - name: "Create .env"
+	run: |
+	  touch .env
+          touch api/.env
       - name: "Cargo test"
         run: cargo test --manifest-path=${{ env.CARGO_PATH }}
       - name: "Cargo coverage"
