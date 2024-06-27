@@ -59,7 +59,6 @@ void ReceptorDeviceManager::processReceivedPacket(std::vector<uint8_t> &packet) 
         Heltec.display->drawString(0, y, String(value.c_str()));
         y += 10; // Ajuster l'espacement en fonction de vos besoins
 
-        api->createMeasure(value, measure->getMeasureType()
     }
     Heltec.display->display();
 
