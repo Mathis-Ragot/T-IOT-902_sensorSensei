@@ -23,14 +23,13 @@ pub struct MeasureHandler;
 impl MeasureHandlers for MeasureHandler {
     /// Route for creating a measure (POST /measure/)
     async fn create_measure(measure: Dto<CreateMeasures>, config: AppConfig, client: Data<AppState>) -> Result<PushMeasuresResponse, ApiException> {
+        println!("measure, {:?}", measure.0);
         let mut response: Vec<PushSensorDataResponse> = vec![];
         for x in measure.0.values {
             MeasureService::create_measure(&x, &client.influxdb).await?;
             info!("Measure inserted into db");
-            if let MeasureKind::Dust = x.kind {
-                response.push(SensorCommunity::push_data(config.sensor_community_url.as_str(), &config.device_node, PushSensorData::from_measure(config.sensor_id, x)).await?);
-                info!("Measure push to sensor community !");
-            }
+            response.push(SensorCommunity::push_data(config.sensor_community_url.as_str(), &config.device_node, PushSensorData::from_measure(config.sensor_id, x.clone()), x.kind).await?);
+            info!("Measure push to sensor community !");
         }
         Ok(PushMeasuresResponse(response))
     }
