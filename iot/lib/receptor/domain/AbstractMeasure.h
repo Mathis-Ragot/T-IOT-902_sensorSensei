@@ -6,8 +6,10 @@
 #define IOT_ABSTRACTMEASURE_H
 
 #include <cstdint>
+#include <utility>
 #include <Arduino.h>
 #include "IMeasure.h"
+#include "SensorInfos/SensorInfos.h"
 
 namespace measure {
 
@@ -17,9 +19,16 @@ namespace measure {
     protected:
         uint32_t rawMeasure{};
 
-        explicit AbstractMeasure(int dataLength) : dateLength(dataLength), rawMeasure(0) {} ;
+        explicit AbstractMeasure(int dataLength, SensorInfos infos)
+                : dateLength(dataLength), rawMeasure(0), infos(std::move(infos)) {} ;
+
+        measure::SensorInfos infos;
 
     public:
+        measure::SensorInfos getInfos() {
+            return infos;
+        };
+
         void setRawMeasure(uint32_t measure) override {
             rawMeasure = measure;
         };
@@ -30,7 +39,6 @@ namespace measure {
 
         int dateLength{};
     };
-
 
 
 }

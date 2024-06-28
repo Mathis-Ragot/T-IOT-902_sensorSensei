@@ -5,7 +5,11 @@
 #include "SoundMeasure.h"
 using namespace measure;
 
-SoundMeasure::SoundMeasure() : AbstractMeasure(SOUND_SENSOR_DATA_BIT_LENGTH) {
+SoundMeasure::SoundMeasure() : AbstractMeasure(SOUND_SENSOR_DATA_BIT_LENGTH,
+                                               SensorInfos(
+                                                       SOUND_SENSOR_ID,
+                                                       SOUND_SENSOR_REF,
+                                                       std::vector<SensorType>{SensorInfos::stringToSensorType(SOUND_SENSOR_TYPE)})) {
 }
 
 //Retourne la valeur de la mesure de son en string

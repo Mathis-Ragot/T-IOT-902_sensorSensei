@@ -6,7 +6,11 @@
 
 using namespace measure;
 
-PressureMeasure::PressureMeasure() : AbstractMeasure(PRESSURE_SENSOR_DATA_BIT_LENGTH) {
+PressureMeasure::PressureMeasure() : AbstractMeasure(PRESSURE_SENSOR_DATA_BIT_LENGTH,
+                                                     SensorInfos(
+                                                             PRESSURE_SENSOR_ID,
+                                                             PRESSURE_SENSOR_REF,
+                                                             std::vector<SensorType>{SensorInfos::stringToSensorType(PRESSURE_SENSOR_TYPE)})) {
 }
 
 //Retourne la valeur de la mesure de pression en string

@@ -6,7 +6,11 @@
 using namespace measure;
 
 
-    measure::HumidityMeasure::HumidityMeasure() : AbstractMeasure(HUMIDITY_SENSOR_DATA_BIT_LENGTH) {
+    measure::HumidityMeasure::HumidityMeasure() : AbstractMeasure(HUMIDITY_SENSOR_DATA_BIT_LENGTH,
+                                                                  SensorInfos(
+                                                                          HUMIDITY_SENSOR_ID,
+                                                                          HUMIDITY_SENSOR_REF,
+                                                                          std::vector<SensorType>{SensorInfos::stringToSensorType(HUMIDITY_SENSOR_TYPE)})) {
 
 }
 
