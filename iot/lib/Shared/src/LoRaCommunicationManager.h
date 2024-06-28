@@ -7,6 +7,7 @@
 
 #include "ICommunication.h"
 #include "Arduino.h"
+#include <vector>
 
 
 #ifdef LORA_RECEPTOR
@@ -21,7 +22,8 @@
 class LoRaCommunicationManager : public communication::ICommunication {
 
 public:
-    LoRaCommunicationManager(LoRaClass &loraInstance, int ssPin, int resetPin, int irqPin, long frequency);
+    explicit LoRaCommunicationManager(LoRaClass &loraInstance) :
+            LoRa(loraInstance), ssPin(LORA_SS_PIN), resetPin(LORA_RESET_PIN), irqPin(LORA_IRQ_PIN), frequency(LORA_FREQUENCY) {};
 
     virtual ~LoRaCommunicationManager() = default;
 
@@ -34,14 +36,14 @@ public:
 
 protected:
 
-    LoRaClass &LoRa;
     virtual void setupLoRa() const = 0;
     // Slave Select pin
     int resetPin;  // Reset pin
     int irqPin;    // Interrupt Request pin
     long frequency;  // Frequency channel
     int ssPin;
-};
+    LoRaClass &LoRa;
 
+};
 
 #endif //T_IOT_902_SENSORSENSEI_COMMUNICATIONMANAGER_H

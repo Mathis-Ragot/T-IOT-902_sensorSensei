@@ -28,7 +28,7 @@ void setup() {
     init_wifi();
 
     SensorApi sensorApi(std::make_shared<HttpClient>(), "https://3c7e-163-5-23-29.ngrok-free.app");
-    std::optional<Measure> dust = createMeasure(std::vector<String>{"10.2", "12.25"}, "dust");
+    std::optional<Measure> dust = createMeasure(std::vector<String>{"10.2", "12.25"}, DUST);
     if (dust.has_value()) {
         sensorApi.addMeasure(dust.value());
     }

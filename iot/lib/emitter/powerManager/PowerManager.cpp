@@ -10,6 +10,7 @@ void PowerManager::init() {
     pinMode(GPIO_PIN4_WAKEUP_ENABLE_S, INPUT);
 }
 
-void PowerManager::start() {
+void PowerManager::deepSleep() {
     esp_deep_sleep_start();
+
 }

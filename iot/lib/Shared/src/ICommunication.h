@@ -24,6 +24,8 @@ namespace communication {
 
         virtual void close() = 0;
 
+
+
     };
 }
 #endif //T_IOT_902_SENSORSENSEI_ICOMMUNICATION_H

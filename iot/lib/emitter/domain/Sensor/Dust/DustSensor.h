@@ -11,6 +11,7 @@
 #include "Utils.h"
 #include "domain/Sensor/AbstractSensor.h"
 #include <iostream>
+#include "cmath"
 
 namespace sensor {
 
@@ -24,19 +25,32 @@ namespace sensor {
 
         float getMeasure() override;
 
+        void readMeasure(int sample);
+
         uint16_t getSerializedMeasure() override;
 
     private:
         int measurePin = DUST_MEASURE_PIN;
         int ledPower = DUST_LED_PIN;
+        int adcResolution = 12;
+
+        float covRatio = 0.2f;
+        int noDustVoltage = 400;
+        int sysVoltage = 3300;
+
+        int adcValue;
+        float voltage;
+        float density;
+
+        const int NUM_SAMPLES = 10;
+        std::vector<int> adcValues = std::vector<int>(NUM_SAMPLES);
+        int adcIndex = 0;
+        int sumAdcValues = 0;
+        int numReadings = 0;
 
         int samplingTime = 280;
         int deltaTime = 40;
-        int sleepTime = 9680;
-
-        float voMeasured = 0;
-        float calcVoltage = 0;
-        float dustDensity = 0;
+        int sleepTime = 250;
     };
 
 }
