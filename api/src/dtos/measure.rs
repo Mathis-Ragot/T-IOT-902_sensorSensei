@@ -1,6 +1,6 @@
 use std::fmt::Display;
 use actix_web::body::BoxBody;
-use actix_web::Responder;
+use actix_web::{HttpResponse, Responder};
 use influxdb::InfluxDbWriteable;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -18,8 +18,8 @@ pub struct Measure {
 impl Responder for Measure {
     type Body = BoxBody;
     /// Respond to the request with the json of Measure
-    fn respond_to(self, _req: &actix_web::HttpRequest) -> actix_web::HttpResponse {
-        actix_web::HttpResponse::Ok().json(self)
+    fn respond_to(self, _req: &actix_web::HttpRequest) -> HttpResponse {
+        HttpResponse::Ok().json(self)
     }
 }
 
@@ -35,7 +35,7 @@ pub struct TimeMeasure {
 }
 
 /// Implementation of the Responder trait for the TimeMeasure structure
-#[derive(Deserialize, Validate, Clone, Serialize, Default)]
+#[derive(Debug, Deserialize, Validate, Clone, Serialize, Default)]
 pub struct CreateMeasure {
     #[validate(length(min = 1, max = 255))]
     pub value: Vec<String>,
@@ -49,19 +49,18 @@ impl From<CreateMeasure> for Vec<TimeMeasure> {
         match &value.kind {
             MeasureKind::Dust => vec![
                 TimeMeasure::new(value.value[0].parse::<f64>().unwrap(), "dust".to_string(), "P1".to_string()),
-                TimeMeasure::new(value.value[1].parse::<f64>().unwrap(), "dust".to_string(), "P2".to_string())
             ],
             MeasureKind::Humidity => vec![
-                TimeMeasure::new(value.value[0].parse::<f64>().unwrap(), "humidity".to_string(), "P1".to_string()),
+                TimeMeasure::new(value.value[0].parse::<f64>().unwrap(), "humidity".to_string(), "%".to_string()),
             ],
             MeasureKind::Pressure => vec![
-                TimeMeasure::new(value.value[0].parse::<f64>().unwrap(), "pressure".to_string(), "P1".to_string()),
+                TimeMeasure::new(value.value[0].parse::<f64>().unwrap(), "pressure".to_string(), "hPa".to_string()),
             ],
             MeasureKind::SoundLevel => vec![
-                TimeMeasure::new(value.value[0].parse::<f64>().unwrap(), "sound_level".to_string(), "P1".to_string()),
+                TimeMeasure::new(value.value[0].parse::<f64>().unwrap(), "sound_level".to_string(), "dB".to_string()),
             ],
             MeasureKind::Temperature => vec![
-                TimeMeasure::new(value.value[0].parse::<f64>().unwrap(), "temperature".to_string(), "P1".to_string()),
+                TimeMeasure::new(value.value[0].parse::<f64>().unwrap(), "temperature".to_string(), "celsius".to_string()),
             ]
         }
     }
@@ -94,7 +93,7 @@ impl TimeMeasure {
 
 /// CreateMeasures DTO is used to create multiple measures at once
 /// Handle by the /measure/ routes
-#[derive(Deserialize, Validate, Clone, Default)]
+#[derive(Debug, Deserialize, Validate, Clone, Default)]
 pub struct CreateMeasures {
     pub values: Vec<CreateMeasure>,
 }
@@ -161,7 +160,7 @@ impl Responder for QueryResponse {
 
     /// Respond to the request with the json of QueryResponse
     fn respond_to(self, _req: &actix_web::HttpRequest) -> actix_web::HttpResponse {
-        actix_web::HttpResponse::Ok().json(self)
+        HttpResponse::Ok().json(self)
     }
 }
 
@@ -292,7 +291,7 @@ mod tests {
             kind: MeasureKind::Dust,
         };
         let time_measures: Vec<TimeMeasure> = create_measure.clone().into();
-        assert_eq!(time_measures.len(), 2);
+        assert_eq!(time_measures.len(), 1);
         create_measure.kind = MeasureKind::Humidity;
         let time_measures: Vec<TimeMeasure> = create_measure.clone().into();
         assert_eq!(time_measures.len(), 1);
