@@ -51,7 +51,7 @@ float sensor::DustSensor::getMeasure()
     numReadings = 0;
 
     // Calculate voltage
-    voltage = (sysVoltage / 4096.0) * adcValue * 11;
+    voltage = (sysVoltage / (pow(2, adcResolution))) * adcValue * 11;
 
     // Calculate density
     if (voltage >= noDustVoltage) {

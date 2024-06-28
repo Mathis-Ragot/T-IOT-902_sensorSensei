@@ -11,6 +11,7 @@
 #include "Utils.h"
 #include "domain/Sensor/AbstractSensor.h"
 #include <iostream>
+#include "cmath"
 
 namespace sensor {
 
