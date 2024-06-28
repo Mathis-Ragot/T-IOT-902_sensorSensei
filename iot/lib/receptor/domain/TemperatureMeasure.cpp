@@ -15,7 +15,7 @@ TemperatureMeasure::TemperatureMeasure() : AbstractMeasure(TEMP_SENSOR_DATA_BIT_
 //Retourne la valeur de la mesure de température en string
 String TemperatureMeasure::getDeSerializedMeasure() {
     float fahrenheit = static_cast<float>(measure::AbstractMeasure::rawMeasure) / 10.0f;
-    float celsius = (fahrenheit - 32) * 5.0 / 9.0;
+    float celsius = (fahrenheit - 32) * 5.0f / 9.0f;
 #ifdef RECEPTOR_DEBUG
     Serial.print("Temperature : ");
     Serial.println(String(celsius, 1));
