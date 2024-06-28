@@ -14,6 +14,7 @@
 #include "IMeasure.h"
 #include "heltec.h"
 #include "AbstractMeasure.h"
+#include "Utils.h"
 
 
 namespace measure {
@@ -27,12 +28,17 @@ namespace measure {
 
         void deserializeMeasureFromBytes(const std::vector<uint8_t> &data);
         void addMeasure(const std::shared_ptr<AbstractMeasure>& measure) ;
+        bool checkAuthId(const vector<uint8_t> &data);
 
     private:
 
         std::vector<bool> serializeMeasuresToBits(const std::vector<uint8_t> &data);
 
         uint32_t bitsToInteger(const std::vector<bool> &bits, int start, int length);
+
+        uint32_t bytesToUInt32(const std::vector<uint8_t>& data, int start);
+
+        std::vector<bool> serializeIdToBits(const std::vector<uint8_t> &data);
 
 
     };

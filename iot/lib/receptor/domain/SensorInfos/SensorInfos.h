@@ -48,6 +48,25 @@ namespace measure {
                     return MeasureKind::Unknown;
             }
         }
+
+         String sensorTypeToString(SensorType type) {
+             switch (type) {
+                 case SensorType::TEMPERATURE:
+                     return "TEMPERATURE";
+                 case SensorType::HUMIDITY:
+                     return "HUMIDITY";
+                 case SensorType::AIR_QUALITY:
+                     return "AIR_QUALITY";
+                 case SensorType::SOUND:
+                     return "SOUND";
+                 case SensorType::PRESSURE:
+                     return "PRESSURE";
+                 case SensorType::ALTITUDE:
+                     return "ALTITUDE";
+                 default:
+                     return "UNKNOWN";
+             }
+         }
     };
 }
 #endif //T_IOT_902_MEASURE_SENSORINFOS_H

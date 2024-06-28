@@ -35,7 +35,6 @@ void ReceptorDeviceManager::init() const {
     if (auto wifi_error = wifiManager->initialize()) {
         Serial.println(wifi_error.value().c_str());
     }
-
 }
 
 
@@ -49,6 +48,12 @@ void ReceptorDeviceManager::loop() {
 }
 
 void ReceptorDeviceManager::processReceivedPacket(std::vector<uint8_t> &packet) {
+
+    if(!dataManager.measures.checkAuthId(packet)){
+        Serial.println("Authentification failed");
+        return;
+    }
+
     dataManager.measures.deserializeMeasureFromBytes(packet);
 
     // Affiche sur l'écran heltec lora les valeurs des mesures
@@ -56,7 +61,9 @@ void ReceptorDeviceManager::processReceivedPacket(std::vector<uint8_t> &packet) 
     int y = 0;
     for (const std::shared_ptr<measure::AbstractMeasure> &measure: dataManager.measures.measures) {
         String value = measure->getDeSerializedMeasure();
-        Heltec.display->drawString(5, y, String(value.c_str()));
+        // Affichage des valeurs sur l'écran
+        Heltec.display->drawString(2, y, String(measure->getInfos().sensorTypeToString(measure->getInfos().sensorType[0])));
+        Heltec.display->drawString(90, y, String(value.c_str()));
         y += 10; // Ajuster l'espacement en fonction de vos besoins
 
         //Création des données à envoyer sur l'API

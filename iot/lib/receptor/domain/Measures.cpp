@@ -7,53 +7,65 @@
 
 using namespace measure;
 
-void Measures::deserializeMeasureFromBytes(const std::vector<uint8_t> &data) {
-    if (data.empty()) {
-        return ;
+bool Measures::checkAuthId(const std::vector<uint8_t> &data) {
+    if (data.empty() || data.size() < 4) {
+        return false;
     }
+    // Récupération de l'ID
+    std::vector<bool> serializedId = serializeIdToBits(data);
+    uint32_t id = bitsToInteger(serializedId, 0, 32);
+
+#ifdef RECEPTOR_DEBUG
+    Serial.print("ID : ");
+    Serial.println(id);
+    Utils::printBytesAsIntegers(data);
+#endif
+
+    return id == EMITTER_ID;
+}
+
+
+void Measures::deserializeMeasureFromBytes(const std::vector<uint8_t> &data) {
+    if (data.empty() || data.size() < 4) {
+        return;
+    }
+
     std::vector<bool> serializedBits = serializeMeasuresToBits(data);
 
     // Définition des longueurs de bits pour chaque mesure
-//    int datasBitLength[] = {12, 12, 12, 12, 8};
     int pos = 0;
-//    int y = 0;
 
     Heltec.display->clear();
 
-    for(const std::shared_ptr<AbstractMeasure>& measure : measures){
-        uint32_t value =  bitsToInteger(serializedBits, pos, measure->dateLength);
+    for (const std::shared_ptr<AbstractMeasure> &measure: measures) {
+        uint32_t value = bitsToInteger(serializedBits, pos, measure->dateLength);
         measure->setRawMeasure(value);
         pos += measure->dateLength;
     }
-//
-//    for (int length: datasBitLength) {
-//        uint32_t value = bitsToInteger(serializedBits, pos, length);
-//        std::string bitString = "";
-//        for (int i = pos; i < pos + length; ++i) {
-//            bitString += (serializedBits[i] ? "1" : "0");
-//        }
-//        pos += length;
-//
-//        std::string displayText = "Valeur extraite: " + std::to_string(value) + " (" + bitString + ")";
-//        std::cout << displayText << std::endl;
-//
-//        Heltec.display->drawString(0, y, String(displayText.c_str()));
-//        y += 10; // Ajuster l'espacement en fonction de vos besoins
-//    }
-//
-//    Heltec.display->display();
 
+}
+
+std::vector<bool> Measures::serializeIdToBits(const std::vector<uint8_t> &data) {
+    std::vector<bool> bitsId;
+
+    for (size_t i = 0; i < 4; ++i) { //
+        for (int j = 7; j >= 0; --j) {
+            bitsId.push_back((data[i] >> j) & 1);
+        }
+    }
+    return bitsId;
 }
 
 // Simule l'obtention des mesures sérialisées en bits
 std::vector<bool> Measures::serializeMeasuresToBits(const std::vector<uint8_t> &data) {
-    std::vector<bool> bits;
-    for (size_t i = 1; i < data.size(); ++i) { // Commencer à partir de l'indice 1 pour ignorer le premier byte
+    std::vector<bool> measureBits;
+
+    for (size_t i = 5; i < data.size(); ++i) { // Commencer à partir de l'indice 1 pour ignorer le premier byte
         for (int j = 7; j >= 0; --j) {
-            bits.push_back((data[i] >> j) & 1);
+            measureBits.push_back((data[i] >> j) & 1);
         }
     }
-    return bits;
+    return measureBits;
 }
 
 // Convertit un segment de bits en un entier
@@ -65,11 +77,22 @@ uint32_t Measures::bitsToInteger(const std::vector<bool> &bits, int start, int l
     return result;
 }
 
+uint32_t Measures::bytesToUInt32(const std::vector<uint8_t> &data, int start) {
+    if (start + 4 > data.size()) {
+        // Assurez-vous que nous avons suffisamment de bytes pour lire un uint32_t
+        return 0;
+    }
+    return (static_cast<uint32_t>(data[start]) << 24) |
+           (static_cast<uint32_t>(data[start + 1]) << 16) |
+           (static_cast<uint32_t>(data[start + 2]) << 8) |
+           static_cast<uint32_t>(data[start + 3]);
+}
+
 Measures::Measures() {
     measures = std::vector<std::shared_ptr<AbstractMeasure>>();
 
 }
 
-void Measures::addMeasure(const std::shared_ptr<AbstractMeasure>& measure)  {
+void Measures::addMeasure(const std::shared_ptr<AbstractMeasure> &measure) {
     measures.push_back(measure);
 }
