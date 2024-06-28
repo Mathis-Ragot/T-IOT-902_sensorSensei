@@ -1,6 +1,7 @@
 use std::fmt::{Debug, Display, Formatter};
 use actix_web::{HttpResponse, ResponseError};
 use actix_web::body::BoxBody;
+use log::{error};
 use serde::Serialize;
 use serde_json::json;
 use validator::ValidationErrors;
@@ -42,6 +43,13 @@ impl ResponseError for ApiException {
 impl From<ValidationErrors> for ApiException {
     fn from(_errors: ValidationErrors) -> Self {
         ApiException::BaqRequest("Invalid request".to_string())
+    }
+}
+
+impl From<anyhow::Error> for ApiException {
+    fn from(_error: anyhow::Error) -> Self {
+        error!("{:?}", _error);
+        ApiException::Internal("Internal error".to_string())
     }
 }
 

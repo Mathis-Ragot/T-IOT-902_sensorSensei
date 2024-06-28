@@ -6,17 +6,20 @@ use actix_web::web::{Data};
 use config::Config;
 use serde::Deserialize;
 use crate::exceptions::api_exception::ApiException;
-use crate::state::AppState;
+use crate::app::AppState;
+use anyhow::{Context, Result};
 
 /// AppConfig structure is used to represent the configuration of the application load in the environment variable at the startup of the app
 /// The structure is used to store the configuration of the influxdb connection and the sensor info
-/// Required: INFLUX_URL, INFLUX_DB_NAME, INFLUX_DB_TOKEN, SENSOR_ID and DEVICE_NODE
+/// Required: INFLUX_DB_HOST, INFLUX_DB_PORT, INFLUX_DB_NAME, INFLUX_DB_TOKEN, API_PORT, SENSOR_ID and DEVICE_NODE
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct AppConfig {
-    pub influx_url: String,
+    pub influx_db_host: String,
+    pub influx_db_port: String,
     pub influx_db_name: String,
     pub influx_db_token: String,
+    pub api_port: u16,
     pub sensor_id: u64,
     pub device_node: String,
     pub sensor_community_url: String,
@@ -25,15 +28,17 @@ pub struct AppConfig {
 /// Implementation of the AppConfig structure
 impl AppConfig {
     /// Create a new instance of the AppConfig structure and load by default the config
-    pub fn new() -> Option<Self> {
+    pub fn new() -> Result<Self> {
         AppConfig::load_config()
     }
 
     /// Load the configuration from the environment variables
-    pub fn load_config() -> Option<Self> {
+    pub fn load_config() -> Result<Self> {
         Config::builder()
-            .add_source(config::Environment::default())
-            .build().unwrap().try_deserialize::<AppConfig>().ok()
+            .add_source(config::Environment::default()).build()
+            .context("Cannot retrieve configuration from environment variables !")?
+            .try_deserialize::<AppConfig>()
+            .context("Cannot deserialize configuration from environment variables !")
     }
 }
 
@@ -48,10 +53,7 @@ impl FromRequest for AppConfig {
     fn from_request(req: &HttpRequest, _payload: &mut Payload) -> Self::Future {
         let request = req.clone();
         Box::pin(async move {
-            let config = request.app_data::<Data<AppState>>()
-                .ok_or(ApiException::Internal(String::from("APE-100300")))?
-                .config.clone();
-            Ok(config)
+            request.app_data::<Data<AppState>>().ok_or(ApiException::Internal(String::from("APE-100300"))).map(|state| state.config.clone())
         })
     }
 }
@@ -67,9 +69,11 @@ mod test {
 
     pub fn initialize() {
         INIT.call_once(|| {
-            env::set_var("INFLUX_URL", "http://localhost:8086");
+            env::set_var("INFLUX_DB_HOST", "localhost");
+            env::set_var("INFLUX_DB_PORT", "8086");
             env::set_var("INFLUX_DB_NAME", "test");
             env::set_var("INFLUX_DB_TOKEN", "test");
+            env::set_var("API_PORT", "8080");
             env::set_var("SENSOR_ID", "1");
             env::set_var("DEVICE_NODE", "test");
             env::set_var("SENSOR_COMMUNITY_URL", "http://localhost:8086");
@@ -80,21 +84,21 @@ mod test {
     async fn test_app_config() {
         initialize();
         let config = AppConfig::new();
-        assert!(config.is_some());
+        assert!(config.is_ok());
     }
 
     #[test]
     async fn test_app_config_load() {
         initialize();
         let config = AppConfig::load_config();
-        assert!(config.is_some());
+        assert!(config.is_ok());
     }
 
     #[test]
     async fn test_app_config_from_request_error() {
         initialize();
         let req = actix_web::test::TestRequest::default().to_http_request();
-        let resp = AppConfig::from_request(&req, &mut actix_web::dev::Payload::None).await;
+        let resp = AppConfig::from_request(&req, &mut Payload::None).await;
         assert!(resp.is_err());
     }
 
@@ -102,7 +106,15 @@ mod test {
     async fn test_app_config_from_request_error_data() {
         initialize();
         let req = actix_web::test::TestRequest::default().to_http_request();
-        let resp = AppConfig::from_request(&req, &mut actix_web::dev::Payload::None).await;
+        let resp = AppConfig::from_request(&req, &mut Payload::None).await;
         assert!(resp.is_err());
+    }
+
+    #[test]
+    async fn test_app_config_from_request_ok() {
+        initialize();
+        let data = Data::new(AppState::new());
+        let req = test::TestRequest::default().app_data(data.clone()).to_http_request();
+        let _ = AppConfig::from_request(&req, &mut Payload::None).await;
     }
 }
