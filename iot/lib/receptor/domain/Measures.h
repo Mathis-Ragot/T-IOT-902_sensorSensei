@@ -14,6 +14,7 @@
 #include "IMeasure.h"
 #include "heltec.h"
 #include "AbstractMeasure.h"
+#include "Utils.h"
 
 
 namespace measure {
@@ -34,7 +35,9 @@ namespace measure {
 
         uint32_t bitsToInteger(const std::vector<bool> &bits, int start, int length);
 
+        uint32_t bytesToUInt32(const std::vector<uint8_t>& data, int start);
 
+        std::vector<bool> serializeIdToBits(const std::vector<uint8_t> &data);
     };
 }
 #endif //IOT_MEASURES_H
