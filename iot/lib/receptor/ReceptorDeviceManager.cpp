@@ -60,7 +60,7 @@ void ReceptorDeviceManager::processReceivedPacket(std::vector<uint8_t> &packet) 
         y += 10; // Ajuster l'espacement en fonction de vos besoins
 
         //Création des données à envoyer sur l'API
-       Measure finalMeasure =  createMeasure(value, measure->getInfos().getMeasureKind());
+       Measure finalMeasure =  createMeasure(value.c_str(), measure->getInfos().getMeasureKind());
         api->addMeasure(finalMeasure);
 
     }

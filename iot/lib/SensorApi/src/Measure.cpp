@@ -1,13 +1,13 @@
 #include "Measure.h"
 
-MeasureKindMap::MeasureKindMap(String name, MeasureKind kind) {
+MeasureKindMap::MeasureKindMap(string name, MeasureKind kind) {
     this->kind = kind;
     this->name = std::move(name);
 }
 
-tl::optional<Measure> createMeasure(const std::vector<String>& value, const String& kind) {
+tl::optional<Measure> createMeasure(const std::vector<string>& value, const string& kind) {
     for (const auto &item: measureKindMaps) {
-        if (kind.equalsIgnoreCase(item.name)) {
+        if (kind == item.name) {
             return tl::optional<Measure>(Measure {
                     value,
                     item.kind
@@ -17,16 +17,16 @@ tl::optional<Measure> createMeasure(const std::vector<String>& value, const Stri
     return tl::nullopt;
 }
 
-tl::optional<MeasureKind> parseMeasureKind(const String& name) {
+tl::optional<MeasureKind> parseMeasureKind(const string& name) {
     for (const auto &item: measureKindMaps) {
-        if (item.name.equalsIgnoreCase(name)) {
+        if (item.name == name) {
             return item.kind;
         }
     }
     return tl::nullopt;
 }
 
-String getMeasureKindName(MeasureKind kind){
+string getMeasureKindName(MeasureKind kind) {
     for (const auto &item: measureKindMaps) {
         if (item.kind == kind) {
             return item.name;
@@ -35,26 +35,26 @@ String getMeasureKindName(MeasureKind kind){
     throw std::invalid_argument("Invalid MeasureKind");
 }
 
-tl::optional<Measure> createMeasure(String value, const String& kind) {
+tl::optional<Measure> createMeasure(string value, const string& kind) {
     if (parseMeasureKind(kind).has_value()) {
         return tl::optional<Measure>(Measure {
-                std::vector<String>{std::move(value)},
+                std::vector<string>{std::move(value)},
                 parseMeasureKind(kind).value()
         });
     }
     return tl::nullopt;
 }
 
-Measure createMeasure(std::vector<String> value, MeasureKind kind) {
+Measure createMeasure(std::vector<string> value, MeasureKind kind) {
     return Measure {
             std::move(value),
             kind
     };
 }
 
-Measure createMeasure(String value, MeasureKind kind) {
+Measure createMeasure(string value, MeasureKind kind) {
     return Measure {
-            std::vector<String>{std::move(value)},
+            std::vector<string>{std::move(value)},
             kind
     };
 }
@@ -66,9 +66,9 @@ CreateMeasures createMeasures(std::vector<Measure> measures) {
     };
 }
 
-String Measure::toJson()  {
+string Measure::toJson()  {
     JsonDocument doc;
-    String s;
+    string s;
     doc["kind"] = getMeasureKindName(this->kind);
     for (int i = 0; i < this->value.size(); i++) {
         doc["value"][i] = this->value[i];
@@ -77,7 +77,7 @@ String Measure::toJson()  {
     return s;
 }
 
-Measure Measure::fromJson(String data) {
+Measure Measure::fromJson(string data) {
     JsonDocument doc;
     deserializeJson(doc, data);
     return Measure {
@@ -86,9 +86,9 @@ Measure Measure::fromJson(String data) {
     };
 }
 
-String CreateMeasures::toJson() {
+string CreateMeasures::toJson() {
     JsonDocument doc;
-    String s;
+    string s;
     for (int i = 0; i < this->values.size(); i++) {
         doc["values"][i]["kind"] = getMeasureKindName(this->values[i].kind);
         for (int j = 0; j < this->values[i].value.size(); j++) {
