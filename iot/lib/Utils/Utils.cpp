@@ -2,14 +2,15 @@
 // Created by clement.mathe on 26/04/2024.
 //
 
+#include <iostream>
 #include "Utils.h"
 
 void Utils::printBits(int value, int numBits) {
-    Serial.print("Bits: ");
+    std::cout << "Bits: ";
     for (int i = numBits - 1; i >= 0; --i) {
-        Serial.print((value >> i) & 1);
+        std::cout << "Bits: " << ((value >> i) & 1);
     }
-    Serial.println();
+    std::cout << std::endl;
 }
 
 int Utils::countSignificantBits(int value) {
@@ -18,40 +19,41 @@ int Utils::countSignificantBits(int value) {
         bits++;
         value >>= 1;
     }
-    Serial.print("Bits: ");
-    Serial.print(bits);
+    std::cout << "Bits: " << bits << std::endl;
     return bits;
 }
 
 void Utils::printBytesAsCharacters(const std::vector<uint8_t>& bytes) {
-    Serial.print( "Characters: ");
+    std::cout << "Characters: ";
     for (uint8_t byte : bytes) {
         if (isprint(byte))  // Vérifie si le byte est un caractère imprimable
-            Serial.print(static_cast<char>(byte));
+            std::cout << static_cast<char>(byte);
         else
-            Serial.print('.');  // Afficher un point pour les caractères non imprimables
+            std::cout << '.';  // Afficher un point pour les caractères non imprimables
     }
-    Serial.println();
+    std::cout << std::endl;
 }
 
 void Utils::printBytesAsIntegers(const std::vector<uint8_t>& bytes) {
-    Serial.print("Bytes: ");
+    std::cout << "Bytes: ";
     for (uint8_t byte : bytes) {
-        if (byte < 10) Serial.print("00");  // Pour aligner les chiffres pour les nombres en dessous de 10
-        else if (byte < 100) Serial.print("0");  // Pour aligner les chiffres pour les nombres en dessous de 100
-        Serial.print(byte);
-        Serial.print(" ");
+        if (byte < 10) {
+            std::cout << "00"; // Pour aligner les chiffres pour les nombres en dessous de 10
+        } else if (byte < 100) {
+            std::cout << "0";  // Pour aligner les chiffres pour les nombres en dessous de 100
+        };
+        std::cout << byte << " ";
     }
-    Serial.println();
+    std::cout << std::endl;
 }
 
 void Utils::printBytesAsHex(const std::vector<uint8_t>& bytes) {
-    Serial.print("Hex Bytes: ");
+    std::cout << "Hex Bytes: ";
     for (uint8_t byte : bytes) {
-        if (byte < 16) Serial.print("0");  // Ajouter un zéro pour l'alignement des nombres hexadécimaux
-        Serial.print(byte, HEX);
-        Serial.print(" ");
+        if (byte < 16) {
+            std::cout << "0"; // Ajouter un zéro pour l'alignement des nombres hexadécimaux
+        }
+        std::cout << byte << " ";
     }
-    Serial.println();
+    std::cout << std::endl;
 }
-// Path: lib/Utils/Utils.h

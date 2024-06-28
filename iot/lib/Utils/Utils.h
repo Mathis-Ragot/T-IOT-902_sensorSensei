@@ -5,9 +5,8 @@
 #ifndef IOT_UTILS_H
 #define IOT_UTILS_H
 
-#include <Arduino.h>
+#include "cstdint"
 #include "vector"
-
 
 class Utils {
 public:

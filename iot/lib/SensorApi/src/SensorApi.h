@@ -19,10 +19,10 @@ enum SensorResponseKind {
     InvalidMeasure
 };
 
-typedef std::tuple<String, int> SensorApiError;
+typedef std::tuple<string, int> SensorApiError;
 typedef std::tuple<SensorResponseKind, SensorApiError> SensorApiResponse;
 typedef std::tuple<SensorResponseKind, SensorApiError, std::vector<Measure>> SensorApiMeasureResponse;
-typedef std::tuple<SensorResponseKind, String> SensorResponse;
+typedef std::tuple<SensorResponseKind, string> SensorResponse;
 typedef std::shared_ptr<IClient> SensorClient;
 
 class SensorApi {
@@ -31,7 +31,7 @@ public:
      * Constructor
      * @param serverEndpoint
      */
-    SensorApi(SensorClient client, String serverEndpoint);
+    SensorApi(SensorClient client, string serverEndpoint);
     /**
      * Copy constructor
      * @param sensorApi
@@ -96,7 +96,7 @@ public:
      * Get the server endpoint
      * @return
      */
-    [[nodiscard]] String getServerEndpoint() const noexcept;
+    [[nodiscard]] string getServerEndpoint() const noexcept;
     /**
      * Destructor
      */
@@ -109,7 +109,7 @@ private:
     /**
      * The server endpoint
      */
-    String _serverEndpoint;
+    string _serverEndpoint;
     /**
      * The queues of measures
      */
