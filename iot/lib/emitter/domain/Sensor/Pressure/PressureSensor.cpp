@@ -14,20 +14,26 @@ sensor::PressureSensor::PressureSensor() : BMP280Sensor() {
 }
 
 float sensor::PressureSensor::getMeasure() {
-    return this->bmp.readPressure();
+    auto measure = this->bmp.readPressure();
+#ifdef PRESSURE_SENSOR_DEBUG
+    Serial.print("Pressure  ");
+    Serial.print(measure);
+    Serial.println(" Pa");
+#endif
+    return measure;
 }
 
 uint16_t sensor::PressureSensor::getSerializedMeasure() {
-    float measure = getMeasure();
+    auto measure = static_cast<uint16_t>(getMeasure()/100);
 
     if (measure > MaxMeasureSize) {
         measure = MaxMeasureSize;  // Cap the value to fit within 12 bits
     }
+#ifdef PRESSURE_SENSOR_DEBUG
+    Serial.print("Pressure serialized: ");
+    Serial.print(measure);
+    Serial.println();
+#endif
 
-    #ifdef PRESSURE_SENSOR_DEBUG
-        Serial.print("Pressure: ");
-        Serial.println(measure / 100.0f);
-    #endif
-
-    return static_cast<uint16_t>(measure);
+    return measure;
 }

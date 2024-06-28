@@ -53,10 +53,12 @@ std::tuple<SensorResponseKind, SensorApiError> SensorApi::send() noexcept {
 
     string url = (string(this->_serverEndpoint) + MEASURE_ENDPOINT);
     const auto [body, code] = this->_client->send(CREATE_MEASURE_METHOD_TYPE, measuresToSend.toJson().c_str(), url);
+
 #ifdef SENSOR_API_DEBUG
     printf("Code: %i\n", code);
     printf("Body: %s\n", body.c_str());
 #endif
+    this->_queues.clear();
     return std::make_tuple(code == 200 ? Success : Failed, std::make_tuple(body, code));
 }
 

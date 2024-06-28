@@ -1,23 +1,23 @@
 #ifdef ENABLE_IOT_HTTP_CLIENT
 #include <HTTPClient.h>
-#include "HttpClient.h"
+#include "MyHttpClient.h"
 #include "ArduinoJson.h"
 
 using namespace std;
 
-HttpClient::HttpClient() {
+MyHttpClient::MyHttpClient() {
     this->_client = new HTTPClient();
 }
 
-HttpClient::~HttpClient() {
+MyHttpClient::~MyHttpClient() {
     delete this->_client;
 }
 
-void HttpClient::setURL(const char *serverEndpoint) {
+void MyHttpClient::setURL(const char *serverEndpoint) {
     this->_client->setURL(serverEndpoint);
 }
 
-std::tuple<string, int> HttpClient::send(const char* type, const char *body, string url) {
+std::tuple<string, int> MyHttpClient::send(const char* type, const char *body, string url) {
     #ifdef SENSOR_API_DEBUG
         Serial.printf("Sending request to url: %s\n", url.c_str());
     #endif

@@ -11,7 +11,17 @@
 #include "DeviceInfos.h"
 #include "infrastructure/lora/LoraReceptorManager.h"
 #include "infrastructure/wifi/WifiManager.h"
+#include "MyHttpClient.h"
+#include "infrastructure/wifi/ArduinoWifiClient.h"
 #include "SensorApi.h"
+#include "core/DataManager.h"
+#include "domain/DustMeasure.h"
+#include "domain/SoundMeasure.h"
+#include "domain/TemperatureMeasure.h"
+#include "domain/PressureMeasure.h"
+#include "domain/HumidityMeasure.h"
+#include <Arduino.h>
+
 
 class ReceptorDeviceManager {
 
@@ -20,13 +30,19 @@ public:
     explicit ReceptorDeviceManager(LoRaClass &loraInstance);
     ~ReceptorDeviceManager();
     void init() const;
-    void loop() const;
+    void loop();
     void communicateMeasures();
     void communicateInfos();
 private:
-    std::unique_ptr<LoRaCommunicationManager> communicationManager;
+    LoRaCommunicationManager* communicationManager;
     WifiManager *wifiManager;
     SensorApi *api;
+
+    DataManager dataManager;
+    void processReceivedPacket(std::vector<uint8_t> &packet);
+
+
+
 };
 
 

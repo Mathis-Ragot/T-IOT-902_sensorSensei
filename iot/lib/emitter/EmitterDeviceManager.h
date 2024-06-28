@@ -7,7 +7,7 @@
 
 #include <vector>
 #include <memory>
-#include "PowerManager/PowerManager.h"
+#include "powerManager/PowerManager.h"
 #include "LoRaCommunicationManager.h"
 #include "DeviceInfos.h"
 #include "domain/Sensor/ISensor.h"

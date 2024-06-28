@@ -1,17 +1,17 @@
 #ifdef ENABLE_IOT_HTTP_CLIENT
 
-#ifndef IOT_HTTPCLIENT_H
-#define IOT_HTTPCLIENT_H
+#ifndef IOT_MYHTTPCLIENT_H
+#define IOT_MYHTTPCLIENT_H
 
 #include <HTTPClient.h>
 #include "IClient.h"
 
 using namespace std;
 
-class HttpClient: public IClient {
+class MyHttpClient: public IClient {
 public:
-    HttpClient();
-    ~HttpClient();
+    MyHttpClient();
+    ~MyHttpClient();
     std::tuple<string, int> send(const char* type, const char *body, string url) override;
     void setURL(const char *serverEndpoint) override;
 private:
@@ -19,6 +19,6 @@ private:
 };
 
 
-#endif //IOT_HTTPCLIENT_H
+#endif //IOT_MYHTTPCLIENT_H
 
 #endif

@@ -15,7 +15,7 @@ public:
     PowerManager() = default;
 
     static void init();
-    static void start();
+    static void deepSleep();
 };
 
 
