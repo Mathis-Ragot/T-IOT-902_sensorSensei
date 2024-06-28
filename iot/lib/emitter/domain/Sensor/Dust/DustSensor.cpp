@@ -7,42 +7,74 @@
 
 void sensor::DustSensor::begin()
 {
-    analogReadResolution(12);       // Configure la résolution ADC à 12 bits
-    analogSetAttenuation(ADC_11db); // Configure l'atténuation pour lire jusqu'à environ 3.3V
+    pinMode(measurePin, OUTPUT);
+    digitalWrite(measurePin, LOW);
 }
+
+
+void sensor::DustSensor::readMeasure(int sample = 0) {
+    // We read 10 samples + 1 to compute the mean, since we will ignore the first one
+    if (sample == NUM_SAMPLES + 1) {
+        return;
+    }
+
+    digitalWrite(measurePin, HIGH);
+    delayMicroseconds(samplingTime);
+    adcValues[adcIndex] = analogRead(ledPower);
+
+    // We ignore the first value read since it is always 0
+    if (adcIndex != 0) {
+        sumAdcValues += adcValues[adcIndex];
+    }
+
+    adcIndex++;
+    numReadings++;
+
+    delayMicroseconds(deltaTime);
+    digitalWrite(measurePin, LOW);
+    delay(sleepTime);
+
+    readMeasure(sample + 1);
+}
+
 
 float sensor::DustSensor::getMeasure()
 {
-    digitalWrite(ledPower, LOW);         // power on the LED
-    delayMicroseconds(samplingTime);     //
-    voMeasured = analogRead(measurePin); // read the dust value//
-    delayMicroseconds(deltaTime);
-    digitalWrite(ledPower, HIGH); // turn the LED off
-    delayMicroseconds(sleepTime); //
-    calcVoltage = voMeasured * (3.2 / 4096.0);
+    readMeasure();
 
-    // linear eqaution taken from http://www.howmuchsnow.com/arduino/airquality/
-    dustDensity = 170 * calcVoltage - 0.1;
+    adcIndex = 0;
 
-    Serial.print("PM2.5= ");
-    Serial.print(dustDensity);
-    Serial.print(" ug/m3");
-    Serial.println();
+    // Compute average ADC value
+    adcValue = sumAdcValues / NUM_SAMPLES;
 
-    return this->dustDensity;
+    sumAdcValues = 0;
+    numReadings = 0;
+
+    // Calculate voltage
+    voltage = (sysVoltage / 4096.0) * adcValue * 11;
+
+    // Calculate density
+    if (voltage >= noDustVoltage) {
+        voltage -= noDustVoltage;
+        density = voltage * covRatio;
+    } else {
+        density = 0;
+    }
+
+    Serial.print("Dust : ");
+    Serial.print(density);
+    Serial.print(" ug/m3\n");
+
+    return density;
 }
 
 sensor::DustSensor::DustSensor() : AbstractSensor()
 {
-
     this->dataBitLength = DUST_SENSOR_DATA_BIT_LENGTH;
     this->infos = SensorInfos(
         DUST_SENSOR_ID,
         DUST_SENSOR_REF,
         std::vector<SensorType>{SensorInfos::stringToSensorType(DUST_SENSOR_TYPE)});
-
-    pinMode(ledPower, OUTPUT);
-    pinMode(measurePin, INPUT);
 }
 
 uint16_t sensor::DustSensor::getSerializedMeasure()
