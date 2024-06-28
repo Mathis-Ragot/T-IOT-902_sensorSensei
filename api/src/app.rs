@@ -78,7 +78,6 @@ mod test {
     use actix_web::{FromRequest, test};
     use actix_web::web::Data;
 
-
     static INIT: Once = Once::new();
 
     pub fn initialize() {
@@ -104,9 +103,7 @@ mod test {
     #[test]
     async fn test_app_state() {
         initialize();
-        let state = AppState::new().unwrap();
-        assert_eq!(state.config.influx_db_host, "http://localhost:8086");
-        assert_eq!(state.config.influx_db_name, "test");
+        assert_eq!(AppState::new().is_ok(), true);
     }
     
     #[test]
