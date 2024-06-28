@@ -56,13 +56,22 @@ void ReceptorDeviceManager::processReceivedPacket(std::vector<uint8_t> &packet) 
     int y = 0;
     for (const std::shared_ptr<measure::AbstractMeasure> &measure: dataManager.measures.measures) {
         String value = measure->getDeSerializedMeasure();
-        Heltec.display->drawString(0, y, String(value.c_str()));
+        Heltec.display->drawString(5, y, String(value.c_str()));
         y += 10; // Ajuster l'espacement en fonction de vos besoins
 
+        //Création des données à envoyer sur l'API
+       Measure finalMeasure =  createMeasure(value, measure->getInfos().getMeasureKind());
+        api->addMeasure(finalMeasure);
+
     }
+
+    api->send();
+
     Heltec.display->display();
 
+
     // Envoi des mesures sur l'API
+
 
 
 

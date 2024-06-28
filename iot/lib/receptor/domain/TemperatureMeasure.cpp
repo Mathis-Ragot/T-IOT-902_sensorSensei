@@ -5,7 +5,11 @@
 #include "TemperatureMeasure.h"
 using namespace measure;
 
-TemperatureMeasure::TemperatureMeasure() : AbstractMeasure(TEMP_SENSOR_DATA_BIT_LENGTH) {
+TemperatureMeasure::TemperatureMeasure() : AbstractMeasure(TEMP_SENSOR_DATA_BIT_LENGTH,
+                                                           SensorInfos(
+                                                                   TEMP_SENSOR_ID,
+                                                                   TEMP_SENSOR_REF,
+                                                                   std::vector<SensorType>{SensorInfos::stringToSensorType(TEMP_SENSOR_TYPE)})) {
 }
 
 //Retourne la valeur de la mesure de température en string

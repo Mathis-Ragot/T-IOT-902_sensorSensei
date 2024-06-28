@@ -12,6 +12,7 @@ enum MeasureKind
     Humidity,
     Pressure,
     SoundLevel,
+    Unknown,
 };
 
 struct Measure
