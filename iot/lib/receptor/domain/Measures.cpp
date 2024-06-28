@@ -7,12 +7,10 @@
 
 using namespace measure;
 
-void Measures::deserializeMeasureFromBytes(const std::vector<uint8_t> &data) {
+bool Measures::checkAuthId(const std::vector<uint8_t> &data) {
     if (data.empty() || data.size() < 4) {
-        return;
+        return false;
     }
-
-
     // Récupération de l'ID
     std::vector<bool> serializedId = serializeIdToBits(data);
     uint32_t id = bitsToInteger(serializedId, 0, 32);
@@ -23,24 +21,28 @@ void Measures::deserializeMeasureFromBytes(const std::vector<uint8_t> &data) {
     Utils::printBytesAsIntegers(data);
 #endif
 
-    if (id == EMITTER_ID) {
-        std::vector<bool> serializedBits = serializeMeasuresToBits(data);
+    return id == EMITTER_ID;
+}
 
 
-
-        // Définition des longueurs de bits pour chaque mesure
-        int pos = 0;
-
-        Heltec.display->clear();
-
-        for (const std::shared_ptr<AbstractMeasure> &measure: measures) {
-            uint32_t value = bitsToInteger(serializedBits, pos, measure->dateLength);
-            measure->setRawMeasure(value);
-            pos += measure->dateLength;
-        }
-    } else {
-        Serial.println("ID non reconnu");
+void Measures::deserializeMeasureFromBytes(const std::vector<uint8_t> &data) {
+    if (data.empty() || data.size() < 4) {
+        return;
     }
+
+    std::vector<bool> serializedBits = serializeMeasuresToBits(data);
+
+    // Définition des longueurs de bits pour chaque mesure
+    int pos = 0;
+
+    Heltec.display->clear();
+
+    for (const std::shared_ptr<AbstractMeasure> &measure: measures) {
+        uint32_t value = bitsToInteger(serializedBits, pos, measure->dateLength);
+        measure->setRawMeasure(value);
+        pos += measure->dateLength;
+    }
+
 }
 
 std::vector<bool> Measures::serializeIdToBits(const std::vector<uint8_t> &data) {

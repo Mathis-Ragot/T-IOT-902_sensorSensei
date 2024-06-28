@@ -28,6 +28,7 @@ namespace measure {
 
         void deserializeMeasureFromBytes(const std::vector<uint8_t> &data);
         void addMeasure(const std::shared_ptr<AbstractMeasure>& measure) ;
+        bool checkAuthId(const vector<uint8_t> &data);
 
     private:
 
@@ -38,6 +39,8 @@ namespace measure {
         uint32_t bytesToUInt32(const std::vector<uint8_t>& data, int start);
 
         std::vector<bool> serializeIdToBits(const std::vector<uint8_t> &data);
+
+
     };
 }
 #endif //IOT_MEASURES_H

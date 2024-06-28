@@ -35,7 +35,6 @@ void ReceptorDeviceManager::init() const {
     if (auto wifi_error = wifiManager->initialize()) {
         Serial.println(wifi_error.value().c_str());
     }
-
 }
 
 
@@ -49,6 +48,12 @@ void ReceptorDeviceManager::loop() {
 }
 
 void ReceptorDeviceManager::processReceivedPacket(std::vector<uint8_t> &packet) {
+
+    if(!dataManager.measures.checkAuthId(packet)){
+        Serial.println("Authentification failed");
+        return;
+    }
+
     dataManager.measures.deserializeMeasureFromBytes(packet);
 
     // Affiche sur l'écran heltec lora les valeurs des mesures
