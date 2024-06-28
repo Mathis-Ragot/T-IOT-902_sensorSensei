@@ -14,7 +14,20 @@ sensor::TemperatureSensor::TemperatureSensor() : BMP280Sensor() {
 }
 
 float sensor::TemperatureSensor::getMeasure() {
-    return this->bmp.readTemperature();
+
+    float measure = this->bmp.readTemperature();
+
+#ifdef TEMP_SENSOR_DEBUG
+    Serial.print("Temperature: ");
+    Serial.print(celsiusToFahrenheit(measure));
+    Serial.println("°F ");
+#endif
+
+    return celsiusToFahrenheit(measure);
+}
+
+float sensor::TemperatureSensor::celsiusToFahrenheit(float celsius) {
+    return (celsius * 9.0 / 5.0) + 32.0;
 }
 
 uint16_t sensor::TemperatureSensor::getSerializedMeasure() {
@@ -23,10 +36,12 @@ uint16_t sensor::TemperatureSensor::getSerializedMeasure() {
     if (measure > MaxMeasureSize) {
         measure = MaxMeasureSize;  // Cap the value to fit within 12 bits
     }
+    auto measureInt = static_cast<uint16_t>(std::round(measure * 10));
 
-    #ifdef TEMP_SENSOR_DEBUG
-        Serial.print("Temperature: ");
-        Serial.println(measure);
-    #endif
-    return static_cast<uint16_t>(measure);
+#ifdef TEMP_SENSOR_DEBUG
+    Serial.print("Temperature serialized: ");
+    Serial.println(measureInt);
+#endif
+
+    return measureInt; // *10 to keep one decimal
 }

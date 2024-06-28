@@ -6,6 +6,7 @@
 
 DataManager::DataManager(size_t queueSize) {
     packetQueue = xQueueCreate(queueSize, sizeof(std::vector<uint8_t>*));
+    measures = measure::Measures();
 }
 
 DataManager::~DataManager() {
@@ -38,19 +39,19 @@ bool DataManager::dequeuePacket(std::vector<uint8_t> &packet) {
     return false;
 }
 
-std::vector<uint8_t> DataManager::deserializePacket(const std::vector<uint8_t> &packet) {
-    std::vector<uint8_t> deserializedData;
-    if (packet.empty()) return deserializedData;
-
-    size_t totalLength = packet[0];
-    size_t bitIndex = 0;
-
-    for (size_t i = 1; i < packet.size(); ++i) {
-        uint8_t byte = packet[i];
-        for (size_t j = 0; j < 8 && bitIndex < totalLength; ++j, ++bitIndex) {
-            bool bit = (byte >> j) & 1;
-            deserializedData.push_back(bit);
-        }
-    }
-    return deserializedData;
-}
+//std::vector<uint8_t> DataManager::deserializePacket(const std::vector<uint8_t> &packet) {
+//    std::vector<uint8_t> deserializedData;
+//    if (packet.empty()) return deserializedData;
+//
+//    size_t totalLength = packet[0];
+//    size_t bitIndex = 0;
+//
+//    for (size_t i = 1; i < packet.size(); ++i) {
+//        uint8_t byte = packet[i];
+//        for (size_t j = 0; j < 8 && bitIndex < totalLength; ++j, ++bitIndex) {
+//            bool bit = (byte >> j) & 1;
+//            deserializedData.push_back(bit);
+//        }
+//    }
+//    return deserializedData;
+//}

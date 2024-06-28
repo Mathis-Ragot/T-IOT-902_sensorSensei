@@ -4,44 +4,44 @@
 #include <vector>
 #include <ArduinoJson.h>
 #include "optional.hpp"
+#include <string>
 
-enum MeasureKind
-{
+using namespace std;
+
+enum MeasureKind {
     Dust,
     Temperature,
     Humidity,
     Pressure,
     SoundLevel,
+    Unknown,
 };
 
-struct Measure
-{
-    std::vector<String> value;
+struct Measure {
+    std::vector<string> value;
     MeasureKind kind;
-    String toJson();
-    static Measure fromJson(String);
+    string toJson();
+    static Measure fromJson(string);
 };
 
-struct CreateMeasures
-{
+struct CreateMeasures {
     std::vector<Measure> values;
-    String toJson();
+    string toJson();
 };
 
-struct MeasureKindMap
-{
-    MeasureKindMap(String, MeasureKind);
-    String name;
+struct MeasureKindMap {
+    MeasureKindMap(string, MeasureKind);
+    string name;
     MeasureKind kind;
 };
 
 const MeasureKindMap measureKindMaps[] = {{"dust", Dust}, {"temperature", Temperature}, {"humidity", Humidity}, {"pressure", Pressure}, {"sound_level", SoundLevel}};
-
-tl::optional<Measure> createMeasure(const std::vector<String> &value, const String &kind);
-tl::optional<Measure> createMeasure(String value, const String &kind);
-tl::optional<MeasureKind> parseMeasureKind();
-Measure createMeasure(std::vector<String> value, MeasureKind kind);
-Measure createMeasure(String value, MeasureKind kind);
+string getMeasureKindName(MeasureKind kind);
+tl::optional<Measure> createMeasure(const std::vector<string>& value, const string& kind);
+tl::optional<Measure> createMeasure(string value, const string& kind);
+tl::optional<MeasureKind> parseMeasureKind(const string& name);
+Measure createMeasure(std::vector<string> value, MeasureKind kind);
+Measure createMeasure(string value, MeasureKind kind);
 CreateMeasures createMeasures(std::vector<Measure> measures);
 
 #endif
