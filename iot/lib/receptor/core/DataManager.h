@@ -11,6 +11,7 @@
 #include <freertos/queue.h>
 #include <Arduino.h>
 #include "../../receptor/domain/Measures.h"
+#include <WiFi.h>
 
 class DataManager {
 public:
