@@ -30,11 +30,14 @@ bool DataManager::enqueuePacket(const uint8_t *data, size_t length) {
 }
 
 bool DataManager::dequeuePacket(std::vector<uint8_t> &packet) {
-    std::vector<uint8_t> *receivedPacket;
-    if (xQueueReceive(packetQueue, &receivedPacket, portMAX_DELAY) == pdPASS) {
-        packet = *receivedPacket;
-        delete receivedPacket; // Libère la mémoire après traitement
-        return true;
+
+    if(WiFi.isConnected()) {
+        std::vector<uint8_t> *receivedPacket;
+        if (xQueueReceive(packetQueue, &receivedPacket, portMAX_DELAY) == pdPASS) {
+            packet = *receivedPacket;
+            delete receivedPacket; // Libère la mémoire après traitement
+            return true;
+        }
     }
     return false;
 }

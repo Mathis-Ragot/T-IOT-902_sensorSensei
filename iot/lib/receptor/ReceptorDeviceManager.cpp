@@ -20,6 +20,7 @@ ReceptorDeviceManager::ReceptorDeviceManager(LoRaClass &loraInstance) :
     dataManager.measures.addMeasure(std::make_shared<measure::PressureMeasure>());
     dataManager.measures.addMeasure(std::make_shared<measure::SoundMeasure>());
     dataManager.measures.addMeasure(std::make_shared<measure::HumidityMeasure>());
+//    dataManager.measures.addMeasure(std::make_shared<measure::TimeMeasure>());
 
 }
 
@@ -72,9 +73,10 @@ void ReceptorDeviceManager::processReceivedPacket(std::vector<uint8_t> &packet) 
 
     }
 
+    Heltec.display->display();
     api->send();
 
-    Heltec.display->display();
+
 
 
     // Envoi des mesures sur l'API
