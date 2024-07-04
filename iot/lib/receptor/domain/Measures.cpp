@@ -68,6 +68,7 @@ std::vector<bool> Measures::serializeMeasuresToBits(const std::vector<uint8_t> &
     return measureBits;
 }
 
+
 // Convertit un segment de bits en un entier
 uint32_t Measures::bitsToInteger(const std::vector<bool> &bits, int start, int length) {
     uint32_t result = 0;
@@ -77,17 +78,6 @@ uint32_t Measures::bitsToInteger(const std::vector<bool> &bits, int start, int l
     return result;
 }
 
-uint32_t Measures::bytesToUInt32(const std::vector<uint8_t> &data, int start) {
-    if (start + 4 > data.size()) {
-        // Assurez-vous que nous avons suffisamment de bytes pour lire un uint32_t
-        return 0;
-    }
-    return (static_cast<uint32_t>(data[start]) << 24) |
-           (static_cast<uint32_t>(data[start + 1]) << 16) |
-           (static_cast<uint32_t>(data[start + 2]) << 8) |
-           static_cast<uint32_t>(data[start + 3]);
-}
-
 Measures::Measures() {
     measures = std::vector<std::shared_ptr<AbstractMeasure>>();
 
@@ -95,4 +85,21 @@ Measures::Measures() {
 
 void Measures::addMeasure(const std::shared_ptr<AbstractMeasure> &measure) {
     measures.push_back(measure);
+}
+
+extern "C" {
+// Declare a function to get the free heap size
+uint32_t getFreeHeap();
+}
+
+void printMemoryUsage() {
+    uint32_t totalMemory = ESP.getHeapSize();  // Total heap size
+    uint32_t freeMemory = ESP.getFreeHeap();   // Free heap size
+    uint32_t usedMemory = totalMemory - freeMemory;
+    float usedPercentage = ((float)usedMemory / totalMemory) * 100;
+
+    Heltec.display->clear();
+    Heltec.display->drawString(0, 0, "Memory Usage:");
+    Heltec.display->drawString(0, 10, String(usedPercentage, 2) + "%");
+    Heltec.display->display();
 }
