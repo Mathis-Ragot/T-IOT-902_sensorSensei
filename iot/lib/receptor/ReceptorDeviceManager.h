@@ -27,11 +27,35 @@ class ReceptorDeviceManager {
 
 public:
     DeviceInfos deviceInfo;
+
+    /**
+     * @brief Constructor of the ReceptorDeviceManager class.
+     * Initializes the communication, API, and WiFi managers, and adds the measures to the DataManager.
+     *
+     * @param loraInstance Reference to an instance of LoRaClass used for LoRa communication.
+     */
     explicit ReceptorDeviceManager(LoRaClass &loraInstance);
     ~ReceptorDeviceManager();
+
+    /**
+     * @brief Initialization method for the ReceptorDeviceManager.
+     * Initializes the Heltec display, communication manager, and WiFi manager.
+     */
     void init() const;
+    /**
+     * @brief Main loop method for the ReceptorDeviceManager.
+     * Checks and processes received packets.
+     */
     void loop();
+    /**
+     * @brief Method to communicate measures.
+     * Currently not implemented.
+     */
     void communicateMeasures();
+    /**
+    * @brief Method to communicate information.
+    * Currently not implemented.
+    */
     void communicateInfos();
 private:
     LoRaCommunicationManager* communicationManager;
@@ -39,6 +63,13 @@ private:
     SensorApi *api;
 
     DataManager dataManager;
+
+    /**
+     * @brief Processes a received packet.
+     * Verifies the packet's authenticity, deserializes the measures, and displays them on the Heltec screen.
+     *
+     * @param packet The received packet to process.
+     */
     void processReceivedPacket(std::vector<uint8_t> &packet);
 
 

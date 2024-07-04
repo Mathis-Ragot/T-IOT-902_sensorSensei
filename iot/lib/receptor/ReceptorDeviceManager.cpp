@@ -79,10 +79,6 @@ void ReceptorDeviceManager::processReceivedPacket(std::vector<uint8_t> &packet) 
 
     // Envoi des mesures sur l'API
 
-
-
-
-
 }
 
 void ReceptorDeviceManager::communicateMeasures() {

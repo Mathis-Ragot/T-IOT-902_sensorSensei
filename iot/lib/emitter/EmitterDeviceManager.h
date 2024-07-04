@@ -22,19 +22,46 @@
 
 
 class EmitterDeviceManager {
-    public:
-        DeviceInfos deviceInfo;
-        explicit EmitterDeviceManager(LoRaClass &loraInstance);
+public:
+    DeviceInfos deviceInfo;
 
-        void init() const;
-        void loop() const;
-        void communicateMeasures();
-        void communicateInfos();
+    /**
+     * @brief Constructor of the EmitterDeviceManager class.
+     * Initializes device information, power manager, communication manager, and sensors.
+     *
+     * @param loraInstance Reference to an instance of LoRaClass used for LoRa communication.
+     */
+    explicit EmitterDeviceManager(LoRaClass &loraInstance);
 
-    private:
-        std::unique_ptr<PowerManager> powerManager{};
-        std::unique_ptr<LoRaCommunicationManager> communicationManager;
-        std::unique_ptr<Sensors> sensors;
+    /**
+    * @brief Initialization method for the EmitterDeviceManager.
+    * Initializes the power manager, communication manager, and sensors.
+    */
+    void init() const;
+
+    /**
+     * @brief Main loop method for the EmitterDeviceManager.
+     * Collects sensor measurements, adds the device ID, and sends the data via LoRa.
+     */
+    void loop() const;
+
+    /**
+     * @brief Method to communicate measures.
+     * Currently not implemented.
+     */
+    void communicateMeasures();
+
+
+    /**
+     * @brief Method to communicate information.
+     * Currently not implemented.
+     */
+    void communicateInfos();
+
+private:
+    std::unique_ptr<PowerManager> powerManager{};
+    std::unique_ptr<LoRaCommunicationManager> communicationManager;
+    std::unique_ptr<Sensors> sensors;
 };
 
 
